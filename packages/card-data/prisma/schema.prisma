@@ -2,8 +2,7 @@
 // con modelos reales de Card/CardSet según el dataset de apitcg.com.
 
 generator client {
-  provider        = "prisma-client-js"
-  previewFeatures = []
+  provider = "prisma-client-js"
 }
 
 datasource db {
