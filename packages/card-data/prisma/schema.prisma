@@ -1,0 +1,23 @@
+// ASSUMPTION: este schema es un placeholder de Fase 0. Fase 1 lo reemplaza
+// con modelos reales de Card/CardSet según el dataset de apitcg.com.
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = []
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// Placeholder — elimínese o reemplácese en Fase 1.
+model Card {
+  id        String   @id
+  setCode   String
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([setCode])
+}
