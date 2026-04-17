@@ -21,3 +21,6 @@ pnpm-debug.log*
 
 # Turbo cache
 .turbo/
+
+# TypeScript incremental build cache
+*.tsbuildinfo
