@@ -10,6 +10,7 @@ import {
   type BuilderFilters,
 } from './filter-sidebar-builder';
 import { CardGridBuilder } from './card-grid-builder';
+import { DeckPanel } from './deck-panel';
 
 interface DeckDraftState {
   name: string;
@@ -102,7 +103,6 @@ export function BuilderLayout({ deckId }: { deckId: string }) {
   if (loading) return <p className="p-6">Loading…</p>;
   if (!deck) return <p className="p-6 text-red-500">Deck not found</p>;
 
-  const totalCards = deck.cards.reduce((s, c) => s + c.quantity, 0);
   const leader = deck.leaderCardId ? catalog.find((c) => c.id === deck.leaderCardId) : null;
   const leaderColors = leader ? leader.colors.split(',').filter(Boolean) : [];
 
@@ -132,26 +132,19 @@ export function BuilderLayout({ deckId }: { deckId: string }) {
           onInspect={setInspecting}
         />
       </main>
-      <aside className="w-80 shrink-0 space-y-4 rounded border p-4">
-        <div className="flex items-center justify-between gap-2">
-          <input
-            className="flex-1 rounded border px-2 py-1 text-lg font-semibold"
-            value={deck.name}
-            onChange={(e) => setDeck({ ...deck, name: e.target.value })}
-          />
-          <button
-            className="rounded bg-primary px-3 py-1 text-sm text-primary-foreground disabled:opacity-50"
-            onClick={handleSave}
-            disabled={saving}
-          >
-            {saving ? 'Saving…' : 'Save'}
-          </button>
-        </div>
-        <p className="text-xs text-muted-foreground">
-          Leader: {deck.leaderCardId ?? 'none'} · {totalCards}/50
-        </p>
-        <p className="text-xs text-muted-foreground">(DeckPanel — Task 11)</p>
-      </aside>
+      <DeckPanel
+        name={deck.name}
+        leader={leader ?? null}
+        catalog={catalog}
+        cards={deck.cards}
+        onNameChange={(n) => setDeck((d) => (d ? { ...d, name: n } : d))}
+        onLeaderChange={(l) => setDeck((d) => (d ? { ...d, leaderCardId: l.id } : d))}
+        onAdd={addCard}
+        onRemove={removeCard}
+        onImport={(parsed) => setDeck((d) => (d ? { ...d, cards: parsed.cards } : d))}
+        onSave={handleSave}
+        saving={saving}
+      />
       <CardDetailDialog
         card={inspecting}
         open={!!inspecting}
