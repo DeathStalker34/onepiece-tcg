@@ -8,7 +8,7 @@ import { runRefresh } from './phases/refresh';
 import { runDraw } from './phases/draw';
 import { runDon } from './phases/don';
 import { runEnd } from './phases/end';
-import { playCharacter, playEvent, playStage } from './phases/main';
+import { playCharacter, playEvent, playStage, attachDon, activateMain } from './phases/main';
 
 export interface ApplyResult {
   state: GameState;
@@ -111,6 +111,22 @@ export function apply(state: GameState, action: Action): ApplyResult {
 
     case 'PlayStage': {
       const r = playStage(state, action);
+      if (r.error) return errorResult(state, r.error);
+      next = r.state;
+      events = r.events;
+      break;
+    }
+
+    case 'AttachDon': {
+      const r = attachDon(state, action);
+      if (r.error) return errorResult(state, r.error);
+      next = r.state;
+      events = r.events;
+      break;
+    }
+
+    case 'ActivateMain': {
+      const r = activateMain(state, action);
       if (r.error) return errorResult(state, r.error);
       next = r.state;
       events = r.events;

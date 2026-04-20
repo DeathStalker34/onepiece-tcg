@@ -474,3 +474,131 @@ describe('Main phase — PlayStage', () => {
     expect(res.state.players[0].trash).toContain('TEST-OLD-STAGE');
   });
 });
+
+describe('Main phase — AttachDon', () => {
+  function postMulliganInMain() {
+    let s = createInitialState(mkSetup());
+    s = apply(s, { kind: 'Mulligan', player: 0, mulligan: false }).state;
+    s = apply(s, { kind: 'Mulligan', player: 1, mulligan: false }).state;
+    s = apply(s, { kind: 'PassPhase', player: 0 }).state;
+    s = apply(s, { kind: 'PassPhase', player: 0 }).state;
+    s = apply(s, { kind: 'PassPhase', player: 0 }).state;
+    return s;
+  }
+
+  it('attaches 1 DON to leader', () => {
+    let s = postMulliganInMain();
+    s = { ...s, players: [{ ...s.players[0], donActive: 3 }, s.players[1]] as typeof s.players };
+    const res = apply(s, { kind: 'AttachDon', player: 0, target: { kind: 'Leader' } });
+    expect(res.error).toBeUndefined();
+    expect(res.state.players[0].donActive).toBe(2);
+    expect(res.state.players[0].leader.attachedDon).toBe(1);
+  });
+
+  it('attaches 1 DON to a character', () => {
+    let s = postMulliganInMain();
+    const charInstanceId = 'char-1';
+    s = {
+      ...s,
+      players: [
+        {
+          ...s.players[0],
+          donActive: 3,
+          characters: [
+            {
+              instanceId: charInstanceId,
+              cardId: 'TEST-CHAR-BASIC-01',
+              rested: false,
+              attachedDon: 0,
+              powerThisTurn: 0,
+              summoningSickness: false,
+              usedBlockerThisTurn: false,
+            },
+          ],
+        },
+        s.players[1],
+      ] as typeof s.players,
+    };
+    const res = apply(s, {
+      kind: 'AttachDon',
+      player: 0,
+      target: { kind: 'Character', instanceId: charInstanceId },
+    });
+    expect(res.error).toBeUndefined();
+    expect(res.state.players[0].characters[0].attachedDon).toBe(1);
+    expect(res.state.players[0].donActive).toBe(2);
+  });
+
+  it('errors NotEnoughDon at 0', () => {
+    let s = postMulliganInMain();
+    s = { ...s, players: [{ ...s.players[0], donActive: 0 }, s.players[1]] as typeof s.players };
+    const res = apply(s, { kind: 'AttachDon', player: 0, target: { kind: 'Leader' } });
+    expect(res.error?.code).toBe('NotEnoughDon');
+  });
+
+  it('errors InvalidTarget for unknown instanceId', () => {
+    const s = postMulliganInMain();
+    const res = apply(s, {
+      kind: 'AttachDon',
+      player: 0,
+      target: { kind: 'Character', instanceId: 'does-not-exist' },
+    });
+    expect(res.error?.code).toBe('InvalidTarget');
+  });
+});
+
+describe('Main phase — ActivateMain', () => {
+  function postMulliganInMain() {
+    let s = createInitialState(mkSetup());
+    s = apply(s, { kind: 'Mulligan', player: 0, mulligan: false }).state;
+    s = apply(s, { kind: 'Mulligan', player: 1, mulligan: false }).state;
+    s = apply(s, { kind: 'PassPhase', player: 0 }).state;
+    s = apply(s, { kind: 'PassPhase', player: 0 }).state;
+    s = apply(s, { kind: 'PassPhase', player: 0 }).state;
+    return s;
+  }
+
+  it('activates leader Activate:Main (TEST-LEADER-01 → +1000 power this turn)', () => {
+    const s = postMulliganInMain();
+    const res = apply(s, { kind: 'ActivateMain', player: 0, source: { kind: 'Leader' } });
+    expect(res.error).toBeUndefined();
+    expect(res.state.players[0].leader.rested).toBe(true);
+    expect(res.state.players[0].leader.powerThisTurn).toBe(1000);
+  });
+
+  it('errors CharacterIsRested when leader already rested', () => {
+    let s = postMulliganInMain();
+    s = {
+      ...s,
+      players: [
+        { ...s.players[0], leader: { ...s.players[0].leader, rested: true } },
+        s.players[1],
+      ] as typeof s.players,
+    };
+    const res = apply(s, { kind: 'ActivateMain', player: 0, source: { kind: 'Leader' } });
+    expect(res.error?.code).toBe('CharacterIsRested');
+  });
+
+  it('errors InvalidTarget when source has no Activate:Main effect (leader 2)', () => {
+    let s = postMulliganInMain();
+    s = {
+      ...s,
+      players: [
+        { ...s.players[0], leader: { ...s.players[0].leader, cardId: 'TEST-LEADER-02' } },
+        s.players[1],
+      ] as typeof s.players,
+    };
+    const res = apply(s, { kind: 'ActivateMain', player: 0, source: { kind: 'Leader' } });
+    expect(res.error?.code).toBe('InvalidTarget');
+  });
+
+  it('errors InvalidTarget for unknown character instanceId', () => {
+    const s = postMulliganInMain();
+    const res = apply(s, {
+      kind: 'ActivateMain',
+      player: 0,
+      source: { kind: 'Character', instanceId: 'does-not-exist' },
+    });
+    expect(res.error?.code).toBe('InvalidTarget');
+  });
+});

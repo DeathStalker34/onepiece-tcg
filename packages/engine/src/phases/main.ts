@@ -148,6 +148,163 @@ export function playEvent(
   };
 }
 
+export function attachDon(
+  state: GameState,
+  action: Extract<Action, { kind: 'AttachDon' }>,
+): MainResult {
+  const guard = guardMain(state, action.player);
+  if (guard) return { state, events: [], error: guard };
+
+  const p = state.players[action.player];
+  if (p.donActive < 1) {
+    return { state, events: [], error: { code: 'NotEnoughDon', need: 1, have: p.donActive } };
+  }
+
+  let updatedPlayer = p;
+  let targetLabel = '';
+  if (action.target.kind === 'Leader') {
+    updatedPlayer = {
+      ...p,
+      donActive: p.donActive - 1,
+      leader: { ...p.leader, attachedDon: p.leader.attachedDon + 1 },
+    };
+    targetLabel = p.leader.cardId;
+  } else {
+    const targetInstanceId = action.target.instanceId;
+    const charIdx = p.characters.findIndex((c) => c.instanceId === targetInstanceId);
+    if (charIdx === -1) {
+      return {
+        state,
+        events: [],
+        error: { code: 'InvalidTarget', reason: 'character not found' },
+      };
+    }
+    const newChars = [...p.characters];
+    newChars[charIdx] = {
+      ...newChars[charIdx],
+      attachedDon: newChars[charIdx].attachedDon + 1,
+    };
+    updatedPlayer = { ...p, donActive: p.donActive - 1, characters: newChars };
+    targetLabel = newChars[charIdx].instanceId;
+  }
+
+  const nextPlayers = state.players.map((pp, i) =>
+    i === action.player ? updatedPlayer : pp,
+  ) as GameState['players'];
+
+  return {
+    state: { ...state, players: nextPlayers },
+    events: [{ kind: 'DonAttached', player: action.player, target: targetLabel, amount: 1 }],
+  };
+}
+
+export function activateMain(
+  state: GameState,
+  action: Extract<Action, { kind: 'ActivateMain' }>,
+): MainResult {
+  const guard = guardMain(state, action.player);
+  if (guard) return { state, events: [], error: guard };
+
+  const p = state.players[action.player];
+
+  if (action.source.kind === 'Leader') {
+    const card = state.catalog[p.leader.cardId];
+    if (!card) {
+      return { state, events: [], error: { code: 'Unknown', detail: 'leader not in catalog' } };
+    }
+    const eff = card.effects.find((e) => e.trigger === 'Activate:Main');
+    if (!eff) {
+      return {
+        state,
+        events: [],
+        error: { code: 'InvalidTarget', reason: 'no Activate:Main on leader' },
+      };
+    }
+    if (p.leader.rested) {
+      return { state, events: [], error: { code: 'CharacterIsRested' } };
+    }
+    // Task 13 will wire the full declarative effect executor. For now, handle the
+    // single case used by TEST-LEADER-01: `power { self, delta, thisTurn }`.
+    if (eff.effect.kind !== 'power' || eff.effect.target.kind !== 'self') {
+      return {
+        state,
+        events: [],
+        error: {
+          code: 'Unknown',
+          detail: `Activate:Main effect kind ${eff.effect.kind} not yet supported — Task 13`,
+        },
+      };
+    }
+    const delta = eff.effect.delta;
+    const updatedPlayer = {
+      ...p,
+      leader: {
+        ...p.leader,
+        rested: true,
+        powerThisTurn: p.leader.powerThisTurn + delta,
+      },
+    };
+    const nextPlayers = state.players.map((pp, i) =>
+      i === action.player ? updatedPlayer : pp,
+    ) as GameState['players'];
+    return {
+      state: { ...state, players: nextPlayers },
+      events: [{ kind: 'EffectResolved', effect: eff.effect, sourceCardId: card.id }],
+    };
+  }
+
+  // Character source
+  const sourceInstanceId = action.source.instanceId;
+  const charIdx = p.characters.findIndex((c) => c.instanceId === sourceInstanceId);
+  if (charIdx === -1) {
+    return {
+      state,
+      events: [],
+      error: { code: 'InvalidTarget', reason: 'character not found' },
+    };
+  }
+  const char = p.characters[charIdx];
+  if (char.rested) {
+    return { state, events: [], error: { code: 'CharacterIsRested' } };
+  }
+  const card = state.catalog[char.cardId];
+  if (!card) {
+    return { state, events: [], error: { code: 'Unknown', detail: 'card not in catalog' } };
+  }
+  const eff = card.effects.find((e) => e.trigger === 'Activate:Main');
+  if (!eff) {
+    return {
+      state,
+      events: [],
+      error: { code: 'InvalidTarget', reason: 'no Activate:Main on character' },
+    };
+  }
+  if (eff.effect.kind !== 'power' || eff.effect.target.kind !== 'self') {
+    return {
+      state,
+      events: [],
+      error: {
+        code: 'Unknown',
+        detail: `Activate:Main effect kind ${eff.effect.kind} not yet supported — Task 13`,
+      },
+    };
+  }
+  const newChars = [...p.characters];
+  newChars[charIdx] = {
+    ...char,
+    rested: true,
+    powerThisTurn: char.powerThisTurn + eff.effect.delta,
+  };
+  const updatedPlayer = { ...p, characters: newChars };
+  const nextPlayers = state.players.map((pp, i) =>
+    i === action.player ? updatedPlayer : pp,
+  ) as GameState['players'];
+  return {
+    state: { ...state, players: nextPlayers },
+    events: [{ kind: 'EffectResolved', effect: eff.effect, sourceCardId: card.id }],
+  };
+}
+
 export function playStage(
   state: GameState,
   action: Extract<Action, { kind: 'PlayStage' }>,
