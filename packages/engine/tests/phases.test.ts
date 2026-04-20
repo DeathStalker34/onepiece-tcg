@@ -279,3 +279,198 @@ describe('legalActions', () => {
     expect(res.legalActions).toEqual([]);
   });
 });
+
+describe('Main phase — PlayCharacter', () => {
+  function postMulliganInMain(setup = mkSetup()) {
+    let s = createInitialState(setup);
+    s = apply(s, { kind: 'Mulligan', player: 0, mulligan: false }).state;
+    s = apply(s, { kind: 'Mulligan', player: 1, mulligan: false }).state;
+    // Advance to Main for p0 (Refresh → Draw skip → Don → Main)
+    s = apply(s, { kind: 'PassPhase', player: 0 }).state;
+    s = apply(s, { kind: 'PassPhase', player: 0 }).state;
+    s = apply(s, { kind: 'PassPhase', player: 0 }).state;
+    return s;
+  }
+
+  it('plays a character paying the cost', () => {
+    let s = postMulliganInMain();
+    // Inject a cost-1 character at handIndex 0
+    s = {
+      ...s,
+      players: [
+        {
+          ...s.players[0],
+          hand: ['TEST-CHAR-BASIC-01', ...s.players[0].hand.slice(1)],
+          donActive: 3,
+        },
+        s.players[1],
+      ] as typeof s.players,
+    };
+    const res = apply(s, { kind: 'PlayCharacter', player: 0, handIndex: 0, donSpent: 0 });
+    expect(res.error).toBeUndefined();
+    expect(res.state.players[0].characters.length).toBe(1);
+    expect(res.state.players[0].characters[0].cardId).toBe('TEST-CHAR-BASIC-01');
+    expect(res.state.players[0].donActive).toBe(2); // cost 1 paid
+    expect(res.state.players[0].hand.length).toBe(s.players[0].hand.length - 1);
+  });
+
+  it('errors NotEnoughDon when insufficient', () => {
+    let s = postMulliganInMain();
+    s = {
+      ...s,
+      players: [
+        { ...s.players[0], hand: ['TEST-CHAR-RUSH'], donActive: 2 }, // cost 4, only 2 don
+        s.players[1],
+      ] as typeof s.players,
+    };
+    const res = apply(s, { kind: 'PlayCharacter', player: 0, handIndex: 0, donSpent: 0 });
+    expect(res.error?.code).toBe('NotEnoughDon');
+  });
+
+  it('Rush character has summoningSickness=false', () => {
+    let s = postMulliganInMain();
+    s = {
+      ...s,
+      players: [
+        { ...s.players[0], hand: ['TEST-CHAR-RUSH'], donActive: 10 },
+        s.players[1],
+      ] as typeof s.players,
+    };
+    const res = apply(s, { kind: 'PlayCharacter', player: 0, handIndex: 0, donSpent: 0 });
+    expect(res.state.players[0].characters[0].summoningSickness).toBe(false);
+  });
+
+  it('non-Rush character has summoningSickness=true', () => {
+    let s = postMulliganInMain();
+    s = {
+      ...s,
+      players: [
+        { ...s.players[0], hand: ['TEST-CHAR-BASIC-01'], donActive: 5 },
+        s.players[1],
+      ] as typeof s.players,
+    };
+    const res = apply(s, { kind: 'PlayCharacter', player: 0, handIndex: 0, donSpent: 0 });
+    expect(res.state.players[0].characters[0].summoningSickness).toBe(true);
+  });
+
+  it('errors MaxCharactersReached at 5 chars already', () => {
+    let s = postMulliganInMain();
+    const fillerChars = Array.from({ length: 5 }, (_, i) => ({
+      instanceId: `fake-${i}`,
+      cardId: 'TEST-CHAR-BASIC-01',
+      rested: false,
+      attachedDon: 0,
+      powerThisTurn: 0,
+      summoningSickness: false,
+      usedBlockerThisTurn: false,
+    }));
+    s = {
+      ...s,
+      players: [
+        { ...s.players[0], hand: ['TEST-CHAR-BASIC-01'], donActive: 5, characters: fillerChars },
+        s.players[1],
+      ] as typeof s.players,
+    };
+    const res = apply(s, { kind: 'PlayCharacter', player: 0, handIndex: 0, donSpent: 0 });
+    expect(res.error?.code).toBe('MaxCharactersReached');
+  });
+
+  it('errors CardNotInHand for invalid handIndex', () => {
+    const s = postMulliganInMain();
+    const res = apply(s, { kind: 'PlayCharacter', player: 0, handIndex: 999, donSpent: 0 });
+    expect(res.error?.code).toBe('CardNotInHand');
+  });
+
+  it('cannot play outside Main phase', () => {
+    const s0 = createInitialState(mkSetup());
+    const res = apply(s0, { kind: 'PlayCharacter', player: 0, handIndex: 0, donSpent: 0 });
+    // In Setup mulligan window → NotYourPriority (priority guards)
+    expect(res.error).toBeDefined();
+  });
+});
+
+describe('Main phase — PlayEvent', () => {
+  function postMulliganInMain() {
+    let s = createInitialState(mkSetup());
+    s = apply(s, { kind: 'Mulligan', player: 0, mulligan: false }).state;
+    s = apply(s, { kind: 'Mulligan', player: 1, mulligan: false }).state;
+    s = apply(s, { kind: 'PassPhase', player: 0 }).state;
+    s = apply(s, { kind: 'PassPhase', player: 0 }).state;
+    s = apply(s, { kind: 'PassPhase', player: 0 }).state;
+    return s;
+  }
+
+  it('event goes to trash after play', () => {
+    let s = postMulliganInMain();
+    s = {
+      ...s,
+      players: [
+        { ...s.players[0], hand: ['TEST-EVENT-KO'], donActive: 5 },
+        s.players[1],
+      ] as typeof s.players,
+    };
+    const res = apply(s, { kind: 'PlayEvent', player: 0, handIndex: 0, donSpent: 0 });
+    expect(res.error).toBeUndefined();
+    expect(res.state.players[0].trash).toContain('TEST-EVENT-KO');
+    expect(res.state.players[0].hand).not.toContain('TEST-EVENT-KO');
+    expect(res.state.players[0].donActive).toBe(1); // cost 4
+  });
+
+  it('wrong card type → InvalidTarget', () => {
+    let s = postMulliganInMain();
+    s = {
+      ...s,
+      players: [
+        { ...s.players[0], hand: ['TEST-CHAR-BASIC-01'], donActive: 5 },
+        s.players[1],
+      ] as typeof s.players,
+    };
+    const res = apply(s, { kind: 'PlayEvent', player: 0, handIndex: 0, donSpent: 0 });
+    expect(res.error?.code).toBe('InvalidTarget');
+  });
+});
+
+describe('Main phase — PlayStage', () => {
+  function postMulliganInMain() {
+    let s = createInitialState(mkSetup());
+    s = apply(s, { kind: 'Mulligan', player: 0, mulligan: false }).state;
+    s = apply(s, { kind: 'Mulligan', player: 1, mulligan: false }).state;
+    s = apply(s, { kind: 'PassPhase', player: 0 }).state;
+    s = apply(s, { kind: 'PassPhase', player: 0 }).state;
+    s = apply(s, { kind: 'PassPhase', player: 0 }).state;
+    return s;
+  }
+
+  it('places a stage', () => {
+    let s = postMulliganInMain();
+    s = {
+      ...s,
+      players: [
+        { ...s.players[0], hand: ['TEST-STAGE-01'], donActive: 5 },
+        s.players[1],
+      ] as typeof s.players,
+    };
+    const res = apply(s, { kind: 'PlayStage', player: 0, handIndex: 0, donSpent: 0 });
+    expect(res.error).toBeUndefined();
+    expect(res.state.players[0].stage).toEqual({ cardId: 'TEST-STAGE-01' });
+  });
+
+  it('replaces existing stage, sending old to trash', () => {
+    let s = postMulliganInMain();
+    s = {
+      ...s,
+      players: [
+        {
+          ...s.players[0],
+          hand: ['TEST-STAGE-01'],
+          donActive: 5,
+          stage: { cardId: 'TEST-OLD-STAGE' },
+        },
+        s.players[1],
+      ] as typeof s.players,
+    };
+    const res = apply(s, { kind: 'PlayStage', player: 0, handIndex: 0, donSpent: 0 });
+    expect(res.state.players[0].stage?.cardId).toBe('TEST-STAGE-01');
+    expect(res.state.players[0].trash).toContain('TEST-OLD-STAGE');
+  });
+});

@@ -8,6 +8,7 @@ import { runRefresh } from './phases/refresh';
 import { runDraw } from './phases/draw';
 import { runDon } from './phases/don';
 import { runEnd } from './phases/end';
+import { playCharacter, playEvent, playStage } from './phases/main';
 
 export interface ApplyResult {
   state: GameState;
@@ -89,6 +90,30 @@ export function apply(state: GameState, action: Action): ApplyResult {
       const nextTurnRes = startNextTurn(endRes.state);
       next = nextTurnRes.state;
       events = [...endRes.events, ...nextTurnRes.events];
+      break;
+    }
+
+    case 'PlayCharacter': {
+      const r = playCharacter(state, action);
+      if (r.error) return errorResult(state, r.error);
+      next = r.state;
+      events = r.events;
+      break;
+    }
+
+    case 'PlayEvent': {
+      const r = playEvent(state, action);
+      if (r.error) return errorResult(state, r.error);
+      next = r.state;
+      events = r.events;
+      break;
+    }
+
+    case 'PlayStage': {
+      const r = playStage(state, action);
+      if (r.error) return errorResult(state, r.error);
+      next = r.state;
+      events = r.events;
       break;
     }
 
