@@ -8,4 +8,8 @@ if (process.env.NODE_ENV !== 'production') {
   globalForPrisma.prisma = prisma;
 }
 
+export { ApitcgAdapter } from './adapters/apitcg';
+export type { CardDataService } from './service';
+export { CARD_TYPES } from './types';
+export type { CardType, DomainCard, RawCard } from './types';
 export type { Card } from '@prisma/client';
