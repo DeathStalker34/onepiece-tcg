@@ -133,6 +133,57 @@ describe('ApitcgAdapter.listCardsInSet', () => {
     expect(calls[0]).not.toContain('set=OP01');
   });
 
+  it('paginates through totalPages and concatenates results', async () => {
+    const page1 = {
+      page: 1,
+      limit: 100,
+      total: 150,
+      totalPages: 2,
+      data: Array.from({ length: 100 }, (_, i) => ({
+        id: `OP01-${String(i + 1).padStart(3, '0')}`,
+        code: `OP01-${String(i + 1).padStart(3, '0')}`,
+        name: `Card ${i + 1}`,
+        rarity: 'C',
+        type: 'CHARACTER',
+        cost: 1,
+        power: 1000,
+        color: 'Red',
+        ability: '',
+        set: { name: 'Romance Dawn' },
+        images: { large: `https://example.com/OP01-${String(i + 1).padStart(3, '0')}.png` },
+      })),
+    };
+    const page2 = {
+      page: 2,
+      limit: 100,
+      total: 150,
+      totalPages: 2,
+      data: Array.from({ length: 50 }, (_, i) => ({
+        id: `OP01-${String(i + 101).padStart(3, '0')}`,
+        code: `OP01-${String(i + 101).padStart(3, '0')}`,
+        name: `Card ${i + 101}`,
+        rarity: 'C',
+        type: 'CHARACTER',
+        cost: 1,
+        power: 1000,
+        color: 'Red',
+        ability: '',
+        set: { name: 'Romance Dawn' },
+        images: { large: `https://example.com/OP01-${String(i + 101).padStart(3, '0')}.png` },
+      })),
+    };
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async (url: string) => {
+        if (url.includes('page=2')) return new Response(JSON.stringify(page2), { status: 200 });
+        return new Response(JSON.stringify(page1), { status: 200 });
+      }),
+    );
+    const adapter = new ApitcgAdapter();
+    const cards = await adapter.listCardsInSet('OP01');
+    expect(cards).toHaveLength(150);
+  });
+
   it('filters out alt-art variants where id !== code', async () => {
     const payload = {
       data: [

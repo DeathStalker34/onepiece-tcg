@@ -4,8 +4,13 @@ import { rawToDomain } from '../helpers';
 import { RawCardSchema, type DomainCard } from '../types';
 
 const DEFAULT_BASE_URL = 'https://www.apitcg.com/api/one-piece';
+const PAGE_LIMIT = 100;
 
 const ResponseSchema = z.object({
+  page: z.number().int().optional(),
+  limit: z.number().int().optional(),
+  total: z.number().int().optional(),
+  totalPages: z.number().int().optional(),
   data: z.array(RawCardSchema),
 });
 
@@ -24,22 +29,31 @@ export class ApitcgAdapter implements CardDataService {
   }
 
   async listCardsInSet(setId: string): Promise<DomainCard[]> {
-    const url = `${this.baseUrl}/cards?code=${encodeURIComponent(setId)}`;
     const headers: Record<string, string> = { accept: 'application/json' };
     if (this.apiKey) headers['x-api-key'] = this.apiKey;
 
-    const res = await fetch(url, { headers });
-    if (!res.ok) {
-      throw new Error(`apitcg returned ${res.status} for set ${setId}`);
-    }
+    const allRaw: z.infer<typeof RawCardSchema>[] = [];
+    let page = 1;
+    let totalPages = 1;
+    do {
+      const url = `${this.baseUrl}/cards?code=${encodeURIComponent(setId)}&limit=${PAGE_LIMIT}&page=${page}`;
+      const res = await fetch(url, { headers });
+      if (!res.ok) {
+        throw new Error(`apitcg returned ${res.status} for set ${setId}`);
+      }
 
-    const json = (await res.json()) as unknown;
-    if (typeof json === 'object' && json !== null && 'error' in json) {
-      const message = String((json as { error: unknown }).error);
-      throw new Error(`apitcg error: ${message}`);
-    }
-    const parsed = ResponseSchema.parse(json);
-    const baseCards = parsed.data.filter((c) => !c.code || c.id === c.code);
+      const json = (await res.json()) as unknown;
+      if (typeof json === 'object' && json !== null && 'error' in json) {
+        const message = String((json as { error: unknown }).error);
+        throw new Error(`apitcg error: ${message}`);
+      }
+      const parsed = ResponseSchema.parse(json);
+      allRaw.push(...parsed.data);
+      totalPages = parsed.totalPages ?? 1;
+      page += 1;
+    } while (page <= totalPages);
+
+    const baseCards = allRaw.filter((c) => !c.code || c.id === c.code);
     return baseCards.map(rawToDomain);
   }
 
