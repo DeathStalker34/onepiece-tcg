@@ -67,6 +67,23 @@ describe('ApitcgAdapter.listCardsInSet', () => {
     await expect(adapter.listCardsInSet('OP01')).rejects.toThrow();
   });
 
+  it('throws with the apitcg error message when the upstream returns an error envelope', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(
+        async () =>
+          new Response(
+            JSON.stringify({
+              error: 'API key is required, register into: https://apitcg.com/platform',
+            }),
+            { status: 200 },
+          ),
+      ),
+    );
+    const adapter = new ApitcgAdapter();
+    await expect(adapter.listCardsInSet('OP01')).rejects.toThrow(/API key is required/);
+  });
+
   it('imageUrlFor returns the DomainCard.sourceImageUrl', async () => {
     const adapter = new ApitcgAdapter();
     const cards = await adapter.listCardsInSet('OP01');

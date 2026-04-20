@@ -34,6 +34,10 @@ export class ApitcgAdapter implements CardDataService {
     }
 
     const json = (await res.json()) as unknown;
+    if (typeof json === 'object' && json !== null && 'error' in json) {
+      const message = String((json as { error: unknown }).error);
+      throw new Error(`apitcg error: ${message}`);
+    }
     const parsed = ResponseSchema.parse(json);
     return parsed.data.map(rawToDomain);
   }
