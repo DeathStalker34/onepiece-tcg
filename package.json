@@ -15,6 +15,7 @@
     "lint": "turbo run lint",
     "typecheck": "turbo run typecheck",
     "test": "turbo run test",
+    "cards:sync": "pnpm --filter @optcg/card-data sync",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "prepare": "husky"
