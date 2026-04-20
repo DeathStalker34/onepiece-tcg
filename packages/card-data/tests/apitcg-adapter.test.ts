@@ -89,4 +89,60 @@ describe('ApitcgAdapter.listCardsInSet', () => {
     const cards = await adapter.listCardsInSet('OP01');
     expect(adapter.imageUrlFor(cards[0])).toBe(cards[0].sourceImageUrl);
   });
+
+  it('queries apitcg with ?code=<setId>, not ?set=', async () => {
+    const calls: string[] = [];
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async (url: string) => {
+        calls.push(url);
+        return new Response(JSON.stringify(fixture), { status: 200 });
+      }),
+    );
+    const adapter = new ApitcgAdapter();
+    await adapter.listCardsInSet('OP01');
+    expect(calls[0]).toContain('code=OP01');
+    expect(calls[0]).not.toContain('set=OP01');
+  });
+
+  it('filters out alt-art variants where id !== code', async () => {
+    const payload = {
+      data: [
+        {
+          id: 'OP01-060',
+          code: 'OP01-060',
+          name: 'Red-Haired Shanks',
+          rarity: 'SR',
+          type: 'CHARACTER',
+          cost: 5,
+          power: 6000,
+          color: 'Red',
+          ability: 'Rush.',
+          set: { id: 'OP01', name: 'Romance Dawn' },
+          images: { large: 'https://example.com/OP01-060.png' },
+        },
+        {
+          id: 'OP01-060_p2',
+          code: 'OP01-060',
+          name: 'Red-Haired Shanks',
+          rarity: 'SR',
+          type: 'CHARACTER',
+          cost: 5,
+          power: 6000,
+          color: 'Red',
+          ability: 'Rush.',
+          set: { id: 'OP01', name: 'Romance Dawn' },
+          images: { large: 'https://example.com/OP01-060_p2.png' },
+        },
+      ],
+    };
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async () => new Response(JSON.stringify(payload), { status: 200 })),
+    );
+    const adapter = new ApitcgAdapter();
+    const cards = await adapter.listCardsInSet('OP01');
+    expect(cards).toHaveLength(1);
+    expect(cards[0].id).toBe('OP01-060');
+  });
 });

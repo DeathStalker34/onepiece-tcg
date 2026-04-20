@@ -69,6 +69,10 @@ export async function runSync(opts: SyncOptions): Promise<SyncSummary> {
 
   for (const setId of opts.sets) {
     const cards = await opts.service.listCardsInSet(setId);
+    if (cards.length === 0) {
+      console.warn(`[sync] ${setId} returned 0 cards — check filter and set code`);
+      continue;
+    }
     for (const card of cards) {
       const imagePath = `/cards/${card.setId}/${card.id}.webp`;
       const absImage = join(opts.imagesDir, card.setId, `${card.id}.webp`);

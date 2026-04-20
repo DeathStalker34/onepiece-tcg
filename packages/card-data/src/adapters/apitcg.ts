@@ -24,7 +24,7 @@ export class ApitcgAdapter implements CardDataService {
   }
 
   async listCardsInSet(setId: string): Promise<DomainCard[]> {
-    const url = `${this.baseUrl}/cards?set=${encodeURIComponent(setId)}`;
+    const url = `${this.baseUrl}/cards?code=${encodeURIComponent(setId)}`;
     const headers: Record<string, string> = { accept: 'application/json' };
     if (this.apiKey) headers['x-api-key'] = this.apiKey;
 
@@ -39,7 +39,8 @@ export class ApitcgAdapter implements CardDataService {
       throw new Error(`apitcg error: ${message}`);
     }
     const parsed = ResponseSchema.parse(json);
-    return parsed.data.map(rawToDomain);
+    const baseCards = parsed.data.filter((c) => !c.code || c.id === c.code);
+    return baseCards.map(rawToDomain);
   }
 
   imageUrlFor(card: DomainCard): string {
