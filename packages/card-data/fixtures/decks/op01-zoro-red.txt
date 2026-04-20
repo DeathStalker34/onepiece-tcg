@@ -1,0 +1,15 @@
+# OP01 Red deck - Leader: OP01-001 Roronoa Zoro
+# Fixture for parser tests; may not be a fully legal 50-card deck.
+4x OP01-013
+4x OP01-015
+4x OP01-016
+4x OP01-017
+4x OP01-019
+4x OP01-024
+4x OP01-025
+2x OP01-014
+2x OP01-022
+2x OP01-023
+2x OP01-026
+2x OP01-029
+1x OP01-120

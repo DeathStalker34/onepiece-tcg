@@ -1,0 +1,17 @@
+# OP02 Black deck - Leader: OP02-093 Smoker
+# Fixture for parser tests; may not be a fully legal 50-card deck.
+4x OP02-097
+4x OP02-100
+4x OP02-102
+4x OP02-105
+4x OP02-108
+4x OP02-113
+4x OP02-114
+2x OP02-094
+2x OP02-096
+2x OP02-098
+2x OP02-109
+2x OP02-115
+2x OP02-119
+1x OP02-099
+1x OP02-121
