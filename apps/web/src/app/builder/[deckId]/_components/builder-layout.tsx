@@ -31,6 +31,8 @@ export function BuilderLayout({ deckId }: { deckId: string }) {
   const [catalog, setCatalog] = useState<Card[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [saveStatus, setSaveStatus] = useState<'idle' | 'saved' | 'error'>('idle');
+  const [saveError, setSaveError] = useState<string | null>(null);
   const [filters, setFilters] = useState<BuilderFilters>(INITIAL_FILTERS);
   const [inspecting, setInspecting] = useState<Card | null>(null);
 
@@ -56,16 +58,32 @@ export function BuilderLayout({ deckId }: { deckId: string }) {
   async function handleSave() {
     if (!user || !deck) return;
     setSaving(true);
-    await fetch(`/api/decks/${deckId}`, {
-      method: 'PUT',
-      headers: { 'content-type': 'application/json', 'x-user-id': user.id },
-      body: JSON.stringify({
-        name: deck.name,
-        leaderCardId: deck.leaderCardId,
-        cards: deck.cards,
-      }),
-    });
-    setSaving(false);
+    setSaveStatus('idle');
+    setSaveError(null);
+    try {
+      const res = await fetch(`/api/decks/${deckId}`, {
+        method: 'PUT',
+        headers: { 'content-type': 'application/json', 'x-user-id': user.id },
+        body: JSON.stringify({
+          name: deck.name,
+          leaderCardId: deck.leaderCardId,
+          cards: deck.cards,
+        }),
+      });
+      if (!res.ok) {
+        const body = (await res.json().catch(() => ({}))) as { error?: string };
+        setSaveStatus('error');
+        setSaveError(body.error ?? `HTTP ${res.status}`);
+      } else {
+        setSaveStatus('saved');
+        setTimeout(() => setSaveStatus('idle'), 2000);
+      }
+    } catch (err) {
+      setSaveStatus('error');
+      setSaveError((err as Error).message);
+    } finally {
+      setSaving(false);
+    }
   }
 
   function addCard(cardId: string) {
@@ -143,6 +161,8 @@ export function BuilderLayout({ deckId }: { deckId: string }) {
         onRemove={removeCard}
         onImport={(parsed) => setDeck((d) => (d ? { ...d, cards: parsed.cards } : d))}
         onSave={handleSave}
+        saveStatus={saveStatus}
+        saveError={saveError}
         saving={saving}
       />
       <CardDetailDialog

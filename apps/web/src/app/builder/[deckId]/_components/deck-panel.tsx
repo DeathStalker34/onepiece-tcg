@@ -19,6 +19,8 @@ interface Props {
   onRemove: (cardId: string) => void;
   onImport: (parsed: { cards: Array<{ cardId: string; quantity: number }> }) => void;
   onSave: () => void;
+  saveStatus: 'idle' | 'saved' | 'error';
+  saveError: string | null;
   saving: boolean;
 }
 
@@ -33,6 +35,8 @@ export function DeckPanel({
   onRemove,
   onImport,
   onSave,
+  saveStatus,
+  saveError,
   saving,
 }: Props) {
   const cardIndex = new Map<string, CardRow>(
@@ -58,16 +62,28 @@ export function DeckPanel({
 
   return (
     <aside className="flex w-80 shrink-0 flex-col gap-3 rounded border p-4">
-      <div className="flex items-center gap-2">
-        <input
-          className="flex-1 rounded border px-2 py-1 text-lg font-semibold"
-          value={name}
-          onChange={(e) => onNameChange(e.target.value)}
-          aria-label="Deck name"
-        />
-        <Button onClick={onSave} disabled={saving}>
-          {saving ? 'Saving…' : 'Save'}
-        </Button>
+      <div className="space-y-1">
+        <div className="flex items-center gap-2">
+          <input
+            className="flex-1 rounded border px-2 py-1 text-lg font-semibold"
+            value={name}
+            onChange={(e) => onNameChange(e.target.value)}
+            aria-label="Deck name"
+          />
+          <Button onClick={onSave} disabled={saving}>
+            {saving ? 'Saving…' : 'Save'}
+          </Button>
+        </div>
+        {saveStatus === 'saved' && (
+          <p className="text-right text-xs text-green-600" role="status">
+            ✓ Saved
+          </p>
+        )}
+        {saveStatus === 'error' && (
+          <p className="text-right text-xs text-red-600" role="alert">
+            Save failed{saveError ? `: ${saveError}` : ''}
+          </p>
+        )}
       </div>
 
       <LeaderPicker catalog={catalog} current={leader} onPick={onLeaderChange} />
