@@ -96,6 +96,52 @@ describe('parseDeckText', () => {
     expect(r.cards.map((c) => c.cardId)).toContain('OP01-001');
     expect(r.cards.map((c) => c.cardId)).toContain('ST21-014');
   });
+
+  it('parses "N (ID)" parenthesized format', () => {
+    const r = parseDeckText('4 (OP01-013)\n2 (OP01-014)');
+    expect(r.cards).toEqual([
+      { cardId: 'OP01-013', quantity: 4 },
+      { cardId: 'OP01-014', quantity: 2 },
+    ]);
+  });
+
+  it('parses promo card IDs like P-023', () => {
+    const r = parseDeckText('2 (P-023)\n2xP-017');
+    expect(r.cards).toEqual([
+      { cardId: 'P-017', quantity: 2 },
+      { cardId: 'P-023', quantity: 2 },
+    ]);
+  });
+
+  it('parses the mixed paren-and-promo decklist from the user', () => {
+    const input = [
+      '1 (OP01-001)',
+      '4 (OP01-006)',
+      '4 (OP01-016)',
+      '4 (ST01-006)',
+      '4 (OP01-025)',
+      '4 (OP01-017)',
+      '4 (ST01-012)',
+      '2 (ST01-004)',
+      '4 (ST01-011)',
+      '2 (OP01-022)',
+      '2 (OP01-005)',
+      '2 (P-023)',
+      '2 (ST01-009)',
+      '2 (P-017)',
+      '2 (OP01-012)',
+      '4 (ST01-015)',
+      '2 (OP01-029)',
+      '2 (ST01-016)',
+    ].join('\n');
+    const r = parseDeckText(input);
+    const total = r.cards.reduce((s, c) => s + c.quantity, 0);
+    expect(total).toBe(51);
+    expect(r.cards.map((c) => c.cardId)).toContain('OP01-001');
+    expect(r.cards.map((c) => c.cardId)).toContain('P-023');
+    expect(r.cards.map((c) => c.cardId)).toContain('P-017');
+    expect(r.cards.map((c) => c.cardId)).toContain('ST01-016');
+  });
 });
 
 describe('serializeDeckText', () => {
