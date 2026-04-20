@@ -10,6 +10,9 @@ export default function HomePage() {
         <Button asChild>
           <Link href="/cards">Explore cards</Link>
         </Button>
+        <Button asChild variant="secondary">
+          <Link href="/builder">My decks</Link>
+        </Button>
       </div>
     </main>
   );
