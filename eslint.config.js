@@ -47,6 +47,38 @@ export default tseslint.config(
     },
   },
 
+  // Engine — hard isolation rules
+  {
+    files: ['packages/engine/**/*.{ts,tsx}'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          paths: [
+            {
+              name: '@optcg/card-data',
+              message: 'packages/engine must not import from card-data.',
+            },
+            { name: '@prisma/client', message: 'packages/engine must not touch Prisma.' },
+          ],
+          patterns: [
+            {
+              group: ['react', 'react/*', 'react-dom/*', 'next', 'next/*'],
+              message: 'packages/engine must not import from React/Next.',
+            },
+          ],
+        },
+      ],
+      'no-restricted-syntax': [
+        'error',
+        {
+          selector: "CallExpression[callee.object.name='Math'][callee.property.name='random']",
+          message: 'Use the injected PRNG (rng.ts) — never Math.random in engine code.',
+        },
+      ],
+    },
+  },
+
   // React (apps/web)
   {
     files: ['apps/web/**/*.{ts,tsx}'],
