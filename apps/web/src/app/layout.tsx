@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 import './globals.css';
+import { UserProvider } from '@/lib/user-context';
+import { UserGate } from '@/components/user-gate';
 
 export const metadata: Metadata = {
   title: 'OPTCG Sim',
@@ -10,7 +12,12 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="es">
-      <body className="min-h-screen bg-background text-foreground antialiased">{children}</body>
+      <body className="min-h-screen bg-background text-foreground antialiased">
+        <UserProvider>
+          {children}
+          <UserGate />
+        </UserProvider>
+      </body>
     </html>
   );
 }
