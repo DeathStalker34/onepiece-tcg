@@ -34,3 +34,6 @@ export type {
 export type { Action } from './types/action';
 export type { GameEvent } from './types/event';
 export type { EngineError } from './types/error';
+
+export { validateDeck } from './deck';
+export type { DeckDraft, CardRow, ValidationResult, ValidationIssue } from './deck';
