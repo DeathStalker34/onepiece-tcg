@@ -1,3 +1,5 @@
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { parseDeckText, serializeDeckText, type ParsedDeck } from './deck-txt';
 
@@ -72,5 +74,28 @@ describe('serializeDeckText', () => {
     const text = serializeDeckText(original);
     const reparsed = parseDeckText(text);
     expect(reparsed.cards).toEqual(original.cards);
+  });
+});
+
+describe('parseDeckText fixtures', () => {
+  it('parses op01-zoro-red.txt into a non-empty deck', () => {
+    const content = readFileSync(
+      join(__dirname, '../../../../packages/card-data/fixtures/decks/op01-zoro-red.txt'),
+      'utf8',
+    );
+    const r = parseDeckText(content);
+    expect(r.cards.length).toBeGreaterThan(0);
+    for (const c of r.cards) {
+      expect(c.cardId).toMatch(/^OP\d{2}-\d+/);
+    }
+  });
+
+  it('parses op02-blackbeard-black.txt into a non-empty deck', () => {
+    const content = readFileSync(
+      join(__dirname, '../../../../packages/card-data/fixtures/decks/op02-blackbeard-black.txt'),
+      'utf8',
+    );
+    const r = parseDeckText(content);
+    expect(r.cards.length).toBeGreaterThan(0);
   });
 });
