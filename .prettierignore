@@ -1,0 +1,9 @@
+node_modules
+.next
+dist
+build
+.turbo
+pnpm-lock.yaml
+.superpowers
+apps/web/public/cards
+packages/card-data/prisma/migrations

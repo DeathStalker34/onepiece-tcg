@@ -39,17 +39,17 @@ La clave arquitectónica es un **engine puro en TypeScript** que es la única fu
 
 ## 3. Decisiones confirmadas
 
-| # | Decisión | Valor | Razón |
-|---|---|---|---|
-| 1 | Sets iniciales | **OP01 + OP02** | Cardpool manejable, iteración rápida del parser de efectos. Ampliar en Fase 7. |
-| 2 | Auth MVP | **Username local sin password** | Cero fricción, localStorage + id anónimo. Magic link innecesario para un sim personal. |
-| 3 | Hosting multijugador | **Fly.io** (o Railway) para `apps/server` + Vercel para `apps/web` | Vercel serverless no mantiene conexiones WebSocket largas; Fly sí. |
-| 4 | Idioma UI | **Español primero, i18n-ready desde día 1** | `next-intl` con claves, sin hardcode. Coste marginal bajo ahora, imposible retrofit después. |
-| 5 | Imágenes cartas | **Inglés por defecto, toggle EN/JP en settings** | apitcg.com cubre EN bien; JP aporta valor para seguir meta asiático. |
-| 6 | Long tail de efectos | **Modo manual con botones** (`+1000`, `KO target`, `draw 1`, …) + log al chat | No bloquea partidas por cartas raras. Marcar cartas como "auto" o "manual" según cobertura del parser. |
-| 7 | Dirección visual | **Tabletop cálido** (estilo Hearthstone limpio, tonos madera + dorado, sombras sutiles) | Elegida por el usuario frente a minimalista moderno y navy+rojo OPTCG. |
-| 8 | Dispositivos | **Desktop only** (≥1280 px) | Tablero apaisado no funciona bien en móvil; tablet fuera del MVP. |
-| 9 | Determinismo | **Seed aleatoria por partida** | No hay botón "seed fija"; replay se reconstruye desde log de acciones (la seed vive en el log). |
+| #   | Decisión             | Valor                                                                                   | Razón                                                                                                  |
+| --- | -------------------- | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
+| 1   | Sets iniciales       | **OP01 + OP02**                                                                         | Cardpool manejable, iteración rápida del parser de efectos. Ampliar en Fase 7.                         |
+| 2   | Auth MVP             | **Username local sin password**                                                         | Cero fricción, localStorage + id anónimo. Magic link innecesario para un sim personal.                 |
+| 3   | Hosting multijugador | **Fly.io** (o Railway) para `apps/server` + Vercel para `apps/web`                      | Vercel serverless no mantiene conexiones WebSocket largas; Fly sí.                                     |
+| 4   | Idioma UI            | **Español primero, i18n-ready desde día 1**                                             | `next-intl` con claves, sin hardcode. Coste marginal bajo ahora, imposible retrofit después.           |
+| 5   | Imágenes cartas      | **Inglés por defecto, toggle EN/JP en settings**                                        | apitcg.com cubre EN bien; JP aporta valor para seguir meta asiático.                                   |
+| 6   | Long tail de efectos | **Modo manual con botones** (`+1000`, `KO target`, `draw 1`, …) + log al chat           | No bloquea partidas por cartas raras. Marcar cartas como "auto" o "manual" según cobertura del parser. |
+| 7   | Dirección visual     | **Tabletop cálido** (estilo Hearthstone limpio, tonos madera + dorado, sombras sutiles) | Elegida por el usuario frente a minimalista moderno y navy+rojo OPTCG.                                 |
+| 8   | Dispositivos         | **Desktop only** (≥1280 px)                                                             | Tablero apaisado no funciona bien en móvil; tablet fuera del MVP.                                      |
+| 9   | Determinismo         | **Seed aleatoria por partida**                                                          | No hay botón "seed fija"; replay se reconstruye desde log de acciones (la seed vive en el log).        |
 
 ## 4. Arquitectura
 
@@ -94,10 +94,10 @@ export function createInitialState(setup: MatchSetup): GameState;
 export function apply(state: GameState, action: Action): ApplyResult;
 
 export type ApplyResult = {
-  state: GameState;              // nuevo estado (inmutable; engine nunca muta el input)
-  events: GameEvent[];           // para animaciones y log ("cardDrawn", "attackResolved"…)
-  legalActions: Action[];        // próximas acciones legales dado el turno de prioridad
-  error?: EngineError;           // si la acción era ilegal
+  state: GameState; // nuevo estado (inmutable; engine nunca muta el input)
+  events: GameEvent[]; // para animaciones y log ("cardDrawn", "attackResolved"…)
+  legalActions: Action[]; // próximas acciones legales dado el turno de prioridad
+  error?: EngineError; // si la acción era ilegal
 };
 
 export function validateDeck(deck: DeckList, leader: Card): ValidationResult;
@@ -120,15 +120,15 @@ Cada efecto de carta se representa como árbol serializable:
 
 ```ts
 type Effect =
-  | { kind: 'draw', amount: number }
-  | { kind: 'search', from: 'deck'|'trash', filter: CardFilter, amount: number }
-  | { kind: 'ko', target: TargetSpec }
-  | { kind: 'power', target: TargetSpec, delta: number, duration: 'thisTurn'|'permanent' }
-  | { kind: 'returnToHand', target: TargetSpec }
-  | { kind: 'banish', target: TargetSpec }
-  | { kind: 'sequence', steps: Effect[] }
-  | { kind: 'choice', options: Effect[] }
-  | { kind: 'manual', text: string };   // fallback
+  | { kind: 'draw'; amount: number }
+  | { kind: 'search'; from: 'deck' | 'trash'; filter: CardFilter; amount: number }
+  | { kind: 'ko'; target: TargetSpec }
+  | { kind: 'power'; target: TargetSpec; delta: number; duration: 'thisTurn' | 'permanent' }
+  | { kind: 'returnToHand'; target: TargetSpec }
+  | { kind: 'banish'; target: TargetSpec }
+  | { kind: 'sequence'; steps: Effect[] }
+  | { kind: 'choice'; options: Effect[] }
+  | { kind: 'manual'; text: string }; // fallback
 
 type TriggeredEffect = {
   trigger: 'OnPlay' | 'OnKO' | 'OnAttack' | 'Activate:Main' | 'EndOfTurn' | 'Trigger';
@@ -146,22 +146,22 @@ Catálogo en `packages/engine/src/effects/library.ts` empieza con efectos comune
 
 ```ts
 interface Card {
-  id: string;                    // "OP01-001"
-  setCode: string;               // "OP01"
+  id: string; // "OP01-001"
+  setCode: string; // "OP01"
   name: string;
   type: 'LEADER' | 'CHARACTER' | 'EVENT' | 'STAGE' | 'DON';
-  color: Color[];                // puede ser multicolor
-  cost: number | null;           // null para LEADER y DON
+  color: Color[]; // puede ser multicolor
+  cost: number | null; // null para LEADER y DON
   power: number | null;
   counter: 0 | 1000 | 2000 | null;
-  life: number | null;           // sólo LEADER
-  attribute: Attribute[];        // Slash, Strike, Ranged, Wisdom, Special
-  types: string[];               // ej. "Straw Hat Crew", "Captain"
+  life: number | null; // sólo LEADER
+  attribute: Attribute[]; // Slash, Strike, Ranged, Wisdom, Special
+  types: string[]; // ej. "Straw Hat Crew", "Captain"
   keywords: Keyword[];
-  triggerEffect: string | null;  // texto plano del Trigger
+  triggerEffect: string | null; // texto plano del Trigger
   rawText: string;
-  parsedEffects: TriggeredEffect[];  // vacío si aún no parseada
-  imageUrl: string;              // ruta local en /public/cards/{set}/{id}.webp
+  parsedEffects: TriggeredEffect[]; // vacío si aún no parseada
+  imageUrl: string; // ruta local en /public/cards/{set}/{id}.webp
   rarity: Rarity;
 }
 ```
@@ -171,13 +171,13 @@ interface Card {
 ```ts
 interface GameState {
   matchId: string;
-  seed: string;                  // para PRNG reproducible
-  rngState: number;              // estado actual del PRNG
+  seed: string; // para PRNG reproducible
+  rngState: number; // estado actual del PRNG
   turn: number;
   activePlayer: PlayerId;
-  startingPlayer: PlayerId;      // para aplicar reglas del primer turno
+  startingPlayer: PlayerId; // para aplicar reglas del primer turno
   phase: 'refresh' | 'draw' | 'don' | 'main' | 'end';
-  priority?: PriorityWindow;     // ver §5.3
+  priority?: PriorityWindow; // ver §5.3
   players: Record<PlayerId, PlayerState>;
   pendingTriggers: TriggerInstance[];
   log: ActionLogEntry[];
@@ -187,33 +187,33 @@ interface GameState {
 interface PlayerState {
   id: PlayerId;
   leader: CardInPlay;
-  characters: CardInPlay[];      // máx. 5 (regla OPTCG; verificar ⚠️)
+  characters: CardInPlay[]; // máx. 5 (regla OPTCG; verificar ⚠️)
   stage: CardInPlay | null;
   hand: CardInPlay[];
   deck: CardInPlay[];
   trash: CardInPlay[];
-  life: CardInPlay[];            // boca abajo hasta que se voltean
+  life: CardInPlay[]; // boca abajo hasta que se voltean
   donDeck: DonChip[];
-  donActive: DonChip[];          // en Cost Area
+  donActive: DonChip[]; // en Cost Area
   hasMulliganed: boolean;
 }
 
 interface CardInPlay {
-  uid: string;                   // UUID único por instancia en esta partida
-  cardId: string;                // FK a Card
+  uid: string; // UUID único por instancia en esta partida
+  cardId: string; // FK a Card
   controller: PlayerId;
   zone: Zone;
-  rested: boolean;               // "tapped"
+  rested: boolean; // "tapped"
   attachedDonUids: string[];
-  summoningSick: boolean;        // true el turno que entra si no tiene Rush
-  damage: number;                // no se usa en OPTCG estándar; reservado
-  modifiers: Modifier[];         // efectos temporales (+1000 esta ronda, etc.)
+  summoningSick: boolean; // true el turno que entra si no tiene Rush
+  damage: number; // no se usa en OPTCG estándar; reservado
+  modifiers: Modifier[]; // efectos temporales (+1000 esta ronda, etc.)
 }
 
 interface DonChip {
   uid: string;
   controller: PlayerId;
-  state: { kind: 'active' } | { kind: 'rested' } | { kind: 'attachedTo', targetUid: string };
+  state: { kind: 'active' } | { kind: 'rested' } | { kind: 'attachedTo'; targetUid: string };
 }
 ```
 
@@ -223,9 +223,15 @@ Referencias entre entidades **siempre por UID**, nunca por índice. Esto sobrevi
 
 ```ts
 type PriorityWindow =
-  | { kind: 'counter', defender: PlayerId, attackerUid: string, targetUid: string, blockerDeclared?: string }
-  | { kind: 'triggerChoice', player: PlayerId, options: TriggerOption[] }
-  | { kind: 'onPlayChoice', player: PlayerId, cardUid: string, options: EffectOption[] };
+  | {
+      kind: 'counter';
+      defender: PlayerId;
+      attackerUid: string;
+      targetUid: string;
+      blockerDeclared?: string;
+    }
+  | { kind: 'triggerChoice'; player: PlayerId; options: TriggerOption[] }
+  | { kind: 'onPlayChoice'; player: PlayerId; cardUid: string; options: EffectOption[] };
 ```
 
 Mientras `state.priority` esté definido, `engine.apply()` sólo acepta acciones apropiadas a ese window. Esto hace el Counter Step explícito en el estado, serializable y fácil de renderizar en UI como un modal/panel lateral.
@@ -234,19 +240,19 @@ Mientras `state.priority` esté definido, `engine.apply()` sólo acepta acciones
 
 ```ts
 type Action =
-  | { type: 'Mulligan', playerId: PlayerId, accept: boolean }
+  | { type: 'Mulligan'; playerId: PlayerId; accept: boolean }
   | { type: 'PassPhase' }
-  | { type: 'PlayCard', cardUid: string, costDonUids: string[] }
-  | { type: 'AttachDon', donUid: string, targetUid: string }
-  | { type: 'DetachDon', donUid: string }
-  | { type: 'ActivateAbility', cardUid: string, abilityIdx: number, costDonUids: string[] }
-  | { type: 'Attack', attackerUid: string, targetUid: string }
-  | { type: 'DeclareBlocker', blockerUid: string }
-  | { type: 'PlayCounter', cardUid: string }
+  | { type: 'PlayCard'; cardUid: string; costDonUids: string[] }
+  | { type: 'AttachDon'; donUid: string; targetUid: string }
+  | { type: 'DetachDon'; donUid: string }
+  | { type: 'ActivateAbility'; cardUid: string; abilityIdx: number; costDonUids: string[] }
+  | { type: 'Attack'; attackerUid: string; targetUid: string }
+  | { type: 'DeclareBlocker'; blockerUid: string }
+  | { type: 'PlayCounter'; cardUid: string }
   | { type: 'PassPriority' }
-  | { type: 'ResolveTrigger', choice: number }
-  | { type: 'ManualEffect', description: string, patch: StatePatch }   // fallback long-tail
-  | { type: 'Concede', playerId: PlayerId };
+  | { type: 'ResolveTrigger'; choice: number }
+  | { type: 'ManualEffect'; description: string; patch: StatePatch } // fallback long-tail
+  | { type: 'Concede'; playerId: PlayerId };
 ```
 
 Todas las acciones son JSON-puras, validables con `zod`, y el servidor las rechaza si no cumplen el esquema.
@@ -487,13 +493,13 @@ Cada fase termina con **PR + review checkpoint**. No se empieza la siguiente has
 
 ## 12. Riesgos
 
-| Riesgo | Impacto | Mitigación |
-|---|---|---|
-| API de apitcg.com cambia o se cae | Sync roto, imágenes viejas | `CardDataService` abstracto; datos y imágenes cacheados localmente; fallback Limitless TCG |
-| Reglas OPTCG ambiguas en casos de borde | Bugs de partida | Marcar con `// TODO[rules]`; no inventar; preguntar al usuario; comparar con OPTCG Sim oficial cuando haya duda |
-| Parser de efectos declarativos se vuelve imposible para el long-tail | Bloquear partidas por cartas raras | Fallback manual desde Fase 3; cartas "auto" vs "manual" explícitas en UI |
-| Socket.IO en Fly.io sin sticky sessions rompe reconexiones | Partidas online inestables | Afinar Fly.io con máquinas fijas por match; Redis si hace falta |
-| Costes de tokens del visual-companion excesivos | Brainstorming caro | Usar sólo para decisiones realmente visuales |
+| Riesgo                                                               | Impacto                            | Mitigación                                                                                                      |
+| -------------------------------------------------------------------- | ---------------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| API de apitcg.com cambia o se cae                                    | Sync roto, imágenes viejas         | `CardDataService` abstracto; datos y imágenes cacheados localmente; fallback Limitless TCG                      |
+| Reglas OPTCG ambiguas en casos de borde                              | Bugs de partida                    | Marcar con `// TODO[rules]`; no inventar; preguntar al usuario; comparar con OPTCG Sim oficial cuando haya duda |
+| Parser de efectos declarativos se vuelve imposible para el long-tail | Bloquear partidas por cartas raras | Fallback manual desde Fase 3; cartas "auto" vs "manual" explícitas en UI                                        |
+| Socket.IO en Fly.io sin sticky sessions rompe reconexiones           | Partidas online inestables         | Afinar Fly.io con máquinas fijas por match; Redis si hace falta                                                 |
+| Costes de tokens del visual-companion excesivos                      | Brainstorming caro                 | Usar sólo para decisiones realmente visuales                                                                    |
 
 ## 13. Assumptions pendientes de validar
 
@@ -528,6 +534,7 @@ Cada fase termina con **PR + review checkpoint**. No se empieza la siguiente has
 - **Ambigüedad:** resuelta donde la decisión estaba tomada; marcada con ⚠️ donde hay que consultar rulebook oficial (sólo en §6).
 
 Siguientes pasos:
+
 1. Usuario revisa este doc.
 2. Tras aprobación, init git, commit del doc.
 3. Invocar `writing-plans` para la **Fase 0 (Setup)**.
