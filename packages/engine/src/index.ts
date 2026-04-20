@@ -39,3 +39,6 @@ export { validateDeck } from './deck';
 export type { DeckDraft, CardRow, ValidationResult, ValidationIssue } from './deck';
 
 export { createInitialState } from './setup';
+
+export { apply } from './apply';
+export type { ApplyResult } from './apply';
