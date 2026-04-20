@@ -2,7 +2,7 @@ export interface ParsedDeck {
   cards: Array<{ cardId: string; quantity: number }>;
 }
 
-const LINE_RE = /^\s*(?:(\d+)\s*[xX]\s+)?([A-Z]{2,3}\d{2}-\d+(?:_p\d+)?)(?:\s*[xX]\s*(\d+))?\s*$/;
+const LINE_RE = /^\s*(?:(\d+)\s*[xX]\s*)?([A-Z]{2,3}\d{2}-\d+(?:_p\d+)?)(?:\s*[xX]\s*(\d+))?\s*$/;
 
 export function parseDeckText(input: string): ParsedDeck {
   const bucket = new Map<string, number>();
@@ -16,7 +16,8 @@ export function parseDeckText(input: string): ParsedDeck {
       throw new Error(`parseDeckText: cannot parse line: "${line}"`);
     }
 
-    const [, leadingQ, cardId, trailingQ] = m;
+    const [, leadingQ, rawCardId, trailingQ] = m;
+    const cardId = rawCardId.replace(/_p\d+$/, '');
     const qty = Number(leadingQ ?? trailingQ ?? 1);
     bucket.set(cardId, (bucket.get(cardId) ?? 0) + qty);
   }
