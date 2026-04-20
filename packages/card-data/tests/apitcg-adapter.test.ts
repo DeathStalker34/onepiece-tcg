@@ -36,26 +36,54 @@ describe('ApitcgAdapter.listCardsInSet', () => {
     const zoro = cards.find((c) => c.id === 'OP01-001');
     expect(zoro).toBeDefined();
     expect(zoro!.type).toBe('LEADER');
-    expect(zoro!.life).toBe(4);
-    expect(zoro!.cost).toBeNull();
-    expect(zoro!.colors).toEqual(['Green']);
+    expect(zoro!.setId).toBe('OP01');
+    expect(zoro!.colors).toEqual(['Red']);
     expect(zoro!.attributes).toEqual(['Supernovas', 'Straw Hat Crew']);
+    // real apitcg omits `life` for LEADERs — domain should be null
+    expect(zoro!.life).toBeNull();
+    // counter "-" sentinel normalized to null
+    expect(zoro!.counter).toBeNull();
   });
 
-  it('maps a multi-color STAGE correctly', async () => {
+  it('maps a multi-color LEADER correctly', async () => {
     const adapter = new ApitcgAdapter();
     const cards = await adapter.listCardsInSet('OP01');
-    const sunny = cards.find((c) => c.id === 'OP01-089');
-    expect(sunny!.colors).toEqual(['Red', 'Green']);
+    const law = cards.find((c) => c.id === 'OP01-002');
+    expect(law!.colors).toEqual(['Red', 'Green']);
   });
 
-  it('maps a CHARACTER with trigger', async () => {
+  it('maps an EVENT with null power', async () => {
     const adapter = new ApitcgAdapter();
     const cards = await adapter.listCardsInSet('OP01');
-    const usopp = cards.find((c) => c.id === 'OP01-013');
+    const event = cards.find((c) => c.id === 'OP01-026');
+    expect(event!.type).toBe('EVENT');
+    expect(event!.power).toBeNull();
+    expect(event!.counter).toBeNull();
+  });
+
+  it('maps a CHARACTER with non-empty trigger', async () => {
+    const adapter = new ApitcgAdapter();
+    const cards = await adapter.listCardsInSet('OP01');
+    const kawamatsu = cards.find((c) => c.id === 'OP01-037');
+    expect(kawamatsu!.type).toBe('CHARACTER');
+    expect(kawamatsu!.triggerText).toContain('Play this card');
+    expect(kawamatsu!.counter).toBe(1000);
+  });
+
+  it('maps a CHARACTER with numeric counter', async () => {
+    const adapter = new ApitcgAdapter();
+    const cards = await adapter.listCardsInSet('OP01');
+    const usopp = cards.find((c) => c.id === 'OP01-004');
     expect(usopp!.type).toBe('CHARACTER');
-    expect(usopp!.counter).toBe(1000);
-    expect(usopp!.triggerText).toContain('Draw 1 card');
+    expect(usopp!.counter).toBe(2000);
+    // empty-string trigger should map to null
+    expect(usopp!.triggerText).toBeNull();
+  });
+
+  it('derives setId from code when set.id is missing (real apitcg shape)', async () => {
+    const adapter = new ApitcgAdapter();
+    const cards = await adapter.listCardsInSet('OP01');
+    cards.forEach((c) => expect(c.setId).toBe('OP01'));
   });
 
   it('throws when the upstream response is malformed', async () => {

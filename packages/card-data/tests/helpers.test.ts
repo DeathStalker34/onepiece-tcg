@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { splitMultiValue, rawToDomain } from '../src/helpers';
+import { splitMultiValue, rawToDomain, normalizeCounter } from '../src/helpers';
 import type { RawCard } from '../src/types';
 
 describe('splitMultiValue', () => {
@@ -28,9 +28,40 @@ describe('splitMultiValue', () => {
   });
 });
 
+describe('normalizeCounter', () => {
+  it('returns null for sentinel "-"', () => {
+    expect(normalizeCounter('-')).toBeNull();
+  });
+
+  it('returns null for empty string', () => {
+    expect(normalizeCounter('')).toBeNull();
+  });
+
+  it('parses digit strings like "1000"', () => {
+    expect(normalizeCounter('1000')).toBe(1000);
+  });
+
+  it('returns numbers as-is', () => {
+    expect(normalizeCounter(1000)).toBe(1000);
+  });
+
+  it('returns null for non-numeric strings', () => {
+    expect(normalizeCounter('abc')).toBeNull();
+  });
+
+  it('returns null for null input', () => {
+    expect(normalizeCounter(null)).toBeNull();
+  });
+
+  it('returns null for undefined input', () => {
+    expect(normalizeCounter(undefined)).toBeNull();
+  });
+});
+
 describe('rawToDomain', () => {
   const raw: RawCard = {
     id: 'OP01-001',
+    code: 'OP01-001',
     name: 'Roronoa Zoro',
     rarity: 'L',
     type: 'LEADER',
@@ -88,5 +119,37 @@ describe('rawToDomain', () => {
 
   it('uses images.large as sourceImageUrl', () => {
     expect(rawToDomain(raw).sourceImageUrl).toBe('https://example.com/op01-001.webp');
+  });
+
+  it('derives setId from code prefix when set.id is missing', () => {
+    const noSetId: RawCard = {
+      ...raw,
+      set: { name: '-ROMANCE DAWN- [OP01]' },
+    };
+    expect(rawToDomain(noSetId).setId).toBe('OP01');
+  });
+
+  it('derives setId from id prefix when both set.id and code are missing', () => {
+    const onlyId: RawCard = {
+      ...raw,
+      code: undefined,
+      set: { name: '-ROMANCE DAWN- [OP01]' },
+    };
+    expect(rawToDomain(onlyId).setId).toBe('OP01');
+  });
+
+  it('treats empty-string trigger as null', () => {
+    const emptyTrigger: RawCard = { ...raw, trigger: '' };
+    expect(rawToDomain(emptyTrigger).triggerText).toBeNull();
+  });
+
+  it('normalizes counter "-" to null', () => {
+    const withDash: RawCard = { ...raw, counter: '-' };
+    expect(rawToDomain(withDash).counter).toBeNull();
+  });
+
+  it('normalizes counter "1000" string to 1000', () => {
+    const withStr: RawCard = { ...raw, counter: '1000' };
+    expect(rawToDomain(withStr).counter).toBe(1000);
   });
 });

@@ -2,68 +2,142 @@
   "data": [
     {
       "id": "OP01-001",
-      "name": "Roronoa Zoro",
+      "code": "OP01-001",
       "rarity": "L",
       "type": "LEADER",
-      "power": 5000,
-      "life": 4,
-      "color": "Green",
-      "family": "Supernovas/Straw Hat Crew",
-      "ability": "[Activate: Main] You may rest this Leader: Your Character gains [Rush] during this turn.",
-      "set": { "id": "OP01", "name": "Romance Dawn" },
-      "images": { "large": "https://en.onepiece-cardgame.com/images/cardlist/card/OP01-001.png" }
-    },
-    {
-      "id": "OP01-013",
-      "name": "Usopp",
-      "rarity": "C",
-      "type": "CHARACTER",
-      "cost": 1,
-      "power": 2000,
-      "counter": 1000,
-      "color": "Green",
-      "family": "Straw Hat Crew",
-      "ability": "",
-      "trigger": "[Trigger] Draw 1 card.",
-      "set": { "id": "OP01", "name": "Romance Dawn" },
-      "images": { "large": "https://en.onepiece-cardgame.com/images/cardlist/card/OP01-013.png" }
-    },
-    {
-      "id": "OP01-024",
-      "name": "Guard Point",
-      "rarity": "C",
-      "type": "EVENT",
-      "cost": 1,
-      "color": "Green",
-      "family": "Animal/Straw Hat Crew",
-      "ability": "[Counter] Up to 1 of your Leader or Character cards gains +3000 power.",
-      "set": { "id": "OP01", "name": "Romance Dawn" },
-      "images": { "large": "https://en.onepiece-cardgame.com/images/cardlist/card/OP01-024.png" }
-    },
-    {
-      "id": "OP01-089",
-      "name": "Thousand Sunny",
-      "rarity": "R",
-      "type": "STAGE",
-      "cost": 2,
-      "color": "Red/Green",
-      "ability": "[Activate: Main] You may rest this Stage: ...",
-      "set": { "id": "OP01", "name": "Romance Dawn" },
-      "images": { "large": "https://en.onepiece-cardgame.com/images/cardlist/card/OP01-089.png" }
-    },
-    {
-      "id": "OP01-120",
-      "name": "Monkey D. Luffy",
-      "rarity": "SR",
-      "type": "CHARACTER",
+      "name": "Roronoa Zoro",
+      "images": {
+        "small": "https://en.onepiece-cardgame.com/images/cardlist/card/OP01-001.png",
+        "large": "https://en.onepiece-cardgame.com/images/cardlist/card/OP01-001.png"
+      },
       "cost": 5,
-      "power": 6000,
-      "counter": 1000,
+      "attribute": {
+        "name": "Slash",
+        "image": "https://en.onepiece-cardgame.com/images/cardlist/attribute/ico_type02.png"
+      },
+      "power": 5000,
+      "counter": "-",
       "color": "Red",
       "family": "Supernovas/Straw Hat Crew",
-      "ability": "[Rush] [When Attacking] Give up to 1 of your opponent's Characters -2000 power during this turn.",
-      "set": { "id": "OP01", "name": "Romance Dawn" },
-      "images": { "large": "https://en.onepiece-cardgame.com/images/cardlist/card/OP01-120.png" }
+      "ability": "[DON!! x1] [Your Turn] All of your Characters gain +1000 power.",
+      "trigger": "",
+      "set": {
+        "name": "-ROMANCE DAWN- [OP01]"
+      },
+      "notes": []
+    },
+    {
+      "id": "OP01-002",
+      "code": "OP01-002",
+      "rarity": "L",
+      "type": "LEADER",
+      "name": "Trafalgar Law",
+      "images": {
+        "small": "https://en.onepiece-cardgame.com/images/cardlist/card/OP01-002.png",
+        "large": "https://en.onepiece-cardgame.com/images/cardlist/card/OP01-002.png"
+      },
+      "cost": 4,
+      "attribute": {
+        "name": "Slash",
+        "image": "https://en.onepiece-cardgame.com/images/cardlist/attribute/ico_type02.png"
+      },
+      "power": 5000,
+      "counter": "-",
+      "color": "Red/Green",
+      "family": "Supernovas/Heart Pirates",
+      "ability": "[Activate: Main] [Once Per Turn] \u2461 (You may rest the specified number of DON!! cards in your cost area.): If you have 5 Characters, return 1 of your Characters to the owner's hand. Then, play up to 1 Character with a cost of 5 or less from your hand that is a different color than the returned Character.",
+      "trigger": "",
+      "set": {
+        "name": "-ROMANCE DAWN- [OP01]"
+      },
+      "notes": [
+        {
+          "name": "Errata Card",
+          "url": "https://en.onepiece-cardgame.com//rules/errata_card/#errata_05"
+        }
+      ]
+    },
+    {
+      "id": "OP01-004",
+      "code": "OP01-004",
+      "rarity": "R",
+      "type": "CHARACTER",
+      "name": "Usopp",
+      "images": {
+        "small": "https://en.onepiece-cardgame.com/images/cardlist/card/OP01-004.png",
+        "large": "https://en.onepiece-cardgame.com/images/cardlist/card/OP01-004.png"
+      },
+      "cost": 2,
+      "attribute": {
+        "name": "Ranged",
+        "image": "https://en.onepiece-cardgame.com/images/cardlist/attribute/ico_type04.png"
+      },
+      "power": 3000,
+      "counter": "2000",
+      "color": "Red",
+      "family": "Straw Hat Crew",
+      "ability": "[DON!! x1] [Your Turn] [Once Per Turn] Draw 1 card when your opponent activates an Event.",
+      "trigger": "",
+      "set": {
+        "name": "-ROMANCE DAWN- [OP01]"
+      },
+      "notes": []
+    },
+    {
+      "id": "OP01-026",
+      "code": "OP01-026",
+      "rarity": "R",
+      "type": "EVENT",
+      "name": "Gum-Gum Fire-Fist Pistol Red Hawk",
+      "images": {
+        "small": "https://en.onepiece-cardgame.com/images/cardlist/card/OP01-026.png",
+        "large": "https://en.onepiece-cardgame.com/images/cardlist/card/OP01-026.png"
+      },
+      "cost": 2,
+      "attribute": {
+        "image": "https://en.onepiece-cardgame.comundefined"
+      },
+      "power": null,
+      "counter": "-",
+      "color": "Red",
+      "family": "Supernovas/Straw Hat Crew",
+      "ability": "[Counter] Up to 1 of your Leader or Character cards gains +4000 power during this battle. Then, K.O. up to 1 of your opponent's Characters with 4000 power or less.",
+      "trigger": "[Trigger] Give up to 1 of your opponent's Leader or Character cards \u221210000 power during this turn.",
+      "set": {
+        "name": "-ROMANCE DAWN- [OP01]"
+      },
+      "notes": [
+        {
+          "name": "Errata Card",
+          "url": "https://en.onepiece-cardgame.com//rules/errata_card/#errata_05"
+        }
+      ]
+    },
+    {
+      "id": "OP01-037",
+      "code": "OP01-037",
+      "rarity": "C",
+      "type": "CHARACTER",
+      "name": "Kawamatsu",
+      "images": {
+        "small": "https://en.onepiece-cardgame.com/images/cardlist/card/OP01-037.png",
+        "large": "https://en.onepiece-cardgame.com/images/cardlist/card/OP01-037.png"
+      },
+      "cost": 2,
+      "attribute": {
+        "name": "Slash",
+        "image": "https://en.onepiece-cardgame.com/images/cardlist/attribute/ico_type02.png"
+      },
+      "power": 3000,
+      "counter": "1000",
+      "color": "Green",
+      "family": "Fish-Man/Land of Wano/The Akazaya Nine",
+      "ability": "-",
+      "trigger": "[Trigger] Play this card.",
+      "set": {
+        "name": "-ROMANCE DAWN- [OP01]"
+      },
+      "notes": []
     }
   ]
 }
