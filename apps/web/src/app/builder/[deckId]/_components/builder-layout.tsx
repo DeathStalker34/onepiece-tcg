@@ -3,6 +3,13 @@
 import { useEffect, useState } from 'react';
 import type { Card } from '@optcg/card-data';
 import { useUser } from '@/lib/user-context';
+import { CardDetailDialog } from '@/app/cards/_components/card-detail-dialog';
+import {
+  FilterSidebarBuilder,
+  INITIAL_FILTERS,
+  type BuilderFilters,
+} from './filter-sidebar-builder';
+import { CardGridBuilder } from './card-grid-builder';
 
 interface DeckDraftState {
   name: string;
@@ -23,6 +30,8 @@ export function BuilderLayout({ deckId }: { deckId: string }) {
   const [catalog, setCatalog] = useState<Card[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [filters, setFilters] = useState<BuilderFilters>(INITIAL_FILTERS);
+  const [inspecting, setInspecting] = useState<Card | null>(null);
 
   useEffect(() => {
     if (!user) return;
@@ -58,22 +67,70 @@ export function BuilderLayout({ deckId }: { deckId: string }) {
     setSaving(false);
   }
 
+  function addCard(cardId: string) {
+    setDeck((d) => {
+      if (!d) return d;
+      const existing = d.cards.find((c) => c.cardId === cardId);
+      if (existing) {
+        if (existing.quantity >= 4) return d;
+        return {
+          ...d,
+          cards: d.cards.map((c) => (c.cardId === cardId ? { ...c, quantity: c.quantity + 1 } : c)),
+        };
+      }
+      return { ...d, cards: [...d.cards, { cardId, quantity: 1 }] };
+    });
+  }
+
+  function removeCard(cardId: string) {
+    setDeck((d) => {
+      if (!d) return d;
+      const existing = d.cards.find((c) => c.cardId === cardId);
+      if (!existing) return d;
+      if (existing.quantity <= 1) {
+        return { ...d, cards: d.cards.filter((c) => c.cardId !== cardId) };
+      }
+      return {
+        ...d,
+        cards: d.cards.map((c) => (c.cardId === cardId ? { ...c, quantity: c.quantity - 1 } : c)),
+      };
+    });
+  }
+
   if (!ready) return null;
   if (!user) return null;
   if (loading) return <p className="p-6">Loading…</p>;
   if (!deck) return <p className="p-6 text-red-500">Deck not found</p>;
 
   const totalCards = deck.cards.reduce((s, c) => s + c.quantity, 0);
+  const leader = deck.leaderCardId ? catalog.find((c) => c.id === deck.leaderCardId) : null;
+  const leaderColors = leader ? leader.colors.split(',').filter(Boolean) : [];
+
+  const filteredCards = catalog.filter((c) => {
+    if (c.type === 'DON' || c.type === 'LEADER') return false;
+    if (filters.q && !c.name.toLowerCase().includes(filters.q.toLowerCase())) return false;
+    if (filters.types.length > 0 && !filters.types.includes(c.type)) return false;
+    if (filters.costs.length > 0 && (c.cost === null || !filters.costs.includes(c.cost)))
+      return false;
+    if (filters.colors.length > 0) {
+      const cs = c.colors.split(',').filter(Boolean);
+      if (!filters.colors.some((col) => cs.includes(col))) return false;
+    }
+    return true;
+  });
 
   return (
     <div className="flex gap-6 p-6">
-      <aside className="w-56 shrink-0 space-y-4">
-        <h2 className="text-sm font-semibold uppercase">Filters</h2>
-        <p className="text-xs text-muted-foreground">(Filter UI — Task 10)</p>
-      </aside>
+      <FilterSidebarBuilder filters={filters} onChange={setFilters} />
       <main className="flex-1">
-        <h2 className="mb-4 text-sm font-semibold uppercase">Card grid ({catalog.length})</h2>
-        <p className="text-xs text-muted-foreground">(CardGridBuilder — Task 10)</p>
+        <CardGridBuilder
+          cards={filteredCards}
+          deckCards={deck.cards}
+          leaderColors={leaderColors}
+          onAdd={addCard}
+          onRemove={removeCard}
+          onInspect={setInspecting}
+        />
       </main>
       <aside className="w-80 shrink-0 space-y-4 rounded border p-4">
         <div className="flex items-center justify-between gap-2">
@@ -95,6 +152,13 @@ export function BuilderLayout({ deckId }: { deckId: string }) {
         </p>
         <p className="text-xs text-muted-foreground">(DeckPanel — Task 11)</p>
       </aside>
+      <CardDetailDialog
+        card={inspecting}
+        open={!!inspecting}
+        onOpenChange={(o) => {
+          if (!o) setInspecting(null);
+        }}
+      />
     </div>
   );
 }
