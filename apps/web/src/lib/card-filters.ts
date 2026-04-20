@@ -1,11 +1,12 @@
 export const PAGE_SIZE = 48;
 
 export interface SearchParams {
-  q?: string;
-  color?: string;
-  type?: string;
-  cost?: string;
-  page?: string;
+  q?: string | string[];
+  color?: string | string[];
+  type?: string | string[];
+  cost?: string | string[];
+  page?: string | string[];
+  [key: string]: string | string[] | undefined;
 }
 
 interface Where {
@@ -29,15 +30,26 @@ function splitCsv(input: string): string[] {
     .filter((s) => s.length > 0);
 }
 
+function first(value: string | string[] | undefined): string | undefined {
+  if (Array.isArray(value)) return value[0];
+  return value;
+}
+
 export function parseFilters(params: SearchParams): ParsedFilters {
   const where: Where = {};
 
-  if (params.q && params.q.length > 0) {
-    where.name = { contains: params.q };
+  const q = first(params.q);
+  const color = first(params.color);
+  const type = first(params.type);
+  const cost = first(params.cost);
+  const pageRaw = first(params.page);
+
+  if (q && q.length > 0) {
+    where.name = { contains: q };
   }
 
-  if (params.color) {
-    const colors = splitCsv(params.color);
+  if (color) {
+    const colors = splitCsv(color);
     if (colors.length === 1) {
       where.colors = { contains: colors[0] };
     } else if (colors.length > 1) {
@@ -45,12 +57,12 @@ export function parseFilters(params: SearchParams): ParsedFilters {
     }
   }
 
-  if (params.type) {
-    where.type = params.type;
+  if (type) {
+    where.type = type;
   }
 
-  if (params.cost) {
-    const costs = splitCsv(params.cost)
+  if (cost) {
+    const costs = splitCsv(cost)
       .map((s) => Number(s))
       .filter((n) => Number.isInteger(n));
     if (costs.length === 1) {
@@ -60,7 +72,7 @@ export function parseFilters(params: SearchParams): ParsedFilters {
     }
   }
 
-  const parsedPage = Number(params.page);
+  const parsedPage = Number(pageRaw);
   const page = Number.isInteger(parsedPage) && parsedPage > 0 ? parsedPage : 1;
   const skip = (page - 1) * PAGE_SIZE;
 
