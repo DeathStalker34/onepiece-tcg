@@ -2,6 +2,7 @@
 
 import { ActionBar } from './action-bar';
 import { PlayerSide } from './player-side';
+import { PriorityModal } from './priority-modal';
 
 export function Board() {
   return (
@@ -10,6 +11,7 @@ export function Board() {
       <PlayerSide playerIndex={1} />
       <hr className="border-amber-800/40" />
       <PlayerSide playerIndex={0} />
+      <PriorityModal />
     </div>
   );
 }
