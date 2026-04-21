@@ -456,6 +456,31 @@ describe('Combat resolve', () => {
   });
 });
 
+describe('OnKO wiring', () => {
+  it('KO a TEST-CHAR-ONKO-BANISH character triggers banish of opponent character', () => {
+    let s = postMulliganInMain();
+    s = addChar(s, 0, { instanceId: 'atk', cardId: 'TEST-CHAR-DOUBLEATTACK' }); // power 6000
+    s = addChar(s, 1, { instanceId: 'victim', cardId: 'TEST-CHAR-ONKO-BANISH', rested: true });
+    s = addChar(s, 1, { instanceId: 'collateral', cardId: 'TEST-CHAR-BASIC-01' });
+    const s2 = apply(s, {
+      kind: 'DeclareAttack',
+      player: 0,
+      attacker: { kind: 'Character', instanceId: 'atk' },
+      target: { kind: 'Character', instanceId: 'victim', owner: 1 },
+    }).state;
+    const res = apply(s2, { kind: 'DeclineCounter', player: 1 });
+    expect(res.error).toBeUndefined();
+    // victim KO'd → goes to p1.trash. collateral untouched on p1.
+    expect(res.state.players[1].trash).toContain('TEST-CHAR-ONKO-BANISH');
+    expect(res.state.players[1].characters.map((c) => c.instanceId)).toEqual(['collateral']);
+    // OnKO fires with sourcePlayer = KO'd character's owner (p1).
+    // Effect `banish { opponentCharacter }` → from p1's perspective opponent = p0.
+    // p0 only has 'atk' → 'atk' gets banished into p0.banishZone.
+    expect(res.state.players[0].characters.length).toBe(0);
+    expect(res.state.players[0].banishZone).toContain('TEST-CHAR-DOUBLEATTACK');
+  });
+});
+
 describe('Blocker', () => {
   it('DeclineCounter opens BlockerStep when defender has usable blocker', () => {
     let s = postMulliganInMain();

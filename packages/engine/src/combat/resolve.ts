@@ -1,6 +1,7 @@
 import type { GameState, PlayerIndex, AttackerRef, DefenderRef } from '../types/state';
 import type { GameEvent } from '../types/event';
 import type { CardStatic, Effect } from '../types/card';
+import { triggerHook } from '../effects/triggers';
 
 export interface ResolveResult {
   state: GameState;
@@ -142,8 +143,16 @@ export function resolveCombat(
     cardId: victim.cardId,
   });
 
+  const { state: withOnKo, events: onKoEvents } = triggerHook(
+    { ...state, players: newPlayers },
+    'OnKO',
+    victim.cardId,
+    defenderOwner,
+  );
+  events.push(...onKoEvents);
+
   return {
-    state: { ...state, players: newPlayers, priorityWindow: null },
+    state: { ...withOnKo, priorityWindow: null },
     events,
   };
 }

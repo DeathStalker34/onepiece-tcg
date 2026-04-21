@@ -547,6 +547,36 @@ describe('Main phase — AttachDon', () => {
   });
 });
 
+describe('OnPlay wiring', () => {
+  function postMulliganInMain() {
+    let s = createInitialState(mkSetup());
+    s = apply(s, { kind: 'Mulligan', player: 0, mulligan: false }).state;
+    s = apply(s, { kind: 'Mulligan', player: 1, mulligan: false }).state;
+    s = apply(s, { kind: 'PassPhase', player: 0 }).state;
+    s = apply(s, { kind: 'PassPhase', player: 0 }).state;
+    s = apply(s, { kind: 'PassPhase', player: 0 }).state;
+    return s;
+  }
+
+  it('playing TEST-CHAR-ONPLAY-DRAW draws 1 card', () => {
+    let s = postMulliganInMain();
+    s = {
+      ...s,
+      players: [
+        { ...s.players[0], hand: ['TEST-CHAR-ONPLAY-DRAW', ...s.players[0].hand], donActive: 5 },
+        s.players[1],
+      ] as typeof s.players,
+    };
+    const handBefore = s.players[0].hand.length;
+    const deckBefore = s.players[0].deck.length;
+    const res = apply(s, { kind: 'PlayCharacter', player: 0, handIndex: 0, donSpent: 0 });
+    expect(res.error).toBeUndefined();
+    // -1 played card, +1 drawn → net hand = handBefore (minus 1 played, plus 1 drawn)
+    expect(res.state.players[0].hand.length).toBe(handBefore);
+    expect(res.state.players[0].deck.length).toBe(deckBefore - 1);
+  });
+});
+
 describe('Main phase — ActivateMain', () => {
   function postMulliganInMain() {
     let s = createInitialState(mkSetup());

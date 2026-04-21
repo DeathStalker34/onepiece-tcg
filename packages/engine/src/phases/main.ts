@@ -4,6 +4,8 @@ import type { GameEvent } from '../types/event';
 import type { EngineError } from '../types/error';
 import type { CardStatic } from '../types/card';
 import { nextInt } from '../rng';
+import { triggerHook } from '../effects/triggers';
+import { applyEffect, type EffectContext } from '../effects/executor';
 
 export interface MainResult {
   state: GameState;
@@ -101,9 +103,19 @@ export function playCharacter(
     i === action.player ? updatedPlayer : pp,
   ) as GameState['players'];
 
+  const { state: withTriggers, events: triggerEvents } = triggerHook(
+    { ...afterId, players: nextPlayers },
+    'OnPlay',
+    cardId,
+    action.player,
+  );
+
   return {
-    state: { ...afterId, players: nextPlayers },
-    events: [{ kind: 'CardPlayed', player: action.player, cardId, donSpent: action.donSpent }],
+    state: withTriggers,
+    events: [
+      { kind: 'CardPlayed', player: action.player, cardId, donSpent: action.donSpent },
+      ...triggerEvents,
+    ],
   };
 }
 
@@ -142,9 +154,19 @@ export function playEvent(
     i === action.player ? updatedPlayer : pp,
   ) as GameState['players'];
 
+  const { state: withTriggers, events: triggerEvents } = triggerHook(
+    { ...state, players: nextPlayers },
+    'OnPlay',
+    cardId,
+    action.player,
+  );
+
   return {
-    state: { ...state, players: nextPlayers },
-    events: [{ kind: 'CardPlayed', player: action.player, cardId, donSpent: action.donSpent }],
+    state: withTriggers,
+    events: [
+      { kind: 'CardPlayed', player: action.player, cardId, donSpent: action.donSpent },
+      ...triggerEvents,
+    ],
   };
 }
 
@@ -223,33 +245,22 @@ export function activateMain(
     if (p.leader.rested) {
       return { state, events: [], error: { code: 'CharacterIsRested' } };
     }
-    // Task 13 will wire the full declarative effect executor. For now, handle the
-    // single case used by TEST-LEADER-01: `power { self, delta, thisTurn }`.
-    if (eff.effect.kind !== 'power' || eff.effect.target.kind !== 'self') {
-      return {
-        state,
-        events: [],
-        error: {
-          code: 'Unknown',
-          detail: `Activate:Main effect kind ${eff.effect.kind} not yet supported — Task 13`,
-        },
-      };
-    }
-    const delta = eff.effect.delta;
-    const updatedPlayer = {
-      ...p,
-      leader: {
-        ...p.leader,
-        rested: true,
-        powerThisTurn: p.leader.powerThisTurn + delta,
-      },
+    // Pay cost: rest leader
+    const restedPlayer = { ...p, leader: { ...p.leader, rested: true } };
+    const withRest: GameState = {
+      ...state,
+      players: state.players.map((pp, i) =>
+        i === action.player ? restedPlayer : pp,
+      ) as GameState['players'],
     };
-    const nextPlayers = state.players.map((pp, i) =>
-      i === action.player ? updatedPlayer : pp,
-    ) as GameState['players'];
+    const context: EffectContext = {
+      sourcePlayer: action.player,
+      sourceCardId: p.leader.cardId,
+    };
+    const r = applyEffect(withRest, eff.effect, context);
     return {
-      state: { ...state, players: nextPlayers },
-      events: [{ kind: 'EffectResolved', effect: eff.effect, sourceCardId: card.id }],
+      state: r.state,
+      events: r.events,
     };
   }
 
@@ -279,29 +290,24 @@ export function activateMain(
       error: { code: 'InvalidTarget', reason: 'no Activate:Main on character' },
     };
   }
-  if (eff.effect.kind !== 'power' || eff.effect.target.kind !== 'self') {
-    return {
-      state,
-      events: [],
-      error: {
-        code: 'Unknown',
-        detail: `Activate:Main effect kind ${eff.effect.kind} not yet supported — Task 13`,
-      },
-    };
-  }
+  // Pay cost: rest the character
   const newChars = [...p.characters];
-  newChars[charIdx] = {
-    ...char,
-    rested: true,
-    powerThisTurn: char.powerThisTurn + eff.effect.delta,
+  newChars[charIdx] = { ...char, rested: true };
+  const restedPlayer = { ...p, characters: newChars };
+  const withRest: GameState = {
+    ...state,
+    players: state.players.map((pp, i) =>
+      i === action.player ? restedPlayer : pp,
+    ) as GameState['players'],
   };
-  const updatedPlayer = { ...p, characters: newChars };
-  const nextPlayers = state.players.map((pp, i) =>
-    i === action.player ? updatedPlayer : pp,
-  ) as GameState['players'];
+  const context: EffectContext = {
+    sourcePlayer: action.player,
+    sourceCardId: char.cardId,
+  };
+  const r = applyEffect(withRest, eff.effect, context);
   return {
-    state: { ...state, players: nextPlayers },
-    events: [{ kind: 'EffectResolved', effect: eff.effect, sourceCardId: card.id }],
+    state: r.state,
+    events: r.events,
   };
 }
 
@@ -342,8 +348,18 @@ export function playStage(
     i === action.player ? updatedPlayer : pp,
   ) as GameState['players'];
 
+  const { state: withTriggers, events: triggerEvents } = triggerHook(
+    { ...state, players: nextPlayers },
+    'OnPlay',
+    cardId,
+    action.player,
+  );
+
   return {
-    state: { ...state, players: nextPlayers },
-    events: [{ kind: 'CardPlayed', player: action.player, cardId, donSpent: action.donSpent }],
+    state: withTriggers,
+    events: [
+      { kind: 'CardPlayed', player: action.player, cardId, donSpent: action.donSpent },
+      ...triggerEvents,
+    ],
   };
 }

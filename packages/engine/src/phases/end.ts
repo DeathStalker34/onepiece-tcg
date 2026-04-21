@@ -1,5 +1,6 @@
 import type { GameState } from '../types/state';
 import type { GameEvent } from '../types/event';
+import { triggerHook } from '../effects/triggers';
 
 export function runEnd(state: GameState): { state: GameState; events: GameEvent[] } {
   const p = state.players[state.activePlayer];
@@ -34,8 +35,26 @@ export function runEnd(state: GameState): { state: GameState; events: GameEvent[
   const nextPlayers = state.players.map((pp, i) =>
     i === state.activePlayer ? updatedPlayer : pp,
   ) as GameState['players'];
-  return {
-    state: { ...state, players: nextPlayers, phase: 'End' },
-    events: [{ kind: 'PhaseEntered', phase: 'End' }],
-  };
+
+  let finalState: GameState = { ...state, players: nextPlayers, phase: 'End' };
+  const events: GameEvent[] = [{ kind: 'PhaseEntered', phase: 'End' }];
+
+  // EndOfTurn triggers on leader
+  const leaderRes = triggerHook(
+    finalState,
+    'EndOfTurn',
+    updatedPlayer.leader.cardId,
+    state.activePlayer,
+  );
+  finalState = leaderRes.state;
+  events.push(...leaderRes.events);
+
+  // EndOfTurn triggers on each character
+  for (const c of finalState.players[state.activePlayer].characters) {
+    const r = triggerHook(finalState, 'EndOfTurn', c.cardId, state.activePlayer);
+    finalState = r.state;
+    events.push(...r.events);
+  }
+
+  return { state: finalState, events };
 }
