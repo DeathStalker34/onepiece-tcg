@@ -5,7 +5,7 @@ import type { Card } from '@optcg/card-data';
 import { Separator } from '@/components/ui/separator';
 import { Button } from '@/components/ui/button';
 import { LeaderPicker } from './leader-picker';
-import { validateDeck, type ValidationResult, type CardRow } from '@/lib/deck-validation';
+import { validateDeck, type ValidationResult, type CardRow } from '@optcg/engine';
 import { ImportExport } from './import-export';
 
 interface Props {

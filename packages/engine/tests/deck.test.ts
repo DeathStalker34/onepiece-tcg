@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { validateDeck, type DeckDraft, type CardRow } from './deck-validation';
+import { validateDeck, type DeckDraft, type CardRow } from '../src/deck';
 
 function card(overrides: Partial<CardRow> & Pick<CardRow, 'id' | 'colors'>): CardRow {
   return {

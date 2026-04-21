@@ -22,6 +22,9 @@ pnpm-debug.log*
 # Turbo cache
 .turbo/
 
+# Vitest coverage reports
+coverage/
+
 # TypeScript incremental build cache
 *.tsbuildinfo
 
