@@ -3,6 +3,7 @@
 import { useGame } from './game-provider';
 import { LeaderCard } from './leader-card';
 import { CharacterCard } from './character-card';
+import { DonPool } from './don-pool';
 import { Hand } from './hand';
 import type { PlayerIndex } from '@optcg/engine';
 
@@ -49,13 +50,7 @@ export function PlayerSide({ playerIndex }: { playerIndex: PlayerIndex }) {
 
         {/* Right: DON + Deck + Trash */}
         <div className="space-y-2">
-          <div>
-            <div className="zone-label">DON</div>
-            <div className="text-sm">
-              Active <strong>{p.donActive}</strong> · Rested <strong>{p.donRested}</strong> · Deck{' '}
-              {p.donDeck}
-            </div>
-          </div>
+          <DonPool active={p.donActive} rested={p.donRested} donDeck={p.donDeck} compact />
           <div>
             <div className="zone-label">Deck</div>
             <div className="text-sm">{p.deck.length} cards</div>
