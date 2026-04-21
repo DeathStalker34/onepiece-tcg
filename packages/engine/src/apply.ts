@@ -9,6 +9,8 @@ import { runDraw } from './phases/draw';
 import { runDon } from './phases/don';
 import { runEnd } from './phases/end';
 import { playCharacter, playEvent, playStage, attachDon, activateMain } from './phases/main';
+import { declareAttack } from './combat/declare';
+import { playCounter, declineCounter } from './combat/counter-step';
 
 export interface ApplyResult {
   state: GameState;
@@ -127,6 +129,30 @@ export function apply(state: GameState, action: Action): ApplyResult {
 
     case 'ActivateMain': {
       const r = activateMain(state, action);
+      if (r.error) return errorResult(state, r.error);
+      next = r.state;
+      events = r.events;
+      break;
+    }
+
+    case 'DeclareAttack': {
+      const r = declareAttack(state, action);
+      if (r.error) return errorResult(state, r.error);
+      next = r.state;
+      events = r.events;
+      break;
+    }
+
+    case 'PlayCounter': {
+      const r = playCounter(state, action);
+      if (r.error) return errorResult(state, r.error);
+      next = r.state;
+      events = r.events;
+      break;
+    }
+
+    case 'DeclineCounter': {
+      const r = declineCounter(state, action);
       if (r.error) return errorResult(state, r.error);
       next = r.state;
       events = r.events;
