@@ -8,6 +8,10 @@ export default defineConfig({
       provider: 'v8',
       reporter: ['text', 'html'],
       include: ['src/**/*.ts'],
+      // Type-only and barrel files have no executable code (interfaces, type
+      // aliases, const tuples re-exported via index). Excluding them keeps the
+      // coverage signal focused on engine logic.
+      exclude: ['src/types/**', 'src/index.ts'],
       thresholds: {
         lines: 85,
         branches: 85,
