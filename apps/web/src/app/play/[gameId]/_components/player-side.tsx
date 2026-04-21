@@ -8,10 +8,22 @@ import { Hand } from './hand';
 import type { PlayerIndex } from '@optcg/engine';
 
 export function PlayerSide({ playerIndex }: { playerIndex: PlayerIndex }) {
-  const { state } = useGame();
+  const { state, dispatch } = useGame();
   const p = state.players[playerIndex];
   const isActive = state.activePlayer === playerIndex && state.priorityWindow === null;
   const label = `Player ${playerIndex} — ${p.playerId}`;
+
+  const inMain =
+    state.activePlayer === playerIndex && state.phase === 'Main' && state.priorityWindow === null;
+
+  const leaderStatic = state.catalog[p.leader.cardId];
+  const leaderHasActivateMain =
+    leaderStatic?.effects.some((e) => e.trigger === 'Activate:Main') ?? false;
+  const canActivateLeader = inMain && !p.leader.rested && leaderHasActivateMain;
+
+  function activateLeader() {
+    dispatch({ kind: 'ActivateMain', player: playerIndex, source: { kind: 'Leader' } });
+  }
 
   return (
     <section
@@ -28,7 +40,12 @@ export function PlayerSide({ playerIndex }: { playerIndex: PlayerIndex }) {
         <div className="space-y-1">
           <div className="zone-label">Leader</div>
           <div className="zone-frame p-2">
-            <LeaderCard leader={p.leader} lifeCount={p.life.length} />
+            <LeaderCard
+              leader={p.leader}
+              lifeCount={p.life.length}
+              onActivateMain={activateLeader}
+              canActivate={canActivateLeader}
+            />
           </div>
         </div>
 
@@ -39,7 +56,26 @@ export function PlayerSide({ playerIndex }: { playerIndex: PlayerIndex }) {
             {p.characters.length === 0 ? (
               <span className="text-xs italic opacity-50">No characters</span>
             ) : (
-              p.characters.map((c) => <CharacterCard key={c.instanceId} char={c} />)
+              p.characters.map((c) => {
+                const charStatic = state.catalog[c.cardId];
+                const hasActivateMain =
+                  charStatic?.effects.some((e) => e.trigger === 'Activate:Main') ?? false;
+                const canActivate = inMain && !c.rested && hasActivateMain;
+                return (
+                  <CharacterCard
+                    key={c.instanceId}
+                    char={c}
+                    onActivateMain={() =>
+                      dispatch({
+                        kind: 'ActivateMain',
+                        player: playerIndex,
+                        source: { kind: 'Character', instanceId: c.instanceId },
+                      })
+                    }
+                    canActivate={canActivate}
+                  />
+                );
+              })
             )}
           </div>
           <div className="flex items-center gap-2">
@@ -50,7 +86,13 @@ export function PlayerSide({ playerIndex }: { playerIndex: PlayerIndex }) {
 
         {/* Right: DON + Deck + Trash */}
         <div className="space-y-2">
-          <DonPool active={p.donActive} rested={p.donRested} donDeck={p.donDeck} compact />
+          <DonPool
+            active={p.donActive}
+            rested={p.donRested}
+            donDeck={p.donDeck}
+            compact
+            playerIndex={playerIndex}
+          />
           <div>
             <div className="zone-label">Deck</div>
             <div className="text-sm">{p.deck.length} cards</div>
@@ -72,6 +114,8 @@ export function PlayerSide({ playerIndex }: { playerIndex: PlayerIndex }) {
         cards={p.hand}
         hidden={playerIndex !== state.activePlayer /* MVP: show active's hand only */}
         label={`Hand — P${playerIndex}`}
+        clickable={playerIndex === state.activePlayer && state.phase === 'Main'}
+        playerIndex={playerIndex}
       />
 
       <footer className="flex items-center justify-end text-xs">

@@ -4,12 +4,15 @@ import Image from 'next/image';
 import { cardImagePath } from '@/lib/card-image';
 import type { CharacterInPlay } from '@optcg/engine';
 
-export function CharacterCard({ char }: { char: CharacterInPlay }) {
-  return (
-    <div
-      className={`relative aspect-[5/7] w-16 overflow-hidden rounded border border-amber-900/70 transition-transform duration-200 ${char.rested ? 'rotate-90' : ''} ${char.summoningSickness ? 'opacity-60' : ''}`}
-      title={`${char.cardId}${char.summoningSickness ? ' (summoning sickness)' : ''}`}
-    >
+interface Props {
+  char: CharacterInPlay;
+  onActivateMain?: () => void;
+  canActivate?: boolean;
+}
+
+export function CharacterCard({ char, onActivateMain, canActivate = false }: Props) {
+  const inner = (
+    <>
       <Image
         src={cardImagePath(char.cardId)}
         alt={char.cardId}
@@ -22,6 +25,29 @@ export function CharacterCard({ char }: { char: CharacterInPlay }) {
           +{char.attachedDon}
         </span>
       )}
+    </>
+  );
+
+  const baseClass = `relative aspect-[5/7] w-16 overflow-hidden rounded border border-amber-900/70 transition-transform duration-200 ${char.rested ? 'rotate-90' : ''} ${char.summoningSickness ? 'opacity-60' : ''}`;
+  const title = `${char.cardId}${char.summoningSickness ? ' (summoning sickness)' : ''}`;
+
+  if (canActivate && onActivateMain) {
+    return (
+      <button
+        type="button"
+        className={`${baseClass} transition hover:ring-2 hover:ring-primary`}
+        onClick={onActivateMain}
+        title={title}
+        aria-label={`Activate ${char.cardId} main ability`}
+      >
+        {inner}
+      </button>
+    );
+  }
+
+  return (
+    <div className={baseClass} title={title}>
+      {inner}
     </div>
   );
 }
