@@ -1,18 +1,25 @@
 'use client';
 
 import Image from 'next/image';
+import { useState } from 'react';
 import { cardImagePath } from '@/lib/card-image';
 import type { CharacterInPlay } from '@optcg/engine';
+import { ActionMenu, type ActionMenuOption } from './action-menu';
 
-interface Props {
+export function CharacterCard({
+  char,
+  actions = [],
+}: {
   char: CharacterInPlay;
-  onActivateMain?: () => void;
-  canActivate?: boolean;
-}
-
-export function CharacterCard({ char, onActivateMain, canActivate = false }: Props) {
-  const inner = (
-    <>
+  actions?: ActionMenuOption[];
+}) {
+  const [open, setOpen] = useState(false);
+  const clickable = actions.length > 0;
+  const visual = (
+    <div
+      className={`relative aspect-[5/7] w-16 overflow-hidden rounded border border-amber-900/70 transition-transform duration-200 ${char.rested ? 'rotate-90' : ''} ${char.summoningSickness ? 'opacity-60' : ''}`}
+      title={`${char.cardId}${char.summoningSickness ? ' (summoning sickness)' : ''}`}
+    >
       <Image
         src={cardImagePath(char.cardId)}
         alt={char.cardId}
@@ -25,29 +32,31 @@ export function CharacterCard({ char, onActivateMain, canActivate = false }: Pro
           +{char.attachedDon}
         </span>
       )}
-    </>
+    </div>
   );
 
-  const baseClass = `relative aspect-[5/7] w-16 overflow-hidden rounded border border-amber-900/70 transition-transform duration-200 ${char.rested ? 'rotate-90' : ''} ${char.summoningSickness ? 'opacity-60' : ''}`;
-  const title = `${char.cardId}${char.summoningSickness ? ' (summoning sickness)' : ''}`;
-
-  if (canActivate && onActivateMain) {
-    return (
+  if (!clickable) return visual;
+  return (
+    <>
       <button
         type="button"
-        className={`${baseClass} transition hover:ring-2 hover:ring-primary`}
-        onClick={onActivateMain}
-        title={title}
-        aria-label={`Activate ${char.cardId} main ability`}
+        className="hover:ring-2 hover:ring-primary"
+        onClick={() => {
+          if (actions.length === 1) actions[0].onClick();
+          else setOpen(true);
+        }}
+        aria-label={`Character ${char.cardId} actions`}
       >
-        {inner}
+        {visual}
       </button>
-    );
-  }
-
-  return (
-    <div className={baseClass} title={title}>
-      {inner}
-    </div>
+      {actions.length > 1 && (
+        <ActionMenu
+          title={`Character ${char.cardId}`}
+          options={actions}
+          open={open}
+          onOpenChange={setOpen}
+        />
+      )}
+    </>
   );
 }

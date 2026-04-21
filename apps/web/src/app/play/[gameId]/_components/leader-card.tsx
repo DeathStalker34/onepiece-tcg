@@ -1,19 +1,27 @@
 'use client';
 
 import Image from 'next/image';
+import { useState } from 'react';
 import { cardImagePath } from '@/lib/card-image';
 import type { LeaderInPlay } from '@optcg/engine';
+import { ActionMenu, type ActionMenuOption } from './action-menu';
 
-interface Props {
+export function LeaderCard({
+  leader,
+  lifeCount,
+  actions = [],
+}: {
   leader: LeaderInPlay;
   lifeCount: number;
-  onActivateMain?: () => void;
-  canActivate?: boolean;
-}
+  actions?: ActionMenuOption[];
+}) {
+  const [open, setOpen] = useState(false);
+  const clickable = actions.length > 0;
 
-export function LeaderCard({ leader, lifeCount, onActivateMain, canActivate = false }: Props) {
-  const inner = (
-    <>
+  const visual = (
+    <div
+      className={`relative aspect-[5/7] w-20 overflow-hidden rounded border-2 border-amber-900/70 transition-transform duration-200 ${leader.rested ? 'rotate-90' : ''}`}
+    >
       <Image
         src={cardImagePath(leader.cardId)}
         alt={leader.cardId}
@@ -32,29 +40,43 @@ export function LeaderCard({ leader, lifeCount, onActivateMain, canActivate = fa
           {leader.powerThisTurn}
         </span>
       )}
-    </>
+    </div>
   );
 
-  const baseClass = `relative aspect-[5/7] w-20 overflow-hidden rounded border-2 border-amber-900/70 transition-transform duration-200 ${leader.rested ? 'rotate-90' : ''}`;
+  const inner = clickable ? (
+    <button
+      type="button"
+      className="hover:ring-2 hover:ring-primary"
+      onClick={() => {
+        if (actions.length === 1) {
+          actions[0].onClick();
+        } else {
+          setOpen(true);
+        }
+      }}
+      aria-label={`Leader ${leader.cardId} actions`}
+    >
+      {visual}
+    </button>
+  ) : (
+    visual
+  );
 
   return (
     <div className="flex items-center gap-2">
-      {canActivate && onActivateMain ? (
-        <button
-          type="button"
-          className={`${baseClass} transition hover:ring-2 hover:ring-primary`}
-          onClick={onActivateMain}
-          aria-label="Activate leader main ability"
-        >
-          {inner}
-        </button>
-      ) : (
-        <div className={baseClass}>{inner}</div>
-      )}
+      {inner}
       <div className="text-center">
         <div className="zone-label">Life</div>
         <div className="text-2xl font-bold leading-none">{lifeCount}</div>
       </div>
+      {actions.length > 1 && (
+        <ActionMenu
+          title={`Leader ${leader.cardId}`}
+          options={actions}
+          open={open}
+          onOpenChange={setOpen}
+        />
+      )}
     </div>
   );
 }
