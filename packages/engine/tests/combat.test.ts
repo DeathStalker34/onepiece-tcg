@@ -455,3 +455,134 @@ describe('Combat resolve', () => {
     expect(res.state.players[1].trash).not.toContain('TEST-CHAR-BANISH');
   });
 });
+
+describe('Blocker', () => {
+  it('DeclineCounter opens BlockerStep when defender has usable blocker', () => {
+    let s = postMulliganInMain();
+    s = addChar(s, 1, { instanceId: 'blocker-1', cardId: 'TEST-CHAR-BLOCKER' });
+    const s2 = apply(s, {
+      kind: 'DeclareAttack',
+      player: 0,
+      attacker: { kind: 'Leader' },
+      target: { kind: 'Leader' },
+    }).state;
+    const res = apply(s2, { kind: 'DeclineCounter', player: 1 });
+    expect(res.error).toBeUndefined();
+    const pw = res.state.priorityWindow;
+    expect(pw?.kind).toBe('BlockerStep');
+    if (pw?.kind === 'BlockerStep') {
+      expect(pw.originalTarget.target.kind).toBe('Leader');
+    }
+  });
+
+  it('UseBlocker redirects attack to the blocker character, which becomes rested', () => {
+    let s = postMulliganInMain();
+    s = addChar(s, 1, { instanceId: 'blocker-1', cardId: 'TEST-CHAR-BLOCKER' });
+    const s2 = apply(s, {
+      kind: 'DeclareAttack',
+      player: 0,
+      attacker: { kind: 'Leader' },
+      target: { kind: 'Leader' },
+    }).state;
+    const s3 = apply(s2, { kind: 'DeclineCounter', player: 1 }).state;
+    const res = apply(s3, {
+      kind: 'UseBlocker',
+      player: 1,
+      blockerInstanceId: 'blocker-1',
+    });
+    expect(res.error).toBeUndefined();
+    // Leader power 5000 vs Blocker 4000 → blocker KO'd
+    expect(res.state.players[1].characters.length).toBe(0);
+    expect(res.state.players[1].trash).toContain('TEST-CHAR-BLOCKER');
+    // Leader life unchanged (redirected away)
+    expect(res.state.players[1].life.length).toBe(4);
+    expect(res.state.priorityWindow).toBeNull();
+  });
+
+  it('DeclineBlocker resolves with original target', () => {
+    let s = postMulliganInMain();
+    s = addChar(s, 1, { instanceId: 'blocker-1', cardId: 'TEST-CHAR-BLOCKER' });
+    // Seed life with no triggers
+    s = {
+      ...s,
+      players: [
+        s.players[0],
+        {
+          ...s.players[1],
+          life: [
+            'TEST-CHAR-BASIC-01',
+            'TEST-CHAR-BASIC-02',
+            'TEST-CHAR-BASIC-01',
+            'TEST-CHAR-BASIC-02',
+          ],
+        },
+      ] as typeof s.players,
+    };
+    const s2 = apply(s, {
+      kind: 'DeclareAttack',
+      player: 0,
+      attacker: { kind: 'Leader' },
+      target: { kind: 'Leader' },
+    }).state;
+    const s3 = apply(s2, { kind: 'DeclineCounter', player: 1 }).state;
+    const res = apply(s3, { kind: 'DeclineBlocker', player: 1 });
+    expect(res.error).toBeUndefined();
+    expect(res.state.players[1].life.length).toBe(3);
+    expect(res.state.priorityWindow).toBeNull();
+  });
+
+  it('Blocker already used this turn is NOT offered', () => {
+    let s = postMulliganInMain();
+    s = addChar(s, 1, {
+      instanceId: 'blocker-1',
+      cardId: 'TEST-CHAR-BLOCKER',
+      usedBlockerThisTurn: true,
+    });
+    const s2 = apply(s, {
+      kind: 'DeclareAttack',
+      player: 0,
+      attacker: { kind: 'Leader' },
+      target: { kind: 'Leader' },
+    }).state;
+    const res = apply(s2, { kind: 'DeclineCounter', player: 1 });
+    expect(res.error).toBeUndefined();
+    // No blocker step; resolved directly
+    expect(res.state.priorityWindow).toBeNull();
+  });
+
+  it('Rested blocker is NOT offered', () => {
+    let s = postMulliganInMain();
+    s = addChar(s, 1, {
+      instanceId: 'blocker-1',
+      cardId: 'TEST-CHAR-BLOCKER',
+      rested: true,
+    });
+    const s2 = apply(s, {
+      kind: 'DeclareAttack',
+      player: 0,
+      attacker: { kind: 'Leader' },
+      target: { kind: 'Leader' },
+    }).state;
+    const res = apply(s2, { kind: 'DeclineCounter', player: 1 });
+    expect(res.error).toBeUndefined();
+    expect(res.state.priorityWindow).toBeNull();
+  });
+
+  it('UseBlocker with non-blocker character errors', () => {
+    let s = postMulliganInMain();
+    s = addChar(s, 1, { instanceId: 'not-blocker', cardId: 'TEST-CHAR-BLOCKER' });
+    const s2 = apply(s, {
+      kind: 'DeclareAttack',
+      player: 0,
+      attacker: { kind: 'Leader' },
+      target: { kind: 'Leader' },
+    }).state;
+    const s3 = apply(s2, { kind: 'DeclineCounter', player: 1 }).state;
+    const res = apply(s3, {
+      kind: 'UseBlocker',
+      player: 1,
+      blockerInstanceId: 'wrong-id',
+    });
+    expect(res.error).toBeDefined();
+  });
+});

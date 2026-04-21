@@ -3,6 +3,7 @@ import type { Action } from '../types/action';
 import type { GameEvent } from '../types/event';
 import type { EngineError } from '../types/error';
 import { resolveCombat } from './resolve';
+import { availableBlockers } from './blocker';
 
 export interface CounterResult {
   state: GameState;
@@ -72,6 +73,23 @@ export function declineCounter(
     return { state, events: [], error: { code: 'NotYourPriority' } };
   }
   const { attacker, defender } = state.priorityWindow;
-  const resolved = resolveCombat(state, attacker, defender);
+  // Before resolving combat, check whether the defender has any usable Blocker.
+  // If so, open a BlockerStep. Simplification (plan §12): Blocker redirect does
+  // NOT re-open Counter Step; the redirected attack resolves directly.
+  const blockers = availableBlockers(state, defender.owner, defender);
+  if (blockers.length > 0) {
+    return {
+      state: {
+        ...state,
+        priorityWindow: {
+          kind: 'BlockerStep',
+          attacker,
+          originalTarget: defender,
+        },
+      },
+      events: [],
+    };
+  }
+  const resolved = resolveCombat({ ...state, priorityWindow: null }, attacker, defender);
   return { state: resolved.state, events: resolved.events };
 }

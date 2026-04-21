@@ -11,6 +11,7 @@ import { runEnd } from './phases/end';
 import { playCharacter, playEvent, playStage, attachDon, activateMain } from './phases/main';
 import { declareAttack } from './combat/declare';
 import { playCounter, declineCounter } from './combat/counter-step';
+import { useBlocker, declineBlocker } from './combat/blocker';
 import { activateTrigger } from './combat/trigger-step';
 
 export interface ApplyResult {
@@ -154,6 +155,22 @@ export function apply(state: GameState, action: Action): ApplyResult {
 
     case 'DeclineCounter': {
       const r = declineCounter(state, action);
+      if (r.error) return errorResult(state, r.error);
+      next = r.state;
+      events = r.events;
+      break;
+    }
+
+    case 'UseBlocker': {
+      const r = useBlocker(state, action);
+      if (r.error) return errorResult(state, r.error);
+      next = r.state;
+      events = r.events;
+      break;
+    }
+
+    case 'DeclineBlocker': {
+      const r = declineBlocker(state, action);
       if (r.error) return errorResult(state, r.error);
       next = r.state;
       events = r.events;
