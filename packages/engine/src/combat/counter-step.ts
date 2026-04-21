@@ -2,6 +2,7 @@ import type { GameState } from '../types/state';
 import type { Action } from '../types/action';
 import type { GameEvent } from '../types/event';
 import type { EngineError } from '../types/error';
+import { resolveCombat } from './resolve';
 
 export interface CounterResult {
   state: GameState;
@@ -70,9 +71,7 @@ export function declineCounter(
   if (action.player !== state.priorityWindow.defender.owner) {
     return { state, events: [], error: { code: 'NotYourPriority' } };
   }
-  // Stub: close window. Task 11 will insert resolve() call here.
-  return {
-    state: { ...state, priorityWindow: null },
-    events: [],
-  };
+  const { attacker, defender } = state.priorityWindow;
+  const resolved = resolveCombat(state, attacker, defender);
+  return { state: resolved.state, events: resolved.events };
 }

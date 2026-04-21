@@ -234,3 +234,224 @@ describe('Counter Step', () => {
     expect(res.state.priorityWindow).toBeNull();
   });
 });
+
+describe('Combat resolve', () => {
+  function setupLeaderAttack(): GameState {
+    const s = postMulliganInMain();
+    return apply(s, {
+      kind: 'DeclareAttack',
+      player: 0,
+      attacker: { kind: 'Leader' },
+      target: { kind: 'Leader' },
+    }).state;
+  }
+
+  it('attacker >= defender on Leader → Life -1, revealed card to hand (no Trigger)', () => {
+    const s = setupLeaderAttack();
+    // TEST-LEADER-01 power 5000 vs TEST-LEADER-02 power 5000 → attacker >= defender (equal)
+    // Seed life to a known card without Trigger effect (e.g. TEST-CHAR-BASIC-01)
+    const sWithLife = {
+      ...s,
+      players: [
+        s.players[0],
+        {
+          ...s.players[1],
+          life: [
+            'TEST-CHAR-BASIC-01',
+            'TEST-CHAR-BASIC-02',
+            'TEST-CHAR-BASIC-01',
+            'TEST-CHAR-BASIC-02',
+          ],
+        },
+      ] as typeof s.players,
+    };
+    const res = apply(sWithLife, { kind: 'DeclineCounter', player: 1 });
+    expect(res.error).toBeUndefined();
+    expect(res.state.players[1].life.length).toBe(3);
+    expect(res.state.players[1].hand).toContain('TEST-CHAR-BASIC-01');
+    expect(res.state.priorityWindow).toBeNull();
+  });
+
+  it('attacker < defender → no damage, just close window', () => {
+    let s = postMulliganInMain();
+    // Give attacker leader negative powerThisTurn so attack fails
+    s = {
+      ...s,
+      players: [
+        { ...s.players[0], leader: { ...s.players[0].leader, powerThisTurn: -10000 } },
+        s.players[1],
+      ] as typeof s.players,
+    };
+    const sAfterAttack = apply(s, {
+      kind: 'DeclareAttack',
+      player: 0,
+      attacker: { kind: 'Leader' },
+      target: { kind: 'Leader' },
+    }).state;
+    const res = apply(sAfterAttack, { kind: 'DeclineCounter', player: 1 });
+    expect(res.error).toBeUndefined();
+    // No life loss
+    expect(res.state.players[1].life.length).toBe(4);
+    expect(res.state.priorityWindow).toBeNull();
+  });
+
+  it('Life reveals a Trigger card → priorityWindow=TriggerStep', () => {
+    const s = setupLeaderAttack();
+    // Top of life = TEST-CHAR-TRIGGER-DRAW (has Trigger: draw 1)
+    const sWithLife = {
+      ...s,
+      players: [
+        s.players[0],
+        {
+          ...s.players[1],
+          life: [
+            'TEST-CHAR-TRIGGER-DRAW',
+            'TEST-CHAR-BASIC-01',
+            'TEST-CHAR-BASIC-01',
+            'TEST-CHAR-BASIC-01',
+          ],
+        },
+      ] as typeof s.players,
+    };
+    const res = apply(sWithLife, { kind: 'DeclineCounter', player: 1 });
+    expect(res.error).toBeUndefined();
+    const pw = res.state.priorityWindow;
+    expect(pw?.kind).toBe('TriggerStep');
+    if (pw?.kind === 'TriggerStep') {
+      expect(pw.revealedCardId).toBe('TEST-CHAR-TRIGGER-DRAW');
+      expect(pw.owner).toBe(1);
+    }
+  });
+
+  it('ActivateTrigger true → effect runs, revealed card goes to hand', () => {
+    const s = setupLeaderAttack();
+    const sWithLife = {
+      ...s,
+      players: [
+        s.players[0],
+        {
+          ...s.players[1],
+          life: [
+            'TEST-CHAR-TRIGGER-DRAW',
+            'TEST-CHAR-BASIC-01',
+            'TEST-CHAR-BASIC-01',
+            'TEST-CHAR-BASIC-01',
+          ],
+        },
+      ] as typeof s.players,
+    };
+    const s2 = apply(sWithLife, { kind: 'DeclineCounter', player: 1 }).state;
+    const handBefore = s2.players[1].hand.length;
+    const res = apply(s2, { kind: 'ActivateTrigger', player: 1, activate: true });
+    expect(res.error).toBeUndefined();
+    // Trigger was "draw 1" — hand should have +1 (revealed card) + 1 (draw effect) = +2
+    expect(res.state.players[1].hand.length).toBe(handBefore + 2);
+    expect(res.state.players[1].hand).toContain('TEST-CHAR-TRIGGER-DRAW');
+    expect(res.state.priorityWindow).toBeNull();
+  });
+
+  it('ActivateTrigger false → card to hand, no effect', () => {
+    const s = setupLeaderAttack();
+    const sWithLife = {
+      ...s,
+      players: [
+        s.players[0],
+        {
+          ...s.players[1],
+          life: [
+            'TEST-CHAR-TRIGGER-DRAW',
+            'TEST-CHAR-BASIC-01',
+            'TEST-CHAR-BASIC-01',
+            'TEST-CHAR-BASIC-01',
+          ],
+        },
+      ] as typeof s.players,
+    };
+    const s2 = apply(sWithLife, { kind: 'DeclineCounter', player: 1 }).state;
+    const handBefore = s2.players[1].hand.length;
+    const res = apply(s2, { kind: 'ActivateTrigger', player: 1, activate: false });
+    expect(res.error).toBeUndefined();
+    expect(res.state.players[1].hand.length).toBe(handBefore + 1);
+    expect(res.state.priorityWindow).toBeNull();
+  });
+
+  it('Life 0 after hit → winner set, phase GameOver', () => {
+    const s = setupLeaderAttack();
+    const sNoLife = {
+      ...s,
+      players: [s.players[0], { ...s.players[1], life: [] }] as typeof s.players,
+    };
+    const res = apply(sNoLife, { kind: 'DeclineCounter', player: 1 });
+    expect(res.error).toBeUndefined();
+    expect(res.state.winner).toBe(0);
+    expect(res.state.phase).toBe('GameOver');
+  });
+
+  it('DoubleAttack on Leader → Life -2', () => {
+    let s = postMulliganInMain();
+    s = addChar(s, 0, {
+      instanceId: 'atk',
+      cardId: 'TEST-CHAR-DOUBLEATTACK',
+      summoningSickness: false,
+    });
+    // Give p1 life with no triggers
+    s = {
+      ...s,
+      players: [
+        s.players[0],
+        {
+          ...s.players[1],
+          life: [
+            'TEST-CHAR-BASIC-01',
+            'TEST-CHAR-BASIC-02',
+            'TEST-CHAR-BASIC-01',
+            'TEST-CHAR-BASIC-02',
+          ],
+        },
+      ] as typeof s.players,
+    };
+    const s2 = apply(s, {
+      kind: 'DeclareAttack',
+      player: 0,
+      attacker: { kind: 'Character', instanceId: 'atk' },
+      target: { kind: 'Leader' },
+    }).state;
+    const res = apply(s2, { kind: 'DeclineCounter', player: 1 });
+    expect(res.error).toBeUndefined();
+    expect(res.state.players[1].life.length).toBe(2); // lost 2
+  });
+
+  it('Character target KO → to trash (no Banish)', () => {
+    let s = postMulliganInMain();
+    s = addChar(s, 0, { instanceId: 'atk', cardId: 'TEST-CHAR-RUSH' });
+    s = addChar(s, 1, { instanceId: 'def', cardId: 'TEST-CHAR-BASIC-01', rested: true });
+    const s2 = apply(s, {
+      kind: 'DeclareAttack',
+      player: 0,
+      attacker: { kind: 'Character', instanceId: 'atk' },
+      target: { kind: 'Character', instanceId: 'def', owner: 1 },
+    }).state;
+    const res = apply(s2, { kind: 'DeclineCounter', player: 1 });
+    expect(res.error).toBeUndefined();
+    expect(res.state.players[1].characters.length).toBe(0);
+    expect(res.state.players[1].trash).toContain('TEST-CHAR-BASIC-01');
+    expect(res.state.players[1].banishZone).toEqual([]);
+  });
+
+  it('Banish keyword → KO goes to banishZone', () => {
+    let s = postMulliganInMain();
+    s = addChar(s, 0, { instanceId: 'atk', cardId: 'TEST-CHAR-DOUBLEATTACK' }); // 6000 power
+    s = addChar(s, 1, { instanceId: 'def', cardId: 'TEST-CHAR-BANISH', rested: true });
+    const s2 = apply(s, {
+      kind: 'DeclareAttack',
+      player: 0,
+      attacker: { kind: 'Character', instanceId: 'atk' },
+      target: { kind: 'Character', instanceId: 'def', owner: 1 },
+    }).state;
+    const res = apply(s2, { kind: 'DeclineCounter', player: 1 });
+    expect(res.error).toBeUndefined();
+    expect(res.state.players[1].characters.length).toBe(0);
+    expect(res.state.players[1].banishZone).toContain('TEST-CHAR-BANISH');
+    expect(res.state.players[1].trash).not.toContain('TEST-CHAR-BANISH');
+  });
+});
