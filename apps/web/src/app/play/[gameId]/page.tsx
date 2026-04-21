@@ -5,6 +5,7 @@ import Link from 'next/link';
 import type { MatchSetup } from '@optcg/engine';
 import { Button } from '@/components/ui/button';
 import { GameProvider } from './_components/game-provider';
+import { Board } from './_components/board';
 
 export default function GamePage({ params }: { params: { gameId: string } }) {
   const [setup, setSetup] = useState<MatchSetup | null>(null);
@@ -45,19 +46,7 @@ export default function GamePage({ params }: { params: { gameId: string } }) {
 
   return (
     <GameProvider setup={setup}>
-      <BoardPlaceholder gameId={params.gameId} />
+      <Board />
     </GameProvider>
-  );
-}
-
-function BoardPlaceholder({ gameId }: { gameId: string }) {
-  return (
-    <main className="p-6">
-      <h1 className="mb-4 text-xl font-semibold">Game {gameId}</h1>
-      <p className="text-muted-foreground">Board renders here (Task 5).</p>
-      <Button asChild variant="secondary" className="mt-4">
-        <Link href="/play">Back to setup</Link>
-      </Button>
-    </main>
   );
 }
