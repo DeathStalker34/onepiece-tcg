@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import Image from 'next/image';
 import {
   Dialog,
@@ -11,10 +12,10 @@ import {
 import { Button } from '@/components/ui/button';
 import { cardImagePath } from '@/lib/card-image';
 import { useGame } from './game-provider';
-import type { PriorityWindow } from '@optcg/engine';
+import type { Action, PriorityWindow } from '@optcg/engine';
 
 export function PriorityModal() {
-  const { state, dispatch, botPlayers } = useGame();
+  const { state, dispatch, dispatchBatch, botPlayers } = useGame();
   const pw = state.priorityWindow;
 
   if (!pw) return null;
@@ -86,19 +87,21 @@ export function PriorityModal() {
   }
 
   function CounterVariant({ pw }: { pw: Extract<PriorityWindow, { kind: 'CounterStep' }> }) {
+    const [staged, setStaged] = useState<number[]>([]);
+
     const defenderIdx = pw.defender.owner;
     const attackerIdx = pw.attacker.owner;
+    const defender = state.players[defenderIdx];
 
-    // Resolve the card IDs for the attacker / defender cards.
+    // Resolve card IDs for attacker + defender visuals
     const attackerSource = pw.attacker.source;
+    const defenderTarget = pw.defender.target;
     const attackerCardId =
       attackerSource.kind === 'Leader'
         ? state.players[attackerIdx].leader.cardId
         : (state.players[attackerIdx].characters.find(
             (c) => c.instanceId === attackerSource.instanceId,
           )?.cardId ?? '???');
-
-    const defenderTarget = pw.defender.target;
     const defenderCardId =
       defenderTarget.kind === 'Leader'
         ? state.players[defenderIdx].leader.cardId
@@ -106,14 +109,39 @@ export function PriorityModal() {
             (c) => c.instanceId === defenderTarget.instanceId,
           )?.cardId ?? '???');
 
-    const atk = pw.attacker.attackPower;
-    const def = pw.defender.defensePower;
-    const willHit = atk >= def;
-
-    const defender = state.players[defenderIdx];
     const candidates = defender.hand
       .map((cardId, i) => ({ cardId, handIndex: i, card: state.catalog[cardId] }))
       .filter((x) => x.card && x.card.counter !== null && x.card.counter > 0);
+
+    const atk = pw.attacker.attackPower;
+    const baseDef = pw.defender.defensePower;
+    const stagedCounterTotal = staged.reduce((sum, idx) => {
+      const c = state.catalog[defender.hand[idx]];
+      return sum + (c?.counter ?? 0);
+    }, 0);
+    const predictedDef = baseDef + stagedCounterTotal;
+    const willHit = atk >= predictedDef;
+
+    function toggleStage(handIndex: number) {
+      setStaged((prev) =>
+        prev.includes(handIndex) ? prev.filter((i) => i !== handIndex) : [...prev, handIndex],
+      );
+    }
+
+    function handleConfirm() {
+      if (staged.length === 0) {
+        dispatch({ kind: 'DeclineCounter', player: defenderIdx });
+        return;
+      }
+      const actions: Action[] = [];
+      // Apply in DESCENDING handIndex order so earlier indices don't shift
+      const ordered = [...staged].sort((a, b) => b - a);
+      for (const idx of ordered) {
+        actions.push({ kind: 'PlayCounter', player: defenderIdx, handIndex: idx });
+      }
+      actions.push({ kind: 'DeclineCounter', player: defenderIdx });
+      dispatchBatch(actions);
+    }
 
     return (
       <Dialog open modal>
@@ -121,15 +149,12 @@ export function PriorityModal() {
           <DialogHeader>
             <DialogTitle>⚔ Counter Step</DialogTitle>
             <DialogDescription>
-              {pw.attacker.source.kind === 'Leader' ? 'Leader' : 'A character'} is attacking{' '}
-              {pw.defender.target.kind === 'Leader' ? 'your Leader' : 'your Character'}. Play
-              counters from your hand or decline.
+              Select counters to stage. Defense updates as you add/remove. Click Confirm to apply
+              all at once.
             </DialogDescription>
           </DialogHeader>
 
-          {/* Attack visual */}
           <div className="flex items-center justify-center gap-6 py-4">
-            {/* Attacker */}
             <div className="flex flex-col items-center">
               <span className="mb-1 text-[11px] font-semibold uppercase tracking-wider text-red-400">
                 Attacker
@@ -148,7 +173,6 @@ export function PriorityModal() {
               </div>
             </div>
 
-            {/* Arrow */}
             <div
               className={`text-7xl font-bold ${willHit ? 'animate-pulse text-red-500' : 'text-green-500'}`}
               aria-hidden
@@ -156,7 +180,6 @@ export function PriorityModal() {
               →
             </div>
 
-            {/* Defender */}
             <div className="flex flex-col items-center">
               <span
                 className={`mb-1 text-[11px] font-semibold uppercase tracking-wider ${willHit ? 'text-stone-400' : 'text-green-400'}`}
@@ -175,69 +198,90 @@ export function PriorityModal() {
                 />
               </div>
               <div
-                key={def}
+                key={predictedDef}
                 className={`mt-2 rounded px-3 py-1 text-lg font-bold text-white animate-in zoom-in-75 duration-300 ${willHit ? 'bg-stone-600' : 'bg-green-700'}`}
               >
-                🛡 {def.toLocaleString()}
+                🛡 {predictedDef.toLocaleString()}
+                {stagedCounterTotal > 0 && (
+                  <span className="ml-1 text-sm opacity-80">
+                    ({baseDef.toLocaleString()} + {stagedCounterTotal.toLocaleString()})
+                  </span>
+                )}
               </div>
             </div>
           </div>
 
-          {/* Status readout */}
           <div className="text-center text-sm font-semibold">
             {willHit ? (
               <span className="text-red-400">
-                Short by {(atk - def + 1).toLocaleString()} — attack will land.
+                Short by {(atk - predictedDef + 1).toLocaleString()} — attack will land.
               </span>
             ) : (
               <span className="text-green-400">
-                Defense exceeds attack by {(def - atk).toLocaleString()} — attack will miss.
+                Defense exceeds attack by {(predictedDef - atk).toLocaleString()} — attack will
+                miss.
               </span>
             )}
           </div>
 
-          {/* Counter candidates */}
           {candidates.length > 0 ? (
             <>
               <div className="mt-2 text-xs font-semibold uppercase tracking-wider text-amber-300">
-                Play a counter:
+                Counters in hand:
               </div>
               <div className="flex gap-2 overflow-x-auto py-2">
-                {candidates.map(({ cardId, handIndex, card }) => (
-                  <button
-                    key={`${cardId}-${handIndex}`}
-                    type="button"
-                    className="group relative flex shrink-0 flex-col items-center gap-1 rounded border border-amber-900/60 p-2 transition hover:ring-2 hover:ring-amber-500"
-                    onClick={() =>
-                      dispatch({ kind: 'PlayCounter', player: defenderIdx, handIndex })
-                    }
-                  >
-                    <div className="relative aspect-[5/7] w-20 overflow-hidden rounded">
-                      <Image
-                        src={cardImagePath(cardId)}
-                        alt={cardId}
-                        fill
-                        sizes="80px"
-                        className="object-cover"
-                      />
-                    </div>
-                    <span className="rounded bg-green-700 px-2 py-0.5 text-xs font-bold text-white">
-                      +{card?.counter ?? 0}
-                    </span>
-                  </button>
-                ))}
+                {candidates.map(({ cardId, handIndex, card }) => {
+                  const isStaged = staged.includes(handIndex);
+                  return (
+                    <button
+                      key={`${cardId}-${handIndex}`}
+                      type="button"
+                      aria-pressed={isStaged}
+                      className={`group relative flex shrink-0 flex-col items-center gap-1 rounded border p-2 transition ${
+                        isStaged
+                          ? 'border-green-500 bg-green-900/30 ring-2 ring-green-500'
+                          : 'border-amber-900/60 hover:ring-2 hover:ring-amber-500'
+                      }`}
+                      onClick={() => toggleStage(handIndex)}
+                    >
+                      <div className="relative aspect-[5/7] w-20 overflow-hidden rounded">
+                        <Image
+                          src={cardImagePath(cardId)}
+                          alt={cardId}
+                          fill
+                          sizes="80px"
+                          className={`object-cover transition ${isStaged ? 'scale-95' : ''}`}
+                        />
+                        {isStaged && (
+                          <span className="absolute inset-0 flex items-center justify-center bg-green-900/50 text-3xl font-bold text-white">
+                            ✓
+                          </span>
+                        )}
+                      </div>
+                      <span className="rounded bg-green-700 px-2 py-0.5 text-xs font-bold text-white">
+                        +{card?.counter ?? 0}
+                      </span>
+                    </button>
+                  );
+                })}
               </div>
             </>
           ) : (
             <p className="mt-2 text-sm italic opacity-60">No counter cards in hand.</p>
           )}
 
-          <div className="flex justify-end">
+          <div className="flex justify-end gap-2">
             <Button
               variant="secondary"
               onClick={() => dispatch({ kind: 'DeclineCounter', player: defenderIdx })}
             >
               Decline counter
+            </Button>
+            <Button onClick={handleConfirm} disabled={staged.length === 0}>
+              Confirm
+              {staged.length > 0
+                ? ` — ${staged.length} counter${staged.length > 1 ? 's' : ''}`
+                : ''}
             </Button>
           </div>
         </DialogContent>
