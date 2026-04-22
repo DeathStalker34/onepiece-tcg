@@ -1,8 +1,10 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import Image from 'next/image';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
+import { cardImagePath } from '@/lib/card-image';
 import { useGame } from './game-provider';
 
 interface Props {
@@ -128,6 +130,7 @@ export function DonStack({ playerIndex }: Props) {
           </DialogHeader>
           <div className="space-y-2">
             <AttachRow
+              cardId={p.leader.cardId}
               label="Leader"
               available={p.donActive}
               onAttach={(n) => attachTo({ kind: 'Leader' }, n)}
@@ -135,6 +138,7 @@ export function DonStack({ playerIndex }: Props) {
             {p.characters.map((c) => (
               <AttachRow
                 key={c.instanceId}
+                cardId={c.cardId}
                 label={c.cardId}
                 available={p.donActive}
                 onAttach={(n) => attachTo({ kind: 'Character', instanceId: c.instanceId }, n)}
@@ -148,10 +152,12 @@ export function DonStack({ playerIndex }: Props) {
 }
 
 function AttachRow({
+  cardId,
   label,
   available,
   onAttach,
 }: {
+  cardId: string;
   label: string;
   available: number;
   onAttach: (n: number) => void;
@@ -167,8 +173,17 @@ function AttachRow({
   const canAttach = available >= 1 && count >= 1 && count <= available;
 
   return (
-    <div className="flex items-center justify-between gap-3 rounded border p-2 text-sm">
-      <span className="flex-1 truncate">{label}</span>
+    <div className="flex items-center gap-3 rounded border p-2 text-sm">
+      <div className="relative aspect-[5/7] w-14 shrink-0 overflow-hidden rounded border border-amber-900/60">
+        <Image
+          src={cardImagePath(cardId)}
+          alt={cardId}
+          fill
+          sizes="56px"
+          className="object-cover"
+        />
+      </div>
+      <span className="flex-1 truncate text-xs">{label}</span>
       <div className="flex items-center gap-1">
         <Button
           size="sm"

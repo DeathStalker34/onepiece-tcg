@@ -75,6 +75,7 @@ export function LeaderCard({
       {actions.length > 1 && (
         <ActionMenu
           title={`Leader ${leader.cardId}`}
+          cardId={leader.cardId}
           options={actions}
           open={open}
           onOpenChange={setOpen}

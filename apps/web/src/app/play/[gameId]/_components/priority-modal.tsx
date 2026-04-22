@@ -12,7 +12,43 @@ import {
 import { Button } from '@/components/ui/button';
 import { cardImagePath } from '@/lib/card-image';
 import { useGame } from './game-provider';
-import type { Action, PriorityWindow } from '@optcg/engine';
+import type { Action, Effect, PriorityWindow, TargetSpec } from '@optcg/engine';
+
+function targetLabel(target: TargetSpec): string {
+  switch (target.kind) {
+    case 'self':
+      return 'self';
+    case 'opponentLeader':
+      return "opponent's Leader";
+    case 'opponentCharacter':
+      return "opponent's Character";
+    case 'ownCharacter':
+      return 'your Character';
+  }
+}
+
+function formatEffect(effect: Effect): string {
+  switch (effect.kind) {
+    case 'draw':
+      return `Draw ${effect.amount} card${effect.amount > 1 ? 's' : ''}`;
+    case 'search':
+      return `Search ${effect.amount} card${effect.amount > 1 ? 's' : ''} from ${effect.from}`;
+    case 'ko':
+      return `KO target ${targetLabel(effect.target)}`;
+    case 'banish':
+      return `Banish target ${targetLabel(effect.target)}`;
+    case 'returnToHand':
+      return `Return target ${targetLabel(effect.target)} to hand`;
+    case 'power':
+      return `${effect.delta > 0 ? '+' : ''}${effect.delta} power on ${targetLabel(effect.target)} (${effect.duration})`;
+    case 'sequence':
+      return effect.steps.map(formatEffect).join('; ');
+    case 'choice':
+      return `Choose: ${effect.options.map(formatEffect).join(' / ')}`;
+    case 'manual':
+      return effect.text;
+  }
+}
 
 export function PriorityModal() {
   const { state, dispatch, dispatchBatch, botPlayers } = useGame();
@@ -368,7 +404,12 @@ export function PriorityModal() {
                 className="object-cover"
               />
             </div>
-            <pre className="text-xs opacity-80">{JSON.stringify(pw.triggerEffect, null, 2)}</pre>
+            <div className="flex-1 rounded border border-amber-700/50 bg-amber-950/30 p-3 text-sm text-amber-100">
+              <div className="text-[10px] uppercase tracking-wider text-amber-300">
+                Trigger effect
+              </div>
+              <div className="mt-1 font-medium">{formatEffect(pw.triggerEffect)}</div>
+            </div>
           </div>
           <div className="flex justify-end gap-2">
             <Button

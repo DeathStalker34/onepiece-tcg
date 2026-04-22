@@ -119,6 +119,7 @@ export function Hand({
       </div>
       <ActionMenu
         title={selected ? `Play ${selected.cardId}` : ''}
+        cardId={selected?.cardId}
         options={options}
         open={!!selected}
         onOpenChange={(open) => {
