@@ -47,6 +47,9 @@ importers:
 
   apps/web:
     dependencies:
+      '@optcg/ai':
+        specifier: workspace:*
+        version: link:../../packages/ai
       '@optcg/card-data':
         specifier: workspace:*
         version: link:../../packages/card-data

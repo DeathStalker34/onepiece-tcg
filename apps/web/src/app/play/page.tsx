@@ -16,10 +16,21 @@ interface DeckSummary {
   cards: Array<{ cardId: string; quantity: number }>;
 }
 
+type Mode = 'hotseat' | 'ai-easy' | 'ai-medium';
+
+const MODE_LABELS: Record<Mode, string> = {
+  hotseat: 'Hotseat',
+  'ai-easy': 'vs AI Easy',
+  'ai-medium': 'vs AI Medium',
+};
+
+const MODES: readonly Mode[] = ['hotseat', 'ai-easy', 'ai-medium'] as const;
+
 export default function PlaySetupPage() {
   const { user, ready } = useUser();
   const router = useRouter();
   const [decks, setDecks] = useState<DeckSummary[] | null>(null);
+  const [mode, setMode] = useState<Mode>('hotseat');
   const [p0, setP0] = useState<string | null>(null);
   const [p1, setP1] = useState<string | null>(null);
   const [seed, setSeed] = useState('');
@@ -40,6 +51,9 @@ export default function PlaySetupPage() {
   const legalDecks = decks?.filter(
     (d) => d.leaderCardId && d.cards.reduce((s, c) => s + c.quantity, 0) === 50,
   );
+
+  const p0Label = mode === 'hotseat' ? 'Player 0 (first)' : 'Your deck (first)';
+  const p1Label = mode === 'hotseat' ? 'Player 1' : 'AI deck';
 
   async function handleStart(e: FormEvent) {
     e.preventDefault();
@@ -67,8 +81,9 @@ export default function PlaySetupPage() {
         throw new Error(errBody.error ?? `HTTP ${res.status}`);
       }
       const { gameId, setup } = (await res.json()) as { gameId: string; setup: unknown };
-      // Store setup in sessionStorage for the game page to pick up
-      sessionStorage.setItem(`optcg.game.${gameId}`, JSON.stringify(setup));
+      const aiOpponent: 'easy' | 'medium' | null =
+        mode === 'ai-easy' ? 'easy' : mode === 'ai-medium' ? 'medium' : null;
+      sessionStorage.setItem(`optcg.game.${gameId}`, JSON.stringify({ setup, aiOpponent }));
       router.push(`/play/${gameId}`);
     } catch (err) {
       setError((err as Error).message);
@@ -94,15 +109,26 @@ export default function PlaySetupPage() {
 
       {legalDecks && legalDecks.length > 0 && (
         <form onSubmit={handleStart} className="space-y-6">
+          <div className="space-y-2">
+            <Label>Mode</Label>
+            <div className="flex gap-3">
+              {MODES.map((m) => (
+                <label key={m} className="flex items-center gap-2 text-sm">
+                  <input
+                    type="radio"
+                    name="mode"
+                    value={m}
+                    checked={mode === m}
+                    onChange={() => setMode(m)}
+                  />
+                  {MODE_LABELS[m]}
+                </label>
+              ))}
+            </div>
+          </div>
           <div className="grid gap-6 md:grid-cols-2">
-            <DeckSelector
-              id="p0"
-              label="Player 0 (first)"
-              decks={legalDecks}
-              value={p0}
-              onChange={setP0}
-            />
-            <DeckSelector id="p1" label="Player 1" decks={legalDecks} value={p1} onChange={setP1} />
+            <DeckSelector id="p0" label={p0Label} decks={legalDecks} value={p0} onChange={setP0} />
+            <DeckSelector id="p1" label={p1Label} decks={legalDecks} value={p1} onChange={setP1} />
           </div>
           <div className="max-w-xs space-y-2">
             <Label htmlFor="seed">Seed (optional)</Label>

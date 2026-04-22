@@ -12,6 +12,7 @@
     "test": "vitest run"
   },
   "dependencies": {
+    "@optcg/ai": "workspace:*",
     "@optcg/card-data": "workspace:*",
     "@optcg/engine": "workspace:*",
     "@radix-ui/react-checkbox": "^1.3.3",

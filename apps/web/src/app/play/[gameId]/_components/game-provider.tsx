@@ -20,9 +20,19 @@ const GameContext = createContext<GameContextValue | null>(null);
 
 const AUTO_PHASES = new Set<GameState['phase']>(['Refresh', 'Draw', 'Don']);
 
-export function GameProvider({ setup, children }: { setup: MatchSetup; children: ReactNode }) {
+export function GameProvider({
+  setup,
+  aiOpponent: _aiOpponent,
+  children,
+}: {
+  setup: MatchSetup;
+  aiOpponent?: 'easy' | 'medium' | null;
+  children: ReactNode;
+}) {
   const [state, setState] = useState<GameState>(() => createInitialState(setup));
   const [events, setEvents] = useState<GameEvent[]>([]);
+  // aiOpponent wired in Task 7; accepted here so /play/[gameId] can forward it.
+  void _aiOpponent;
 
   function dispatch(action: Action): DispatchResult {
     const result = apply(state, action);
