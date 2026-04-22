@@ -203,17 +203,15 @@ function AttachFlow({
                 key={i}
                 type="button"
                 onClick={() => toggle(idx)}
-                className={`relative h-20 w-14 rounded-lg border-2 transition ${
+                className={`transition ${
                   isSelected
-                    ? '-translate-y-1 border-amber-300 bg-gradient-to-br from-yellow-400 to-amber-600 shadow-lg shadow-amber-500/40'
-                    : 'border-amber-900/40 bg-gradient-to-br from-yellow-700/50 to-stone-800/70 hover:-translate-y-0.5'
+                    ? '-translate-y-1 drop-shadow-[0_4px_12px_rgba(245,158,11,0.55)]'
+                    : 'opacity-60 hover:-translate-y-0.5 hover:opacity-100'
                 }`}
                 aria-label={`DON ${idx}`}
                 aria-pressed={isSelected}
               >
-                <span className="absolute inset-0 flex items-center justify-center text-xs font-bold text-white drop-shadow">
-                  DON!!
-                </span>
+                <DonCardGlyph />
               </button>
             );
           })}
@@ -271,20 +269,81 @@ function TargetTile({
       onClick={onPick}
       disabled={disabled}
       className={`flex flex-col items-center gap-1 rounded transition ${
-        disabled ? 'opacity-40' : 'hover:scale-105 hover:ring-2 hover:ring-amber-400'
+        disabled ? 'opacity-40' : 'hover:scale-105'
       }`}
       aria-label={`Attach to ${label}`}
     >
-      <div className="relative aspect-[5/7] w-28 overflow-hidden rounded shadow-md">
+      <div className="relative aspect-[5/7] w-40 overflow-hidden rounded shadow-md">
         <Image
           src={cardImagePath(cardId)}
           alt={cardId}
           fill
-          sizes="112px"
+          sizes="160px"
           className="object-cover"
         />
       </div>
       <span className="text-[10px] uppercase tracking-wide opacity-70">{label}</span>
     </button>
+  );
+}
+
+function DonCardGlyph() {
+  return (
+    <svg
+      viewBox="0 0 100 140"
+      className="h-24 w-[68px] rounded-lg"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden
+    >
+      <defs>
+        <radialGradient id="don-bg" cx="50%" cy="45%" r="70%">
+          <stop offset="0%" stopColor="#fde68a" />
+          <stop offset="55%" stopColor="#f59e0b" />
+          <stop offset="100%" stopColor="#78350f" />
+        </radialGradient>
+        <radialGradient id="don-sphere" cx="35%" cy="35%" r="65%">
+          <stop offset="0%" stopColor="#fffbeb" />
+          <stop offset="60%" stopColor="#f59e0b" />
+          <stop offset="100%" stopColor="#78350f" />
+        </radialGradient>
+      </defs>
+      <rect
+        x="2"
+        y="2"
+        width="96"
+        height="136"
+        rx="8"
+        fill="url(#don-bg)"
+        stroke="#78350f"
+        strokeWidth="2"
+      />
+      <g opacity="0.9">
+        <circle cx="50" cy="48" r="18" fill="url(#don-sphere)" />
+        <circle cx="30" cy="70" r="18" fill="url(#don-sphere)" />
+        <circle cx="70" cy="70" r="18" fill="url(#don-sphere)" />
+        <circle cx="50" cy="92" r="18" fill="url(#don-sphere)" />
+      </g>
+      <rect
+        x="14"
+        y="112"
+        width="72"
+        height="18"
+        rx="3"
+        fill="#7f1d1d"
+        stroke="#450a0a"
+        strokeWidth="1"
+      />
+      <text
+        x="50"
+        y="125"
+        textAnchor="middle"
+        fontSize="13"
+        fontWeight="900"
+        fill="#fef3c7"
+        fontFamily="system-ui, sans-serif"
+      >
+        DON!!
+      </text>
+    </svg>
   );
 }
