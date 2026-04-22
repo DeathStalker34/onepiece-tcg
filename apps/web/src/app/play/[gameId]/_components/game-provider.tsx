@@ -24,6 +24,7 @@ interface GameContextValue {
   dispatch: (action: Action) => DispatchResult;
   dispatchBatch: (actions: Action[]) => DispatchResult;
   events: GameEvent[];
+  botPlayers: { 0?: true; 1?: true };
 }
 
 const GameContext = createContext<GameContextValue | null>(null);
@@ -60,6 +61,9 @@ export function GameProvider({
   const [events, setEvents] = useState<GameEvent[]>([]);
   const rngRef = useRef<RngState>(createRng(setup.seed + 1));
   const bots = botForPlayerIndex(aiOpponent ?? null);
+  const botPlayers: { 0?: true; 1?: true } = {};
+  if (bots[0]) botPlayers[0] = true;
+  if (bots[1]) botPlayers[1] = true;
 
   function dispatch(action: Action): DispatchResult {
     const result = apply(state, action);
@@ -152,7 +156,7 @@ export function GameProvider({
   }, [state, bots]);
 
   return (
-    <GameContext.Provider value={{ state, dispatch, dispatchBatch, events }}>
+    <GameContext.Provider value={{ state, dispatch, dispatchBatch, events, botPlayers }}>
       {children}
     </GameContext.Provider>
   );

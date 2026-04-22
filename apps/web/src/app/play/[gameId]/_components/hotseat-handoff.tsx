@@ -12,7 +12,7 @@ import { Button } from '@/components/ui/button';
 import { useGame } from './game-provider';
 
 export function HotseatHandoff() {
-  const { state } = useGame();
+  const { state, botPlayers } = useGame();
   const prevActive = useRef(state.activePlayer);
   const prevTurn = useRef(state.turn);
   const [open, setOpen] = useState(false);
@@ -20,11 +20,14 @@ export function HotseatHandoff() {
   useEffect(() => {
     if (state.phase === 'GameOver') return;
     if (state.activePlayer !== prevActive.current && state.turn !== prevTurn.current) {
-      setOpen(true);
+      // Only open handoff if the incoming player is a human (not a bot)
+      if (!botPlayers[state.activePlayer]) {
+        setOpen(true);
+      }
     }
     prevActive.current = state.activePlayer;
     prevTurn.current = state.turn;
-  }, [state.activePlayer, state.turn, state.phase]);
+  }, [state.activePlayer, state.turn, state.phase, botPlayers]);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
