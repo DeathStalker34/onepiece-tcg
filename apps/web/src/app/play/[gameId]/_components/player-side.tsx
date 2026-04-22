@@ -12,7 +12,13 @@ import { PileViewer } from './pile-viewer';
 import type { ActionMenuOption } from './action-menu';
 import { TargetPicker, buildAttackTargets, type AttackTarget } from './target-picker';
 
-export function PlayerSide({ playerIndex }: { playerIndex: PlayerIndex }) {
+export function PlayerSide({
+  playerIndex,
+  mirror = false,
+}: {
+  playerIndex: PlayerIndex;
+  mirror?: boolean;
+}) {
   const { state, dispatch, botPlayers } = useGame();
   const p = state.players[playerIndex];
   const opp = state.players[playerIndex === 0 ? 1 : 0];
@@ -73,7 +79,7 @@ export function PlayerSide({ playerIndex }: { playerIndex: PlayerIndex }) {
 
   return (
     <section
-      className={`zone-frame space-y-3 ${isActive ? 'active-player-glow' : ''}`}
+      className={`zone-frame flex ${mirror ? 'flex-col-reverse' : 'flex-col'} gap-3 ${isActive ? 'active-player-glow' : ''}`}
       aria-label={`Player ${playerIndex}`}
     >
       <header className="flex items-center justify-between">

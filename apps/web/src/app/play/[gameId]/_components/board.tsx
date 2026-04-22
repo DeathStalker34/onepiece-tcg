@@ -28,7 +28,7 @@ export function Board() {
       </div>
 
       <div className="space-y-4 p-4 xl:p-6">
-        <PlayerSide playerIndex={1} />
+        <PlayerSide playerIndex={1} mirror />
         <hr className="border-amber-800/40" />
         <PlayerSide playerIndex={0} />
       </div>
