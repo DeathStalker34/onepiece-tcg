@@ -29,7 +29,7 @@ export function LeaderCard({
   }
 
   return (
-    <div className="flex items-center gap-2">
+    <div className="relative">
       <CardHoverPreview cardId={leader.cardId}>
         <button
           type="button"
@@ -62,15 +62,16 @@ export function LeaderCard({
           )}
         </button>
       </CardHoverPreview>
-      <div className="text-center">
-        <div className="zone-label">Life</div>
-        <div
-          key={lifeCount}
-          className="text-3xl font-bold leading-none animate-in zoom-in-75 duration-300"
-        >
-          {lifeCount}
-        </div>
+
+      {/* Life badge — absolute overlay OUTSIDE the rotating button */}
+      <div
+        key={lifeCount}
+        className="absolute -bottom-2 -left-2 z-20 flex h-10 w-10 items-center justify-center rounded-full border-2 border-amber-200 bg-red-800 text-base font-bold text-white shadow-lg animate-in zoom-in-75 duration-300"
+        aria-label={`${lifeCount} life`}
+      >
+        {lifeCount}
       </div>
+
       {actions.length > 1 && (
         <ActionMenu
           title={`Leader ${leader.cardId}`}

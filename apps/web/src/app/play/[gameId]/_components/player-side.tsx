@@ -19,6 +19,7 @@ export function PlayerSide({ playerIndex }: { playerIndex: PlayerIndex }) {
   const isActive = state.activePlayer === playerIndex && state.priorityWindow === null;
   const inMain =
     state.phase === 'Main' && state.priorityWindow === null && state.activePlayer === playerIndex;
+  const isPvAI = Boolean(botPlayers[0] || botPlayers[1]);
 
   const [pendingAttacker, setPendingAttacker] = useState<
     { kind: 'Leader' } | { kind: 'Character'; instanceId: string } | null
@@ -161,7 +162,7 @@ export function PlayerSide({ playerIndex }: { playerIndex: PlayerIndex }) {
 
       <Hand
         cards={p.hand}
-        hidden={botPlayers[playerIndex] || playerIndex !== state.activePlayer}
+        hidden={botPlayers[playerIndex] || (!isPvAI && playerIndex !== state.activePlayer)}
         label={`Hand — P${playerIndex}`}
         clickable={inMain && !botPlayers[playerIndex]}
         playerIndex={playerIndex}
