@@ -13,7 +13,12 @@ import { DonStack } from './don-stack';
 import { PileStack } from './pile-stack';
 import { PileViewer } from './pile-viewer';
 import type { ActionMenuOption } from './action-menu';
-import { TargetPicker, buildAttackTargets, type AttackTarget } from './target-picker';
+import {
+  TargetPicker,
+  buildAttackTargets,
+  type AttackTarget,
+  type AttackerInfo,
+} from './target-picker';
 
 export function PlayerSide({
   playerIndex,
@@ -80,7 +85,32 @@ export function PlayerSide({
     setPendingAttacker(null);
   }
 
-  const attackTargets = buildAttackTargets(opp.leader, opp.characters);
+  const attackTargets = buildAttackTargets(
+    opp.leader,
+    opp.life.length,
+    opp.characters,
+    state.catalog,
+  );
+
+  let attackerInfo: AttackerInfo | null = null;
+  if (pendingAttacker) {
+    if (pendingAttacker.kind === 'Leader') {
+      const ls = state.catalog[p.leader.cardId];
+      attackerInfo = {
+        cardId: p.leader.cardId,
+        power: (ls?.power ?? 0) + p.leader.attachedDon * 1000 + p.leader.powerThisTurn,
+      };
+    } else {
+      const char = p.characters.find((c) => c.instanceId === pendingAttacker.instanceId);
+      if (char) {
+        const cs = state.catalog[char.cardId];
+        attackerInfo = {
+          cardId: char.cardId,
+          power: (cs?.power ?? 0) + char.attachedDon * 1000 + char.powerThisTurn,
+        };
+      }
+    }
+  }
 
   return (
     <section
@@ -217,7 +247,7 @@ export function PlayerSide({
       )}
 
       <TargetPicker
-        title="Pick attack target"
+        attacker={attackerInfo}
         targets={attackTargets}
         open={!!pendingAttacker}
         onPick={resolveAttackTarget}
