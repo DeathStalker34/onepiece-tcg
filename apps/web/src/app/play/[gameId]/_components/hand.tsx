@@ -32,7 +32,7 @@ export function Hand({
           {cards.slice(0, Math.min(cards.length, 10)).map((_, i) => (
             <div
               key={i}
-              className="aspect-[5/7] w-24 rounded border border-amber-900/60 bg-stone-800"
+              className="aspect-[5/7] w-24 rounded border border-amber-900/60 bg-stone-800 animate-in fade-in-0 duration-200"
               aria-hidden
             />
           ))}
@@ -100,7 +100,7 @@ export function Hand({
             <CardHoverPreview key={`${cardId}-${i}`} cardId={cardId}>
               <button
                 type="button"
-                className={`relative aspect-[5/7] w-24 shrink-0 overflow-hidden rounded border border-amber-900/60 transition ${clickable ? 'hover:ring-2 hover:ring-primary' : 'cursor-default'}`}
+                className={`relative aspect-[5/7] w-24 shrink-0 overflow-hidden rounded border border-amber-900/60 animate-in fade-in-0 slide-in-from-bottom-2 duration-300 ${clickable ? 'cursor-pointer transition-transform hover:scale-105 hover:ring-2 hover:ring-primary' : 'cursor-default'}`}
                 onClick={() => handleCardClick(cardId, i)}
                 disabled={!clickable}
                 aria-label={`Card ${cardId}`}

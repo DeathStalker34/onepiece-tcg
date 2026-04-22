@@ -21,7 +21,7 @@ export function LeaderCard({
 
   const visual = (
     <div
-      className={`relative aspect-[5/7] w-32 overflow-hidden rounded border-2 border-amber-900/70 transition-transform duration-200 ${leader.rested ? 'rotate-90' : ''}`}
+      className={`relative aspect-[5/7] w-32 overflow-hidden rounded border-2 border-amber-900/70 transition-transform duration-300 ease-out ${leader.rested ? 'rotate-90' : ''}`}
     >
       <Image
         src={cardImagePath(leader.cardId)}
@@ -47,7 +47,7 @@ export function LeaderCard({
   const inner = clickable ? (
     <button
       type="button"
-      className="hover:ring-2 hover:ring-primary"
+      className="transition-transform hover:scale-105 hover:ring-2 hover:ring-primary"
       onClick={() => {
         if (actions.length === 1) {
           actions[0].onClick();

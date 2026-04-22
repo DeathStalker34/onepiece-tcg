@@ -18,7 +18,7 @@ export function CharacterCard({
   const clickable = actions.length > 0;
   const visual = (
     <div
-      className={`relative aspect-[5/7] w-24 overflow-hidden rounded border border-amber-900/70 transition-transform duration-200 ${char.rested ? 'rotate-90' : ''} ${char.summoningSickness ? 'opacity-60' : ''}`}
+      className={`relative aspect-[5/7] w-24 overflow-hidden rounded border border-amber-900/70 animate-in fade-in-0 zoom-in-95 transition-transform duration-300 ${char.rested ? 'rotate-90' : ''} ${char.summoningSickness ? 'opacity-60' : ''}`}
       title={`${char.cardId}${char.summoningSickness ? ' (summoning sickness)' : ''}`}
     >
       <Image
@@ -42,7 +42,7 @@ export function CharacterCard({
       <CardHoverPreview cardId={char.cardId}>
         <button
           type="button"
-          className="hover:ring-2 hover:ring-primary"
+          className="transition-transform hover:scale-105 hover:ring-2 hover:ring-primary"
           onClick={() => {
             if (actions.length === 1) actions[0].onClick();
             else setOpen(true);
