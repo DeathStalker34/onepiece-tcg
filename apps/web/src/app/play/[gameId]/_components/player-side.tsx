@@ -26,6 +26,8 @@ export function PlayerSide({
   const inMain =
     state.phase === 'Main' && state.priorityWindow === null && state.activePlayer === playerIndex;
   const isPvAI = Boolean(botPlayers[0] || botPlayers[1]);
+  const isYou = !botPlayers[playerIndex];
+  const friendlyName = isPvAI ? (isYou ? 'You' : 'Opponent') : `Player ${playerIndex}`;
 
   const [pendingAttacker, setPendingAttacker] = useState<
     { kind: 'Leader' } | { kind: 'Character'; instanceId: string } | null
@@ -79,17 +81,15 @@ export function PlayerSide({
 
   return (
     <section
-      className={`zone-frame flex ${mirror ? 'flex-col-reverse' : 'flex-col'} gap-3 ${isActive ? 'active-player-glow' : ''}`}
+      className={`zone-frame flex ${mirror ? 'flex-col-reverse' : 'flex-col'} gap-2 ${isActive ? 'active-player-glow' : ''}`}
       aria-label={`Player ${playerIndex}`}
     >
       <header className="flex items-center justify-between">
-        <span className="text-sm font-semibold">
-          Player {playerIndex} — {p.playerId}
-        </span>
+        <span className="text-sm font-semibold">{friendlyName}</span>
         <span className="zone-label">Turn {state.turn}</span>
       </header>
 
-      <div className="grid grid-cols-[auto_1fr_auto] gap-4">
+      <div className="grid grid-cols-[auto_1fr_auto] gap-3">
         <div className="space-y-1">
           <div className="zone-label">Leader</div>
           <div className="zone-frame p-2">
@@ -99,39 +99,46 @@ export function PlayerSide({
 
         <div className="space-y-2">
           <div className="zone-label">Characters</div>
-          <div className="zone-frame flex h-40 items-center gap-2 overflow-x-auto p-2">
-            {p.characters.length === 0 ? (
-              <span className="text-xs italic opacity-50">No characters</span>
-            ) : (
-              p.characters.map((c) => {
-                const charStatic = state.catalog[c.cardId];
-                const actions: ActionMenuOption[] = [];
-                if (inMain && !c.rested) {
-                  if (
-                    p.firstTurnUsed &&
-                    (!c.summoningSickness || (charStatic?.keywords.includes('Rush') ?? false))
-                  ) {
-                    actions.push({
-                      label: 'Attack',
-                      onClick: () =>
-                        setPendingAttacker({ kind: 'Character', instanceId: c.instanceId }),
-                    });
+          <div className="zone-frame p-2">
+            <div className="flex items-center justify-center gap-2">
+              {Array.from({ length: 5 }).map((_, slotIdx) => {
+                const c = p.characters[slotIdx];
+                if (c) {
+                  const charStatic = state.catalog[c.cardId];
+                  const actions: ActionMenuOption[] = [];
+                  if (inMain && !c.rested && p.firstTurnUsed) {
+                    if (!c.summoningSickness || (charStatic?.keywords.includes('Rush') ?? false)) {
+                      actions.push({
+                        label: 'Attack',
+                        onClick: () =>
+                          setPendingAttacker({ kind: 'Character', instanceId: c.instanceId }),
+                      });
+                    }
                   }
-                  if (charStatic?.effects.some((e) => e.trigger === 'Activate:Main')) {
-                    actions.push({
-                      label: 'Activate main',
-                      onClick: () =>
-                        dispatch({
-                          kind: 'ActivateMain',
-                          player: playerIndex,
-                          source: { kind: 'Character', instanceId: c.instanceId },
-                        }),
-                    });
+                  if (inMain && !c.rested) {
+                    if (charStatic?.effects.some((e) => e.trigger === 'Activate:Main')) {
+                      actions.push({
+                        label: 'Activate main',
+                        onClick: () =>
+                          dispatch({
+                            kind: 'ActivateMain',
+                            player: playerIndex,
+                            source: { kind: 'Character', instanceId: c.instanceId },
+                          }),
+                      });
+                    }
                   }
+                  return <CharacterCard key={c.instanceId} char={c} actions={actions} />;
                 }
-                return <CharacterCard key={c.instanceId} char={c} actions={actions} />;
-              })
-            )}
+                return (
+                  <div
+                    key={`empty-${slotIdx}`}
+                    className="aspect-[5/7] w-24 rounded border border-dashed border-amber-900/30 bg-stone-900/20"
+                    aria-hidden
+                  />
+                );
+              })}
+            </div>
           </div>
           <div className="flex items-center gap-2">
             <div className="zone-label">Stage:</div>
@@ -173,8 +180,6 @@ export function PlayerSide({
         clickable={inMain && !botPlayers[playerIndex]}
         playerIndex={playerIndex}
       />
-
-      {p.mulliganTaken && <div className="text-xs opacity-70">Mulligan taken</div>}
 
       <TargetPicker
         title="Pick attack target"
