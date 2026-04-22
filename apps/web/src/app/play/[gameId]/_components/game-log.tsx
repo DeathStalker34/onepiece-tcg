@@ -16,6 +16,8 @@ function eventLabel(e: GameEvent): string {
       return `P${e.player} attached DON to ${e.target}`;
     case 'AttackDeclared':
       return `${e.attacker} → ${e.target} (power ${e.power})`;
+    case 'AttackBlocked':
+      return `Attack blocked (${e.attackerPower} vs ${e.defensePower})`;
     case 'CounterPlayed':
       return `P${e.player} countered with ${e.cardId} (+${e.counterAmount})`;
     case 'BlockerUsed':

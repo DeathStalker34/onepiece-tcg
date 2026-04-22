@@ -31,7 +31,13 @@ export function resolveCombat(
   if (attacker.attackPower < defender.defensePower) {
     return {
       state: { ...state, priorityWindow: null },
-      events: [],
+      events: [
+        {
+          kind: 'AttackBlocked',
+          attackerPower: attacker.attackPower,
+          defensePower: defender.defensePower,
+        },
+      ],
     };
   }
 

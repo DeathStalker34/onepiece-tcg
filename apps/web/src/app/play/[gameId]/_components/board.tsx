@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useGame } from './game-provider';
 import { PlayerSide } from './player-side';
 import { TurnBanner } from './turn-banner';
+import { ToastCenter } from './toast-center';
 import { PriorityModal } from './priority-modal';
 import { HotseatHandoff } from './hotseat-handoff';
 import { GameOver } from './game-over';
@@ -42,6 +43,7 @@ export function Board() {
       <GameLog open={logOpen} onClose={() => setLogOpen(false)} />
       <PriorityModal />
       <HotseatHandoff />
+      <ToastCenter />
       <GameOver />
     </div>
   );
