@@ -104,8 +104,8 @@ export function PlayerSide({
             <div className="zone-label">Characters</div>
             <div className="zone-label">Stage</div>
           </div>
-          <div className="zone-frame p-2">
-            <div className="flex items-center gap-2">
+          <div className="flex justify-center">
+            <div className="zone-frame inline-flex items-center gap-2 p-2">
               <div className="flex items-center gap-2">
                 {Array.from({ length: 5 }).map((_, slotIdx) => {
                   const c = p.characters[slotIdx];

@@ -25,8 +25,8 @@ export function Hand({
   if (hidden) {
     // Single card-back with count overlay
     return (
-      <div className="flex items-center justify-center p-3">
-        <div className="relative aspect-[5/7] w-20">
+      <div className="flex items-center justify-center py-1">
+        <div className="relative aspect-[5/7] w-16">
           {cards.length === 0 ? (
             <div className="h-full w-full rounded border border-amber-900/40 bg-stone-900/20" />
           ) : (
@@ -41,7 +41,7 @@ export function Hand({
               ))}
               <span
                 key={cards.length}
-                className="absolute inset-0 z-10 flex items-center justify-center text-xl font-bold text-white drop-shadow animate-in zoom-in-75 duration-300"
+                className="absolute inset-0 z-10 flex items-center justify-center text-lg font-bold text-white drop-shadow animate-in zoom-in-75 duration-300"
               >
                 {cards.length}
               </span>
