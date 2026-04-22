@@ -632,3 +632,47 @@ describe('Main phase — ActivateMain', () => {
     expect(res.error?.code).toBe('InvalidTarget');
   });
 });
+
+describe('DON counts per OPTCG rules', () => {
+  function advanceToMain(s: GameState, player: 0 | 1): GameState {
+    let next = s;
+    for (let i = 0; i < 3; i += 1) {
+      if (next.phase === 'Main') return next;
+      const res = apply(next, { kind: 'PassPhase', player });
+      if (res.error) throw new Error(`PassPhase errored: ${JSON.stringify(res.error)}`);
+      next = res.state;
+    }
+    return next;
+  }
+
+  it('P0 Main turn 1 has 1 DON; turn 2 has 3 DON', () => {
+    let s = createInitialState(mkSetup());
+    s = apply(s, { kind: 'Mulligan', player: 0, mulligan: false }).state;
+    s = apply(s, { kind: 'Mulligan', player: 1, mulligan: false }).state;
+    s = advanceToMain(s, 0);
+    expect(s.activePlayer).toBe(0);
+    expect(s.phase).toBe('Main');
+    expect(s.players[0].donActive).toBe(1);
+    expect(s.turn).toBe(1);
+
+    // P0 end turn, P1 turn
+    s = apply(s, { kind: 'EndTurn', player: 0 }).state;
+    s = advanceToMain(s, 1);
+    expect(s.activePlayer).toBe(1);
+    expect(s.players[1].donActive).toBe(2);
+    expect(s.turn).toBe(2);
+
+    // P1 end turn, P0's second turn
+    s = apply(s, { kind: 'EndTurn', player: 1 }).state;
+    s = advanceToMain(s, 0);
+    expect(s.activePlayer).toBe(0);
+    expect(s.players[0].donActive).toBe(3);
+    expect(s.turn).toBe(3);
+
+    // P0 end turn, P1's second turn
+    s = apply(s, { kind: 'EndTurn', player: 0 }).state;
+    s = advanceToMain(s, 1);
+    expect(s.players[1].donActive).toBe(4);
+    expect(s.turn).toBe(4);
+  });
+});
