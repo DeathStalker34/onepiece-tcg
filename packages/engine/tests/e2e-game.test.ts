@@ -54,7 +54,7 @@ function nextScriptedAction(state: GameState): Action | null {
     return { kind: 'PassPhase', player: ap };
   }
   if (state.phase === 'Main') {
-    if (!state.players[ap].leader.rested) {
+    if (state.players[ap].firstTurnUsed && !state.players[ap].leader.rested) {
       return {
         kind: 'DeclareAttack',
         player: ap,

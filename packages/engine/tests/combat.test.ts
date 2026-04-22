@@ -24,7 +24,11 @@ function postMulliganInMain(): GameState {
   s = apply(s, { kind: 'PassPhase', player: 0 }).state;
   s = apply(s, { kind: 'PassPhase', player: 0 }).state;
   s = apply(s, { kind: 'PassPhase', player: 0 }).state;
-  return s;
+  // Pretend we're past the first-turn rule so combat tests can run.
+  return {
+    ...s,
+    players: s.players.map((p) => ({ ...p, firstTurnUsed: true })) as typeof s.players,
+  };
 }
 
 function addChar(
@@ -609,5 +613,53 @@ describe('Blocker', () => {
       blockerInstanceId: 'wrong-id',
     });
     expect(res.error).toBeDefined();
+  });
+});
+
+describe('first-turn no-attack rule', () => {
+  it('rejects DeclareAttack when active player firstTurnUsed is false', () => {
+    // Don't use the patched helper — we want to simulate actual turn 1.
+    let s = createInitialState(mkSetup());
+    s = apply(s, { kind: 'Mulligan', player: 0, mulligan: false }).state;
+    s = apply(s, { kind: 'Mulligan', player: 1, mulligan: false }).state;
+    s = apply(s, { kind: 'PassPhase', player: 0 }).state;
+    s = apply(s, { kind: 'PassPhase', player: 0 }).state;
+    s = apply(s, { kind: 'PassPhase', player: 0 }).state;
+    // phase === 'Main', turn 1, P0.firstTurnUsed === false
+    const res = apply(s, {
+      kind: 'DeclareAttack',
+      player: 0,
+      attacker: { kind: 'Leader' },
+      target: { kind: 'Leader' },
+    });
+    expect(res.error?.code).toBe('CannotAttackFirstTurn');
+  });
+
+  it('allows DeclareAttack once a player has completed a turn', () => {
+    let s = createInitialState(mkSetup());
+    s = apply(s, { kind: 'Mulligan', player: 0, mulligan: false }).state;
+    s = apply(s, { kind: 'Mulligan', player: 1, mulligan: false }).state;
+    // Advance to P0 Main, end turn, to P1 Main, end turn, back to P0 Main (turn 3)
+    s = apply(s, { kind: 'PassPhase', player: 0 }).state; // Refresh → Draw
+    s = apply(s, { kind: 'PassPhase', player: 0 }).state; // Draw → Don
+    s = apply(s, { kind: 'PassPhase', player: 0 }).state; // Don → Main
+    s = apply(s, { kind: 'EndTurn', player: 0 }).state;
+    s = apply(s, { kind: 'PassPhase', player: 1 }).state;
+    s = apply(s, { kind: 'PassPhase', player: 1 }).state;
+    s = apply(s, { kind: 'PassPhase', player: 1 }).state;
+    s = apply(s, { kind: 'EndTurn', player: 1 }).state;
+    s = apply(s, { kind: 'PassPhase', player: 0 }).state;
+    s = apply(s, { kind: 'PassPhase', player: 0 }).state;
+    s = apply(s, { kind: 'PassPhase', player: 0 }).state;
+    expect(s.phase).toBe('Main');
+    expect(s.players[0].firstTurnUsed).toBe(true);
+    const res = apply(s, {
+      kind: 'DeclareAttack',
+      player: 0,
+      attacker: { kind: 'Leader' },
+      target: { kind: 'Leader' },
+    });
+    expect(res.error).toBeUndefined();
+    expect(res.state.priorityWindow?.kind).toBe('CounterStep');
   });
 });

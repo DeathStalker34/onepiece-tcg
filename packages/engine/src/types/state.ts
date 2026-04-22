@@ -66,6 +66,7 @@ export interface PlayerState {
   donRested: number;
   donDeck: number;
   mulliganTaken: boolean;
+  firstTurnUsed: boolean;
 }
 
 export interface PlayerSetup {

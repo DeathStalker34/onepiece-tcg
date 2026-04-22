@@ -25,10 +25,12 @@ export function PlayerSide({ playerIndex }: { playerIndex: PlayerIndex }) {
   const leaderStatic = state.catalog[p.leader.cardId];
   const leaderActions: ActionMenuOption[] = [];
   if (inMain && !p.leader.rested) {
-    leaderActions.push({
-      label: 'Attack',
-      onClick: () => setPendingAttacker({ kind: 'Leader' }),
-    });
+    if (p.firstTurnUsed) {
+      leaderActions.push({
+        label: 'Attack',
+        onClick: () => setPendingAttacker({ kind: 'Leader' }),
+      });
+    }
     if (leaderStatic?.effects.some((e) => e.trigger === 'Activate:Main')) {
       leaderActions.push({
         label: 'Activate main',
@@ -93,7 +95,10 @@ export function PlayerSide({ playerIndex }: { playerIndex: PlayerIndex }) {
                 const charStatic = state.catalog[c.cardId];
                 const actions: ActionMenuOption[] = [];
                 if (inMain && !c.rested) {
-                  if (!c.summoningSickness || (charStatic?.keywords.includes('Rush') ?? false)) {
+                  if (
+                    p.firstTurnUsed &&
+                    (!c.summoningSickness || (charStatic?.keywords.includes('Rush') ?? false))
+                  ) {
                     actions.push({
                       label: 'Attack',
                       onClick: () =>
