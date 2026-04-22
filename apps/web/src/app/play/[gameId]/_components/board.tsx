@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import { useGame } from './game-provider';
 import { PlayerSide } from './player-side';
-import { ActionBar } from './action-bar';
 import { TurnBanner } from './turn-banner';
 import { PriorityModal } from './priority-modal';
 import { HotseatHandoff } from './hotseat-handoff';
@@ -12,16 +11,23 @@ import { GameLog } from './game-log';
 import { Button } from '@/components/ui/button';
 
 export function Board() {
-  useGame();
+  const { state, dispatch, botPlayers } = useGame();
   const [logOpen, setLogOpen] = useState(false);
+
+  const canEndTurn =
+    state.phase === 'Main' && state.priorityWindow === null && !botPlayers[state.activePlayer];
 
   return (
     <div className="tabletop-bg min-h-screen">
-      <ActionBar />
       <TurnBanner />
 
-      {/* Floating "Log" toggle in top-right corner */}
-      <div className="fixed right-4 top-16 z-20">
+      {/* Floating controls top-right */}
+      <div className="fixed right-4 top-4 z-20 flex items-center gap-2">
+        {canEndTurn && (
+          <Button onClick={() => dispatch({ kind: 'EndTurn', player: state.activePlayer })}>
+            End turn
+          </Button>
+        )}
         <Button size="sm" variant="secondary" onClick={() => setLogOpen(true)}>
           Log
         </Button>

@@ -11,13 +11,11 @@ import type { CardType } from '@optcg/engine';
 export function Hand({
   cards,
   hidden = false,
-  label,
   clickable = false,
   playerIndex,
 }: {
   cards: string[];
   hidden?: boolean;
-  label: string;
   clickable?: boolean;
   playerIndex: 0 | 1;
 }) {
@@ -25,19 +23,31 @@ export function Hand({
   const [selected, setSelected] = useState<{ cardId: string; handIndex: number } | null>(null);
 
   if (hidden) {
+    // Single card-back with count overlay
     return (
-      <div className="zone-frame flex items-center gap-3 p-3">
-        <div className="zone-label">{label}</div>
-        <div className="flex items-center gap-1">
-          {cards.slice(0, Math.min(cards.length, 10)).map((_, i) => (
-            <div
-              key={i}
-              className="aspect-[5/7] w-24 rounded border border-amber-900/60 bg-stone-800 animate-in fade-in-0 duration-200"
-              aria-hidden
-            />
-          ))}
+      <div className="flex items-center justify-center p-3">
+        <div className="relative aspect-[5/7] w-20">
+          {cards.length === 0 ? (
+            <div className="h-full w-full rounded border border-amber-900/40 bg-stone-900/20" />
+          ) : (
+            <>
+              {Array.from({ length: Math.min(cards.length, 4) }).map((_, i) => (
+                <div
+                  key={i}
+                  className="absolute h-full w-full rounded border-2 border-amber-800/80 bg-gradient-to-br from-amber-900 to-stone-900 shadow"
+                  style={{ top: `-${i * 2}px`, left: `-${i * 1}px`, zIndex: i }}
+                  aria-hidden
+                />
+              ))}
+              <span
+                key={cards.length}
+                className="absolute inset-0 z-10 flex items-center justify-center text-xl font-bold text-white drop-shadow animate-in zoom-in-75 duration-300"
+              >
+                {cards.length}
+              </span>
+            </>
+          )}
         </div>
-        <span className="text-xs opacity-70">{cards.length} cards</span>
       </div>
     );
   }
@@ -91,16 +101,15 @@ export function Hand({
 
   return (
     <>
-      <div className="zone-frame flex items-center gap-2 overflow-x-auto p-3">
-        <div className="zone-label shrink-0">{label}</div>
+      <div className="flex items-center justify-center gap-2 overflow-x-auto p-3">
         {cards.length === 0 ? (
-          <span className="text-xs italic opacity-50">empty</span>
+          <span className="text-xs italic opacity-50">empty hand</span>
         ) : (
           cards.map((cardId, i) => (
             <CardHoverPreview key={`${cardId}-${i}`} cardId={cardId}>
               <button
                 type="button"
-                className={`relative aspect-[5/7] w-24 shrink-0 overflow-hidden rounded border border-amber-900/60 animate-in fade-in-0 slide-in-from-right-16 duration-500 ease-out ${clickable ? 'cursor-pointer transition-transform hover:scale-105 hover:ring-2 hover:ring-primary' : 'cursor-default'}`}
+                className={`relative aspect-[5/7] w-24 shrink-0 overflow-hidden rounded border border-amber-900/60 transition animate-in fade-in-0 slide-in-from-right-16 duration-500 ease-out ${clickable ? 'cursor-pointer hover:ring-2 hover:ring-primary' : 'cursor-default'}`}
                 onClick={() => handleCardClick(cardId, i)}
                 disabled={!clickable}
                 aria-label={`Card ${cardId}`}

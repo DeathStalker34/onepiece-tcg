@@ -1,6 +1,8 @@
 'use client';
 
+import Image from 'next/image';
 import { useState } from 'react';
+import { cardImagePath } from '@/lib/card-image';
 import { useGame } from './game-provider';
 import type { PlayerIndex } from '@optcg/engine';
 import { LeaderCard } from './leader-card';
@@ -98,51 +100,74 @@ export function PlayerSide({
         </div>
 
         <div className="space-y-2">
-          <div className="zone-label">Characters</div>
+          <div className="flex items-center justify-between">
+            <div className="zone-label">Characters</div>
+            <div className="zone-label">Stage</div>
+          </div>
           <div className="zone-frame p-2">
-            <div className="flex items-center justify-center gap-2">
-              {Array.from({ length: 5 }).map((_, slotIdx) => {
-                const c = p.characters[slotIdx];
-                if (c) {
-                  const charStatic = state.catalog[c.cardId];
-                  const actions: ActionMenuOption[] = [];
-                  if (inMain && !c.rested && p.firstTurnUsed) {
-                    if (!c.summoningSickness || (charStatic?.keywords.includes('Rush') ?? false)) {
-                      actions.push({
-                        label: 'Attack',
-                        onClick: () =>
-                          setPendingAttacker({ kind: 'Character', instanceId: c.instanceId }),
-                      });
+            <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2">
+                {Array.from({ length: 5 }).map((_, slotIdx) => {
+                  const c = p.characters[slotIdx];
+                  if (c) {
+                    const charStatic = state.catalog[c.cardId];
+                    const actions: ActionMenuOption[] = [];
+                    if (inMain && !c.rested && p.firstTurnUsed) {
+                      if (
+                        !c.summoningSickness ||
+                        (charStatic?.keywords.includes('Rush') ?? false)
+                      ) {
+                        actions.push({
+                          label: 'Attack',
+                          onClick: () =>
+                            setPendingAttacker({ kind: 'Character', instanceId: c.instanceId }),
+                        });
+                      }
                     }
-                  }
-                  if (inMain && !c.rested) {
-                    if (charStatic?.effects.some((e) => e.trigger === 'Activate:Main')) {
-                      actions.push({
-                        label: 'Activate main',
-                        onClick: () =>
-                          dispatch({
-                            kind: 'ActivateMain',
-                            player: playerIndex,
-                            source: { kind: 'Character', instanceId: c.instanceId },
-                          }),
-                      });
+                    if (inMain && !c.rested) {
+                      if (charStatic?.effects.some((e) => e.trigger === 'Activate:Main')) {
+                        actions.push({
+                          label: 'Activate main',
+                          onClick: () =>
+                            dispatch({
+                              kind: 'ActivateMain',
+                              player: playerIndex,
+                              source: { kind: 'Character', instanceId: c.instanceId },
+                            }),
+                        });
+                      }
                     }
+                    return <CharacterCard key={c.instanceId} char={c} actions={actions} />;
                   }
-                  return <CharacterCard key={c.instanceId} char={c} actions={actions} />;
-                }
-                return (
+                  return (
+                    <div
+                      key={`empty-${slotIdx}`}
+                      className="aspect-[5/7] w-24 rounded border border-dashed border-amber-900/30 bg-stone-900/20"
+                      aria-hidden
+                    />
+                  );
+                })}
+              </div>
+              <div className="mx-2 h-28 w-px bg-amber-900/40" aria-hidden />
+              <div className="flex flex-col items-center gap-1">
+                {p.stage ? (
+                  <div className="relative aspect-[5/7] w-24 overflow-hidden rounded border-2 border-amber-700">
+                    <Image
+                      src={cardImagePath(p.stage.cardId)}
+                      alt={p.stage.cardId}
+                      fill
+                      sizes="96px"
+                      className="object-cover"
+                    />
+                  </div>
+                ) : (
                   <div
-                    key={`empty-${slotIdx}`}
                     className="aspect-[5/7] w-24 rounded border border-dashed border-amber-900/30 bg-stone-900/20"
                     aria-hidden
                   />
-                );
-              })}
+                )}
+              </div>
             </div>
-          </div>
-          <div className="flex items-center gap-2">
-            <div className="zone-label">Stage:</div>
-            <span className="text-xs">{p.stage ? p.stage.cardId : '—'}</span>
           </div>
         </div>
 
@@ -176,7 +201,6 @@ export function PlayerSide({
       <Hand
         cards={p.hand}
         hidden={botPlayers[playerIndex] || (!isPvAI && playerIndex !== state.activePlayer)}
-        label={`Hand — P${playerIndex}`}
         clickable={inMain && !botPlayers[playerIndex]}
         playerIndex={playerIndex}
       />
