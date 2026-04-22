@@ -1,2 +1,2 @@
-// @optcg/ai — populated by subsequent tasks.
-export {};
+export type { Bot, BotDecision } from './types';
+export { generatePriorityAction, generateMainActions } from './action-generator';
