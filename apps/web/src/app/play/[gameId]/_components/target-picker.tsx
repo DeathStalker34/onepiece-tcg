@@ -78,13 +78,7 @@ export function TargetPicker({
                       className="group flex flex-col items-center gap-2 rounded-lg p-1 transition hover:scale-105"
                       onClick={() => onPick(t)}
                     >
-                      <div
-                        className={`relative aspect-[5/7] w-40 overflow-hidden rounded shadow-md ring-2 transition ${
-                          hits
-                            ? 'ring-emerald-500/70 group-hover:ring-emerald-400'
-                            : 'ring-red-500/60 group-hover:ring-red-400'
-                        }`}
-                      >
+                      <div className="relative aspect-[5/7] w-40 overflow-hidden rounded shadow-md transition">
                         <Image
                           src={cardImagePath(t.cardId)}
                           alt={t.cardId}
