@@ -34,27 +34,27 @@ export function TargetPicker({
 }) {
   return (
     <Dialog open={open} onOpenChange={(o) => !o && onCancel()}>
-      <DialogContent className="max-w-3xl">
+      <DialogContent className="max-w-4xl">
         <DialogHeader>
           <DialogTitle>Choose a target</DialogTitle>
         </DialogHeader>
 
         <div className="flex items-stretch gap-4">
           {attacker && (
-            <div className="flex flex-col items-center gap-2 rounded border border-amber-700/40 bg-stone-900/40 p-3">
+            <div className="flex flex-col items-center gap-2">
               <span className="text-xs uppercase tracking-wide opacity-70">Attacker</span>
-              <div className="relative aspect-[5/7] w-28 overflow-hidden rounded">
+              <div className="relative aspect-[5/7] w-40 overflow-hidden rounded">
                 <Image
                   src={cardImagePath(attacker.cardId)}
                   alt={attacker.cardId}
                   fill
-                  sizes="112px"
+                  sizes="160px"
                   className="object-cover"
                 />
+                <span className="absolute right-1 top-1 rounded bg-black/70 px-1.5 py-0.5 text-sm font-bold text-white">
+                  {attacker.power.toLocaleString()}
+                </span>
               </div>
-              <span className="rounded bg-amber-600/80 px-2 py-0.5 text-sm font-bold text-white">
-                {attacker.power.toLocaleString()}
-              </span>
             </div>
           )}
 
@@ -75,26 +75,28 @@ export function TargetPicker({
                     <button
                       key={`${t.kind}-${t.instanceId ?? 'leader'}`}
                       type="button"
-                      className={`group flex flex-col items-center gap-2 rounded-lg border-2 p-2 transition ${
-                        hits
-                          ? 'border-emerald-600/60 bg-emerald-950/20 hover:border-emerald-400 hover:bg-emerald-900/30'
-                          : 'border-red-700/50 bg-red-950/20 hover:border-red-500 hover:bg-red-900/30'
-                      }`}
+                      className="group flex flex-col items-center gap-2 rounded-lg p-1 transition hover:scale-105"
                       onClick={() => onPick(t)}
                     >
-                      <div className="relative aspect-[5/7] w-24 overflow-hidden rounded shadow-md">
+                      <div
+                        className={`relative aspect-[5/7] w-40 overflow-hidden rounded shadow-md ring-2 transition ${
+                          hits
+                            ? 'ring-emerald-500/70 group-hover:ring-emerald-400'
+                            : 'ring-red-500/60 group-hover:ring-red-400'
+                        }`}
+                      >
                         <Image
                           src={cardImagePath(t.cardId)}
                           alt={t.cardId}
                           fill
-                          sizes="96px"
+                          sizes="160px"
                           className="object-cover"
                         />
-                        <span className="absolute right-1 top-1 rounded bg-black/70 px-1.5 py-0.5 text-xs font-bold text-white">
+                        <span className="absolute right-1 top-1 rounded bg-black/70 px-1.5 py-0.5 text-sm font-bold text-white">
                           {t.power.toLocaleString()}
                         </span>
                         {t.kind === 'Leader' && t.lifeRemaining !== undefined && (
-                          <span className="absolute bottom-1 left-1 rounded-full bg-red-600 px-2 py-0.5 text-xs font-bold text-white">
+                          <span className="absolute left-1 top-1 rounded-full bg-red-600 px-2 py-0.5 text-xs font-bold text-white">
                             ♥ {t.lifeRemaining}
                           </span>
                         )}
@@ -124,9 +126,6 @@ export function TargetPicker({
                 })}
               </div>
             )}
-            <p className="mt-1 text-[10px] italic opacity-50">
-              Based on base power · defender may add counters.
-            </p>
           </div>
         </div>
 
