@@ -1,6 +1,7 @@
 'use client';
 
 import Image from 'next/image';
+import { Swords } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { cardImagePath } from '@/lib/card-image';
@@ -58,8 +59,8 @@ export function TargetPicker({
             </div>
           )}
 
-          <div className="flex items-center justify-center px-2 text-3xl opacity-60" aria-hidden>
-            →
+          <div className="flex items-center justify-center px-2" aria-hidden>
+            <Swords className="h-10 w-10 text-amber-600" strokeWidth={1.75} />
           </div>
 
           <div className="flex flex-1 flex-col gap-2">
