@@ -663,3 +663,27 @@ describe('first-turn no-attack rule', () => {
     expect(res.state.priorityWindow?.kind).toBe('CounterStep');
   });
 });
+
+describe('KO returns attached DON to rested', () => {
+  it('KO of a character with attached DON puts the DON into donRested', () => {
+    let s = postMulliganInMain();
+    s = addChar(s, 0, { instanceId: 'atk', cardId: 'TEST-CHAR-DOUBLEATTACK' });
+    s = addChar(s, 1, {
+      instanceId: 'def',
+      cardId: 'TEST-CHAR-BASIC-01',
+      rested: true,
+      attachedDon: 2,
+    });
+    const restedBefore = s.players[1].donRested;
+    const s2 = apply(s, {
+      kind: 'DeclareAttack',
+      player: 0,
+      attacker: { kind: 'Character', instanceId: 'atk' },
+      target: { kind: 'Character', instanceId: 'def', owner: 1 },
+    }).state;
+    const res = apply(s2, { kind: 'DeclineCounter', player: 1 });
+    expect(res.error).toBeUndefined();
+    expect(res.state.players[1].characters.length).toBe(0);
+    expect(res.state.players[1].donRested).toBe(restedBefore + 2);
+  });
+});

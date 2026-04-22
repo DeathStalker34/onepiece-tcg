@@ -633,6 +633,66 @@ describe('Main phase — ActivateMain', () => {
   });
 });
 
+describe('DON cost conservation', () => {
+  it('PlayCharacter: spent cost goes to donRested (not lost)', () => {
+    let s = createInitialState(mkSetup());
+    s = apply(s, { kind: 'Mulligan', player: 0, mulligan: false }).state;
+    s = apply(s, { kind: 'Mulligan', player: 1, mulligan: false }).state;
+    s = apply(s, { kind: 'PassPhase', player: 0 }).state;
+    s = apply(s, { kind: 'PassPhase', player: 0 }).state;
+    s = apply(s, { kind: 'PassPhase', player: 0 }).state;
+    // P0 now in Main with 1 DON active. Inject a cost-1 character at handIndex 0.
+    s = {
+      ...s,
+      players: [
+        { ...s.players[0], hand: ['TEST-CHAR-BASIC-01', ...s.players[0].hand.slice(1)] },
+        s.players[1],
+      ] as typeof s.players,
+    };
+    const donBefore = s.players[0].donActive;
+    const restedBefore = s.players[0].donRested;
+    const res = apply(s, { kind: 'PlayCharacter', player: 0, handIndex: 0, donSpent: 0 });
+    expect(res.error).toBeUndefined();
+    expect(res.state.players[0].donActive).toBe(donBefore - 1);
+    expect(res.state.players[0].donRested).toBe(restedBefore + 1);
+    // Total DON not in deck should be conserved
+    const totalBefore = donBefore + restedBefore;
+    const totalAfter = res.state.players[0].donActive + res.state.players[0].donRested;
+    expect(totalAfter).toBe(totalBefore);
+  });
+
+  it('Refresh of next turn moves spent-cost DON back to active', () => {
+    let s = createInitialState(mkSetup());
+    s = apply(s, { kind: 'Mulligan', player: 0, mulligan: false }).state;
+    s = apply(s, { kind: 'Mulligan', player: 1, mulligan: false }).state;
+    s = apply(s, { kind: 'PassPhase', player: 0 }).state;
+    s = apply(s, { kind: 'PassPhase', player: 0 }).state;
+    s = apply(s, { kind: 'PassPhase', player: 0 }).state;
+    s = {
+      ...s,
+      players: [
+        { ...s.players[0], hand: ['TEST-CHAR-BASIC-01', ...s.players[0].hand.slice(1)] },
+        s.players[1],
+      ] as typeof s.players,
+    };
+    // Play cost-1 character on turn 1, ends turn 1 with active=0, rested=1
+    s = apply(s, { kind: 'PlayCharacter', player: 0, handIndex: 0, donSpent: 0 }).state;
+    s = apply(s, { kind: 'EndTurn', player: 0 }).state;
+    // P1 full turn
+    s = apply(s, { kind: 'PassPhase', player: 1 }).state;
+    s = apply(s, { kind: 'PassPhase', player: 1 }).state;
+    s = apply(s, { kind: 'PassPhase', player: 1 }).state;
+    s = apply(s, { kind: 'EndTurn', player: 1 }).state;
+    // P0's second turn begins. After Refresh, donActive should include the rested DON.
+    s = apply(s, { kind: 'PassPhase', player: 0 }).state;
+    s = apply(s, { kind: 'PassPhase', player: 0 }).state;
+    s = apply(s, { kind: 'PassPhase', player: 0 }).state;
+    // P0 had 0 active + 1 rested at start of turn 3. Refresh → 1 active. Don phase +2. Total 3.
+    expect(s.players[0].donActive).toBe(3);
+    expect(s.players[0].donRested).toBe(0);
+  });
+});
+
 describe('DON counts per OPTCG rules', () => {
   function advanceToMain(s: GameState, player: 0 | 1): GameState {
     let next = s;
