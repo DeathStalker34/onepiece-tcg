@@ -19,11 +19,10 @@ export function HotseatHandoff() {
 
   useEffect(() => {
     if (state.phase === 'GameOver') return;
+    // In PvAI mode (any bot configured) there's no device to pass.
+    if (botPlayers[0] || botPlayers[1]) return;
     if (state.activePlayer !== prevActive.current && state.turn !== prevTurn.current) {
-      // Only open handoff if the incoming player is a human (not a bot)
-      if (!botPlayers[state.activePlayer]) {
-        setOpen(true);
-      }
+      setOpen(true);
     }
     prevActive.current = state.activePlayer;
     prevTurn.current = state.turn;

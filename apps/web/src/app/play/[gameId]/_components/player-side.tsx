@@ -13,7 +13,7 @@ import type { ActionMenuOption } from './action-menu';
 import { TargetPicker, buildAttackTargets, type AttackTarget } from './target-picker';
 
 export function PlayerSide({ playerIndex }: { playerIndex: PlayerIndex }) {
-  const { state, dispatch } = useGame();
+  const { state, dispatch, botPlayers } = useGame();
   const p = state.players[playerIndex];
   const opp = state.players[playerIndex === 0 ? 1 : 0];
   const isActive = state.activePlayer === playerIndex && state.priorityWindow === null;
@@ -161,9 +161,9 @@ export function PlayerSide({ playerIndex }: { playerIndex: PlayerIndex }) {
 
       <Hand
         cards={p.hand}
-        hidden={playerIndex !== state.activePlayer}
+        hidden={botPlayers[playerIndex] || playerIndex !== state.activePlayer}
         label={`Hand — P${playerIndex}`}
-        clickable={inMain}
+        clickable={inMain && !botPlayers[playerIndex]}
         playerIndex={playerIndex}
       />
 

@@ -14,10 +14,19 @@ import { useGame } from './game-provider';
 import type { PriorityWindow } from '@optcg/engine';
 
 export function PriorityModal() {
-  const { state, dispatch } = useGame();
+  const { state, dispatch, botPlayers } = useGame();
   const pw = state.priorityWindow;
 
   if (!pw) return null;
+
+  // Find the actor for this priority window
+  let actor: 0 | 1 | null = null;
+  if (pw.kind === 'Mulligan') actor = pw.player;
+  else if (pw.kind === 'CounterStep') actor = pw.defender.owner;
+  else if (pw.kind === 'BlockerStep') actor = pw.originalTarget.owner;
+  else if (pw.kind === 'TriggerStep') actor = pw.owner;
+
+  if (actor !== null && botPlayers[actor]) return null;
 
   switch (pw.kind) {
     case 'Mulligan':
