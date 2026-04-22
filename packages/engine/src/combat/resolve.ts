@@ -132,6 +132,7 @@ export function resolveCombat(
     characters: newChars,
     trash: newTrash,
     banishZone: newBanish,
+    donRested: dp.donRested + victim.attachedDon,
   };
   const newPlayers = state.players.map((pp, ix) =>
     ix === defenderOwner ? updated : pp,

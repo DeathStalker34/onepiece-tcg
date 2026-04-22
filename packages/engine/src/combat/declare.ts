@@ -39,6 +39,9 @@ export function declareAttack(
   if (state.activePlayer !== action.player) {
     return { state, events: [], error: { code: 'NotYourPriority' } };
   }
+  if (!state.players[action.player].firstTurnUsed) {
+    return { state, events: [], error: { code: 'CannotAttackFirstTurn' } };
+  }
 
   const attackerOwner = action.player;
   const defenderOwner: PlayerIndex = attackerOwner === 0 ? 1 : 0;

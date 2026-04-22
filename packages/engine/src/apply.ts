@@ -260,9 +260,14 @@ function advancePhase(state: GameState): { state: GameState; events: GameEvent[]
 }
 
 function startNextTurn(state: GameState): { state: GameState; events: GameEvent[] } {
-  const nextActive: PlayerIndex = state.activePlayer === 0 ? 1 : 0;
+  const current = state.activePlayer;
+  const nextActive: PlayerIndex = current === 0 ? 1 : 0;
+  const newPlayers = state.players.map((p, i) =>
+    i === current ? { ...p, firstTurnUsed: true } : p,
+  ) as GameState['players'];
   const preRefresh: GameState = {
     ...state,
+    players: newPlayers,
     activePlayer: nextActive,
     isFirstTurnOfFirstPlayer: false,
     turn: state.turn + 1,

@@ -42,6 +42,7 @@ function buildPlayerState(
     donRested: 0,
     donDeck: 10,
     mulliganTaken: false,
+    firstTurnUsed: false,
   };
 
   return { player, rng: rngAfterShuffle };

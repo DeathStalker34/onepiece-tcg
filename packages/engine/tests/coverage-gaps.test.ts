@@ -39,7 +39,11 @@ function postMulliganInMain(setup: MatchSetup = mkSetup()): GameState {
   s = apply(s, { kind: 'PassPhase', player: 0 }).state;
   s = apply(s, { kind: 'PassPhase', player: 0 }).state;
   s = apply(s, { kind: 'PassPhase', player: 0 }).state;
-  return s;
+  // Pretend we're past the first-turn rule so combat tests can run.
+  return {
+    ...s,
+    players: s.players.map((p) => ({ ...p, firstTurnUsed: true })) as typeof s.players,
+  };
 }
 
 function addChar(

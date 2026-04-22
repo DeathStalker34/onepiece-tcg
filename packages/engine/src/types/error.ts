@@ -11,5 +11,6 @@ export type EngineError =
   | { code: 'CharacterAlreadyAttacked' }
   | { code: 'CharacterIsRested' }
   | { code: 'SummoningSickness' }
+  | { code: 'CannotAttackFirstTurn' }
   | { code: 'GameAlreadyOver' }
   | { code: 'Unknown'; detail: string };

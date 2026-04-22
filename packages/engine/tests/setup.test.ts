@@ -90,6 +90,12 @@ describe('createInitialState', () => {
     expect(state.players[1].mulliganTaken).toBe(false);
   });
 
+  it('initializes firstTurnUsed=false for both players', () => {
+    const state = createInitialState(mkSetup());
+    expect(state.players[0].firstTurnUsed).toBe(false);
+    expect(state.players[1].firstTurnUsed).toBe(false);
+  });
+
   it('banishZone and trash start empty', () => {
     const state = createInitialState(mkSetup());
     for (const p of state.players) {

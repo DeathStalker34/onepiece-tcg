@@ -97,6 +97,7 @@ export function playCharacter(
     ...p,
     hand: newHand,
     donActive: p.donActive - effectiveCost,
+    donRested: p.donRested + effectiveCost,
     characters: [...p.characters, newChar],
   };
   const nextPlayers = afterId.players.map((pp, i) =>
@@ -149,6 +150,7 @@ export function playEvent(
     hand: newHand,
     trash: [...p.trash, cardId],
     donActive: p.donActive - effectiveCost,
+    donRested: p.donRested + effectiveCost,
   };
   const nextPlayers = state.players.map((pp, i) =>
     i === action.player ? updatedPlayer : pp,
@@ -341,6 +343,7 @@ export function playStage(
     ...p,
     hand: newHand,
     donActive: p.donActive - effectiveCost,
+    donRested: p.donRested + effectiveCost,
     stage: { cardId },
     trash: [...p.trash, ...trashAddition],
   };
