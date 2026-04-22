@@ -87,48 +87,151 @@ export function PriorityModal() {
 
   function CounterVariant({ pw }: { pw: Extract<PriorityWindow, { kind: 'CounterStep' }> }) {
     const defenderIdx = pw.defender.owner;
+    const attackerIdx = pw.attacker.owner;
+
+    // Resolve the card IDs for the attacker / defender cards.
+    const attackerSource = pw.attacker.source;
+    const attackerCardId =
+      attackerSource.kind === 'Leader'
+        ? state.players[attackerIdx].leader.cardId
+        : (state.players[attackerIdx].characters.find(
+            (c) => c.instanceId === attackerSource.instanceId,
+          )?.cardId ?? '???');
+
+    const defenderTarget = pw.defender.target;
+    const defenderCardId =
+      defenderTarget.kind === 'Leader'
+        ? state.players[defenderIdx].leader.cardId
+        : (state.players[defenderIdx].characters.find(
+            (c) => c.instanceId === defenderTarget.instanceId,
+          )?.cardId ?? '???');
+
+    const atk = pw.attacker.attackPower;
+    const def = pw.defender.defensePower;
+    const willHit = atk >= def;
+
     const defender = state.players[defenderIdx];
-    // Counter candidates: hand cards with counter > 0
     const candidates = defender.hand
       .map((cardId, i) => ({ cardId, handIndex: i, card: state.catalog[cardId] }))
       .filter((x) => x.card && x.card.counter !== null && x.card.counter > 0);
-    const atk = pw.attacker.attackPower;
-    const def = pw.defender.defensePower;
+
     return (
       <Dialog open modal>
         <DialogContent className="max-w-3xl" onInteractOutside={(e) => e.preventDefault()}>
           <DialogHeader>
-            <DialogTitle>Counter Step — Player {defenderIdx}</DialogTitle>
+            <DialogTitle>⚔ Counter Step</DialogTitle>
             <DialogDescription>
-              Attacker power <strong>{atk}</strong> vs current defense <strong>{def}</strong>. Play
-              counters to boost defense, or decline.
+              {pw.attacker.source.kind === 'Leader' ? 'Leader' : 'A character'} is attacking{' '}
+              {pw.defender.target.kind === 'Leader' ? 'your Leader' : 'your Character'}. Play
+              counters from your hand or decline.
             </DialogDescription>
           </DialogHeader>
-          {candidates.length === 0 ? (
-            <p className="text-sm italic opacity-60">No counter candidates in hand.</p>
-          ) : (
-            <div className="flex gap-2 overflow-x-auto py-2">
-              {candidates.map(({ cardId, handIndex, card }) => (
-                <button
-                  key={`${cardId}-${handIndex}`}
-                  type="button"
-                  className="group flex flex-col items-center gap-1 rounded border p-2 hover:ring-2 hover:ring-primary"
-                  onClick={() => dispatch({ kind: 'PlayCounter', player: defenderIdx, handIndex })}
-                >
-                  <div className="relative aspect-[5/7] w-20 overflow-hidden rounded">
-                    <Image
-                      src={cardImagePath(cardId)}
-                      alt={cardId}
-                      fill
-                      sizes="80px"
-                      className="object-cover"
-                    />
-                  </div>
-                  <span className="text-xs">+{card?.counter ?? 0}</span>
-                </button>
-              ))}
+
+          {/* Attack visual */}
+          <div className="flex items-center justify-center gap-6 py-4">
+            {/* Attacker */}
+            <div className="flex flex-col items-center">
+              <span className="mb-1 text-[11px] font-semibold uppercase tracking-wider text-red-400">
+                Attacker
+              </span>
+              <div className="relative aspect-[5/7] w-28 overflow-hidden rounded-md border-2 border-red-600 shadow-lg shadow-red-900/50">
+                <Image
+                  src={cardImagePath(attackerCardId)}
+                  alt=""
+                  fill
+                  sizes="112px"
+                  className="object-cover"
+                />
+              </div>
+              <div className="mt-2 rounded bg-red-700 px-3 py-1 text-lg font-bold text-white">
+                ⚔ {atk.toLocaleString()}
+              </div>
             </div>
+
+            {/* Arrow */}
+            <div
+              className={`text-7xl font-bold ${willHit ? 'animate-pulse text-red-500' : 'text-green-500'}`}
+              aria-hidden
+            >
+              →
+            </div>
+
+            {/* Defender */}
+            <div className="flex flex-col items-center">
+              <span
+                className={`mb-1 text-[11px] font-semibold uppercase tracking-wider ${willHit ? 'text-stone-400' : 'text-green-400'}`}
+              >
+                Defender
+              </span>
+              <div
+                className={`relative aspect-[5/7] w-28 overflow-hidden rounded-md border-2 shadow-lg ${willHit ? 'border-stone-600 shadow-stone-900/50' : 'border-green-600 shadow-green-900/50'}`}
+              >
+                <Image
+                  src={cardImagePath(defenderCardId)}
+                  alt=""
+                  fill
+                  sizes="112px"
+                  className="object-cover"
+                />
+              </div>
+              <div
+                key={def}
+                className={`mt-2 rounded px-3 py-1 text-lg font-bold text-white animate-in zoom-in-75 duration-300 ${willHit ? 'bg-stone-600' : 'bg-green-700'}`}
+              >
+                🛡 {def.toLocaleString()}
+              </div>
+            </div>
+          </div>
+
+          {/* Status readout */}
+          <div className="text-center text-sm font-semibold">
+            {willHit ? (
+              <span className="text-red-400">
+                Short by {(atk - def + 1).toLocaleString()} — attack will land.
+              </span>
+            ) : (
+              <span className="text-green-400">
+                Defense exceeds attack by {(def - atk).toLocaleString()} — attack will miss.
+              </span>
+            )}
+          </div>
+
+          {/* Counter candidates */}
+          {candidates.length > 0 ? (
+            <>
+              <div className="mt-2 text-xs font-semibold uppercase tracking-wider text-amber-300">
+                Play a counter:
+              </div>
+              <div className="flex gap-2 overflow-x-auto py-2">
+                {candidates.map(({ cardId, handIndex, card }) => (
+                  <button
+                    key={`${cardId}-${handIndex}`}
+                    type="button"
+                    className="group relative flex shrink-0 flex-col items-center gap-1 rounded border border-amber-900/60 p-2 transition hover:ring-2 hover:ring-amber-500"
+                    onClick={() =>
+                      dispatch({ kind: 'PlayCounter', player: defenderIdx, handIndex })
+                    }
+                  >
+                    <div className="relative aspect-[5/7] w-20 overflow-hidden rounded">
+                      <Image
+                        src={cardImagePath(cardId)}
+                        alt={cardId}
+                        fill
+                        sizes="80px"
+                        className="object-cover"
+                      />
+                    </div>
+                    <span className="rounded bg-green-700 px-2 py-0.5 text-xs font-bold text-white">
+                      +{card?.counter ?? 0}
+                    </span>
+                  </button>
+                ))}
+              </div>
+            </>
+          ) : (
+            <p className="mt-2 text-sm italic opacity-60">No counter cards in hand.</p>
           )}
+
           <div className="flex justify-end">
             <Button
               variant="secondary"
