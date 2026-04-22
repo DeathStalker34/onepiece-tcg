@@ -1,8 +1,18 @@
 'use client';
 
-import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
-import type { Action, EngineError, GameEvent, GameState, MatchSetup } from '@optcg/engine';
-import { apply, createInitialState } from '@optcg/engine';
+import { createContext, useContext, useEffect, useRef, useState, type ReactNode } from 'react';
+import type {
+  Action,
+  EngineError,
+  GameEvent,
+  GameState,
+  MatchSetup,
+  PlayerIndex,
+  RngState,
+} from '@optcg/engine';
+import { apply, createInitialState, createRng } from '@optcg/engine';
+import type { Bot } from '@optcg/ai';
+import { EasyBot, MediumBot } from '@optcg/ai';
 
 interface DispatchResult {
   error?: EngineError;
@@ -19,10 +29,27 @@ interface GameContextValue {
 const GameContext = createContext<GameContextValue | null>(null);
 
 const AUTO_PHASES = new Set<GameState['phase']>(['Refresh', 'Draw', 'Don']);
+const BOT_DELAY_MS = 400;
+
+function botForPlayerIndex(aiOpponent: 'easy' | 'medium' | null): { 0?: Bot; 1?: Bot } {
+  if (!aiOpponent) return {};
+  const bot = aiOpponent === 'easy' ? EasyBot : MediumBot;
+  return { 1: bot };
+}
+
+function actorForPriority(state: GameState): PlayerIndex | null {
+  const pw = state.priorityWindow;
+  if (!pw) return null;
+  if (pw.kind === 'Mulligan') return pw.player;
+  if (pw.kind === 'CounterStep') return pw.defender.owner;
+  if (pw.kind === 'BlockerStep') return pw.originalTarget.owner;
+  if (pw.kind === 'TriggerStep') return pw.owner;
+  return null;
+}
 
 export function GameProvider({
   setup,
-  aiOpponent: _aiOpponent,
+  aiOpponent,
   children,
 }: {
   setup: MatchSetup;
@@ -31,8 +58,8 @@ export function GameProvider({
 }) {
   const [state, setState] = useState<GameState>(() => createInitialState(setup));
   const [events, setEvents] = useState<GameEvent[]>([]);
-  // aiOpponent wired in Task 7; accepted here so /play/[gameId] can forward it.
-  void _aiOpponent;
+  const rngRef = useRef<RngState>(createRng(setup.seed + 1));
+  const bots = botForPlayerIndex(aiOpponent ?? null);
 
   function dispatch(action: Action): DispatchResult {
     const result = apply(state, action);
@@ -69,12 +96,15 @@ export function GameProvider({
     return { error: err, events: allEvents };
   }
 
-  // Auto-advance Refresh/Draw/Don to Main. User only acts in Main or in priority windows.
+  // Auto-advance Refresh/Draw/Don — only when the active player is NOT a bot
+  // (bots handle those phases themselves via the bot runner effect below).
   useEffect(() => {
     if (state.winner !== null) return;
     if (state.phase === 'GameOver') return;
     if (state.priorityWindow !== null) return;
     if (!AUTO_PHASES.has(state.phase)) return;
+    // If the active player is a bot, the bot runner effect takes over.
+    if (bots[state.activePlayer]) return;
 
     const result = apply(state, { kind: 'PassPhase', player: state.activePlayer });
     if (!result.error) {
@@ -83,7 +113,43 @@ export function GameProvider({
         setEvents((prev) => [...prev, ...result.events]);
       }
     }
-  }, [state]);
+  }, [state, bots]);
+
+  // Bot runner — dispatches a bot's action with a 400ms delay.
+  useEffect(() => {
+    if (state.winner !== null) return;
+    if (state.phase === 'GameOver') return;
+
+    // Identify the actor: priority window defender/owner/mulligan player,
+    // or the active player for phase transitions or Main.
+    const priorityActor = actorForPriority(state);
+    let actor: PlayerIndex | null = null;
+    if (priorityActor !== null) {
+      actor = priorityActor;
+    } else if (AUTO_PHASES.has(state.phase) || state.phase === 'Main') {
+      actor = state.activePlayer;
+    }
+    if (actor === null) return;
+    const bot = bots[actor];
+    if (!bot) return;
+
+    const timer = setTimeout(() => {
+      // Use engine's apply directly so we can thread the RNG.
+      const decision = bot.pick(state, actor, rngRef.current);
+      rngRef.current = decision.rng;
+      const result = apply(state, decision.action);
+      if (!result.error) {
+        setState(result.state);
+        if (result.events.length > 0) {
+          setEvents((prev) => [...prev, ...result.events]);
+        }
+      } else {
+        // Surface in console for debugging; do not mutate state.
+        console.error(`[bot ${bot.id}] illegal action`, decision.action, result.error);
+      }
+    }, BOT_DELAY_MS);
+    return () => clearTimeout(timer);
+  }, [state, bots]);
 
   return (
     <GameContext.Provider value={{ state, dispatch, dispatchBatch, events }}>
