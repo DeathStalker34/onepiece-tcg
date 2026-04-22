@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { cardImagePath } from '@/lib/card-image';
 import type { CharacterInPlay } from '@optcg/engine';
 import { ActionMenu, type ActionMenuOption } from './action-menu';
+import { CardHoverPreview } from './card-hover-preview';
 
 export function CharacterCard({
   char,
@@ -35,20 +36,22 @@ export function CharacterCard({
     </div>
   );
 
-  if (!clickable) return visual;
+  if (!clickable) return <CardHoverPreview cardId={char.cardId}>{visual}</CardHoverPreview>;
   return (
     <>
-      <button
-        type="button"
-        className="hover:ring-2 hover:ring-primary"
-        onClick={() => {
-          if (actions.length === 1) actions[0].onClick();
-          else setOpen(true);
-        }}
-        aria-label={`Character ${char.cardId} actions`}
-      >
-        {visual}
-      </button>
+      <CardHoverPreview cardId={char.cardId}>
+        <button
+          type="button"
+          className="hover:ring-2 hover:ring-primary"
+          onClick={() => {
+            if (actions.length === 1) actions[0].onClick();
+            else setOpen(true);
+          }}
+          aria-label={`Character ${char.cardId} actions`}
+        >
+          {visual}
+        </button>
+      </CardHoverPreview>
       {actions.length > 1 && (
         <ActionMenu
           title={`Character ${char.cardId}`}

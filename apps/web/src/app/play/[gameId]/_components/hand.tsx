@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { cardImagePath } from '@/lib/card-image';
 import { useGame } from './game-provider';
 import { ActionMenu, type ActionMenuOption } from './action-menu';
+import { CardHoverPreview } from './card-hover-preview';
 import type { CardType } from '@optcg/engine';
 
 export function Hand({
@@ -96,22 +97,23 @@ export function Hand({
           <span className="text-xs italic opacity-50">empty</span>
         ) : (
           cards.map((cardId, i) => (
-            <button
-              key={`${cardId}-${i}`}
-              type="button"
-              className={`relative aspect-[5/7] w-24 shrink-0 overflow-hidden rounded border border-amber-900/60 transition ${clickable ? 'hover:ring-2 hover:ring-primary' : 'cursor-default'}`}
-              onClick={() => handleCardClick(cardId, i)}
-              disabled={!clickable}
-              aria-label={`Card ${cardId}`}
-            >
-              <Image
-                src={cardImagePath(cardId)}
-                alt={cardId}
-                fill
-                sizes="96px"
-                className="object-cover"
-              />
-            </button>
+            <CardHoverPreview key={`${cardId}-${i}`} cardId={cardId}>
+              <button
+                type="button"
+                className={`relative aspect-[5/7] w-24 shrink-0 overflow-hidden rounded border border-amber-900/60 transition ${clickable ? 'hover:ring-2 hover:ring-primary' : 'cursor-default'}`}
+                onClick={() => handleCardClick(cardId, i)}
+                disabled={!clickable}
+                aria-label={`Card ${cardId}`}
+              >
+                <Image
+                  src={cardImagePath(cardId)}
+                  alt={cardId}
+                  fill
+                  sizes="96px"
+                  className="object-cover"
+                />
+              </button>
+            </CardHoverPreview>
           ))
         )}
       </div>

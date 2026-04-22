@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { cardImagePath } from '@/lib/card-image';
 import type { LeaderInPlay } from '@optcg/engine';
 import { ActionMenu, type ActionMenuOption } from './action-menu';
+import { CardHoverPreview } from './card-hover-preview';
 
 export function LeaderCard({
   leader,
@@ -64,7 +65,7 @@ export function LeaderCard({
 
   return (
     <div className="flex items-center gap-2">
-      {inner}
+      <CardHoverPreview cardId={leader.cardId}>{inner}</CardHoverPreview>
       <div className="text-center">
         <div className="zone-label">Life</div>
         <div className="text-3xl font-bold leading-none">{lifeCount}</div>

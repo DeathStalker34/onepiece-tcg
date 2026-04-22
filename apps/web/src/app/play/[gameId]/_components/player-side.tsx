@@ -8,6 +8,7 @@ import { CharacterCard } from './character-card';
 import { Hand } from './hand';
 import { DonStack } from './don-stack';
 import { PileStack } from './pile-stack';
+import { PileViewer } from './pile-viewer';
 import type { ActionMenuOption } from './action-menu';
 import { TargetPicker, buildAttackTargets, type AttackTarget } from './target-picker';
 
@@ -22,6 +23,9 @@ export function PlayerSide({ playerIndex }: { playerIndex: PlayerIndex }) {
   const [pendingAttacker, setPendingAttacker] = useState<
     { kind: 'Leader' } | { kind: 'Character'; instanceId: string } | null
   >(null);
+  const [trashOpen, setTrashOpen] = useState(false);
+  const [deckOpen, setDeckOpen] = useState(false);
+  const [banishOpen, setBanishOpen] = useState(false);
 
   const leaderStatic = state.catalog[p.leader.cardId];
   const leaderActions: ActionMenuOption[] = [];
@@ -131,10 +135,25 @@ export function PlayerSide({ playerIndex }: { playerIndex: PlayerIndex }) {
         <div className="flex flex-col gap-3">
           <DonStack playerIndex={playerIndex} />
           <div className="flex gap-3">
-            <PileStack count={p.deck.length} label="Deck" size="sm" />
-            <PileStack count={p.trash.length} label="Trash" size="sm" />
+            <PileStack
+              count={p.deck.length}
+              label="Deck"
+              size="sm"
+              onClick={() => setDeckOpen(true)}
+            />
+            <PileStack
+              count={p.trash.length}
+              label="Trash"
+              size="sm"
+              onClick={() => setTrashOpen(true)}
+            />
             {p.banishZone.length > 0 && (
-              <PileStack count={p.banishZone.length} label="Banish" size="sm" />
+              <PileStack
+                count={p.banishZone.length}
+                label="Banish"
+                size="sm"
+                onClick={() => setBanishOpen(true)}
+              />
             )}
           </div>
         </div>
@@ -156,6 +175,25 @@ export function PlayerSide({ playerIndex }: { playerIndex: PlayerIndex }) {
         open={!!pendingAttacker}
         onPick={resolveAttackTarget}
         onCancel={() => setPendingAttacker(null)}
+      />
+
+      <PileViewer
+        title={`Player ${playerIndex} — Deck`}
+        cards={p.deck}
+        open={deckOpen}
+        onOpenChange={setDeckOpen}
+      />
+      <PileViewer
+        title={`Player ${playerIndex} — Trash`}
+        cards={p.trash}
+        open={trashOpen}
+        onOpenChange={setTrashOpen}
+      />
+      <PileViewer
+        title={`Player ${playerIndex} — Banished`}
+        cards={p.banishZone}
+        open={banishOpen}
+        onOpenChange={setBanishOpen}
       />
     </section>
   );
