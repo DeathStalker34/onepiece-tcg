@@ -18,7 +18,7 @@ export function CharacterCard({
   const clickable = actions.length > 0;
   const visual = (
     <div
-      className={`relative aspect-[5/7] w-24 overflow-hidden rounded border border-amber-900/70 animate-in fade-in-0 zoom-in-95 transition-transform duration-300 ${char.rested ? 'rotate-90' : ''} ${char.summoningSickness ? 'opacity-60' : ''}`}
+      className={`relative aspect-[5/7] w-24 overflow-hidden rounded border border-amber-900/70 animate-in fade-in-0 slide-in-from-bottom-16 duration-600 ease-out transition-transform duration-700 ease-in-out ${char.rested ? 'rotate-90' : ''} ${char.summoningSickness ? 'opacity-60' : ''}`}
       title={`${char.cardId}${char.summoningSickness ? ' (summoning sickness)' : ''}`}
     >
       <Image
@@ -29,7 +29,10 @@ export function CharacterCard({
         className="object-cover"
       />
       {char.attachedDon > 0 && (
-        <span className="absolute right-0.5 top-0.5 rounded bg-yellow-600 px-1 text-[9px] font-bold text-white">
+        <span
+          key={char.attachedDon}
+          className="absolute right-0.5 top-0.5 rounded bg-yellow-600 px-1 text-[9px] font-bold text-white animate-in zoom-in-50 duration-300"
+        >
           +{char.attachedDon}
         </span>
       )}

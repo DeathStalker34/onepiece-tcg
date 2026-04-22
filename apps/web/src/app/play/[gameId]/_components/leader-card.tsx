@@ -21,7 +21,7 @@ export function LeaderCard({
 
   const visual = (
     <div
-      className={`relative aspect-[5/7] w-32 overflow-hidden rounded border-2 border-amber-900/70 transition-transform duration-300 ease-out ${leader.rested ? 'rotate-90' : ''}`}
+      className={`relative aspect-[5/7] w-32 overflow-hidden rounded border-2 border-amber-900/70 transition-transform duration-700 ease-in-out ${leader.rested ? 'rotate-90' : ''}`}
     >
       <Image
         src={cardImagePath(leader.cardId)}
@@ -31,7 +31,10 @@ export function LeaderCard({
         className="object-cover"
       />
       {leader.attachedDon > 0 && (
-        <span className="absolute right-1 top-1 rounded bg-yellow-600 px-1 text-[10px] font-bold text-white">
+        <span
+          key={leader.attachedDon}
+          className="absolute right-1 top-1 rounded bg-yellow-600 px-1 text-[10px] font-bold text-white animate-in zoom-in-50 duration-300"
+        >
           +{leader.attachedDon} DON
         </span>
       )}
@@ -68,7 +71,12 @@ export function LeaderCard({
       <CardHoverPreview cardId={leader.cardId}>{inner}</CardHoverPreview>
       <div className="text-center">
         <div className="zone-label">Life</div>
-        <div className="text-3xl font-bold leading-none">{lifeCount}</div>
+        <div
+          key={lifeCount}
+          className="text-3xl font-bold leading-none animate-in zoom-in-75 duration-300"
+        >
+          {lifeCount}
+        </div>
       </div>
       {actions.length > 1 && (
         <ActionMenu

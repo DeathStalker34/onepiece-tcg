@@ -31,7 +31,8 @@ export function PileStack({ count, label, size = 'md', onClick }: Props) {
           ))
         )}
         <span
-          className="absolute inset-0 z-10 flex items-center justify-center text-sm font-bold text-white drop-shadow animate-in fade-in-0 duration-300"
+          key={count}
+          className="absolute inset-0 z-10 flex items-center justify-center text-sm font-bold text-white drop-shadow animate-in zoom-in-75 duration-300"
           aria-hidden
         >
           {count}

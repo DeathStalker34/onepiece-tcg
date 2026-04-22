@@ -59,7 +59,10 @@ export function DonStack({ playerIndex }: Props) {
                     aria-hidden
                   />
                 ))}
-                <span className="absolute inset-0 z-10 flex items-center justify-center text-sm font-bold text-white drop-shadow">
+                <span
+                  key={donActive}
+                  className="absolute inset-0 z-10 flex items-center justify-center text-sm font-bold text-white drop-shadow animate-in zoom-in-75 duration-300"
+                >
                   {donActive}
                 </span>
               </>
@@ -81,7 +84,10 @@ export function DonStack({ playerIndex }: Props) {
                     aria-hidden
                   />
                 ))}
-                <span className="absolute inset-0 z-10 flex items-center justify-center text-sm font-bold text-white drop-shadow">
+                <span
+                  key={donRested}
+                  className="absolute inset-0 z-10 flex items-center justify-center text-sm font-bold text-white drop-shadow animate-in zoom-in-75 duration-300"
+                >
                   {donRested}
                 </span>
               </>
@@ -103,7 +109,10 @@ export function DonStack({ playerIndex }: Props) {
                     aria-hidden
                   />
                 ))}
-                <span className="absolute inset-0 z-10 flex items-center justify-center text-sm font-bold text-white drop-shadow">
+                <span
+                  key={donDeck}
+                  className="absolute inset-0 z-10 flex items-center justify-center text-sm font-bold text-white drop-shadow animate-in zoom-in-75 duration-300"
+                >
                   {donDeck}
                 </span>
               </>
