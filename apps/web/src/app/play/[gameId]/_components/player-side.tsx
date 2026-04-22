@@ -8,6 +8,7 @@ import type { PlayerIndex } from '@optcg/engine';
 import { LeaderCard } from './leader-card';
 import { CharacterCard } from './character-card';
 import { Hand } from './hand';
+import { OpponentStatus } from './opponent-status';
 import { DonStack } from './don-stack';
 import { PileStack } from './pile-stack';
 import { PileViewer } from './pile-viewer';
@@ -198,12 +199,22 @@ export function PlayerSide({
         </div>
       </div>
 
-      <Hand
-        cards={p.hand}
-        hidden={botPlayers[playerIndex] || (!isPvAI && playerIndex !== state.activePlayer)}
-        clickable={inMain && !botPlayers[playerIndex]}
-        playerIndex={playerIndex}
-      />
+      {botPlayers[playerIndex] ? (
+        <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-4">
+          <div className="flex justify-end">
+            <OpponentStatus />
+          </div>
+          <Hand cards={p.hand} hidden clickable={false} playerIndex={playerIndex} />
+          <div />
+        </div>
+      ) : (
+        <Hand
+          cards={p.hand}
+          hidden={!isPvAI && playerIndex !== state.activePlayer}
+          clickable={inMain}
+          playerIndex={playerIndex}
+        />
+      )}
 
       <TargetPicker
         title="Pick attack target"

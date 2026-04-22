@@ -19,18 +19,61 @@ interface DispatchResult {
   events: GameEvent[];
 }
 
+export interface BotActionSummary {
+  kind: Action['kind'];
+  label: string;
+  at: number;
+}
+
 interface GameContextValue {
   state: GameState;
   dispatch: (action: Action) => DispatchResult;
   dispatchBatch: (actions: Action[]) => DispatchResult;
   events: GameEvent[];
   botPlayers: { 0?: true; 1?: true };
+  botThinking: boolean;
+  lastBotAction: BotActionSummary | null;
 }
 
 const GameContext = createContext<GameContextValue | null>(null);
 
 const AUTO_PHASES = new Set<GameState['phase']>(['Refresh', 'Draw', 'Don']);
 const BOT_DELAY_MS = 1200;
+
+function summarizeAction(action: Action): string {
+  switch (action.kind) {
+    case 'Mulligan':
+      return action.mulligan ? 'Mulliganed' : 'Kept hand';
+    case 'PassPhase':
+      return 'Passed phase';
+    case 'EndTurn':
+      return 'Ended turn';
+    case 'PlayCharacter':
+      return 'Played a character';
+    case 'PlayEvent':
+      return 'Played an event';
+    case 'PlayStage':
+      return 'Played a stage';
+    case 'AttachDon':
+      return action.target.kind === 'Leader'
+        ? 'Attached DON to Leader'
+        : 'Attached DON to character';
+    case 'ActivateMain':
+      return 'Activated effect';
+    case 'DeclareAttack':
+      return action.target.kind === 'Leader' ? 'Attacked Leader' : 'Attacked a character';
+    case 'PlayCounter':
+      return 'Played a counter';
+    case 'DeclineCounter':
+      return 'No counter';
+    case 'UseBlocker':
+      return 'Used a blocker';
+    case 'DeclineBlocker':
+      return 'No blocker';
+    case 'ActivateTrigger':
+      return action.activate ? 'Activated trigger' : 'Skipped trigger';
+  }
+}
 
 function botForPlayerIndex(aiOpponent: 'easy' | 'medium' | null): { 0?: Bot; 1?: Bot } {
   if (!aiOpponent) return {};
@@ -59,11 +102,25 @@ export function GameProvider({
 }) {
   const [state, setState] = useState<GameState>(() => createInitialState(setup));
   const [events, setEvents] = useState<GameEvent[]>([]);
+  const [lastBotAction, setLastBotAction] = useState<BotActionSummary | null>(null);
   const rngRef = useRef<RngState>(createRng(setup.seed + 1));
   const bots = botForPlayerIndex(aiOpponent ?? null);
   const botPlayers: { 0?: true; 1?: true } = {};
   if (bots[0]) botPlayers[0] = true;
   if (bots[1]) botPlayers[1] = true;
+
+  const currentPriorityActor = actorForPriority(state);
+  let currentActor: PlayerIndex | null = null;
+  if (currentPriorityActor !== null) {
+    currentActor = currentPriorityActor;
+  } else if (AUTO_PHASES.has(state.phase) || state.phase === 'Main') {
+    currentActor = state.activePlayer;
+  }
+  const botThinking =
+    state.winner === null &&
+    state.phase !== 'GameOver' &&
+    currentActor !== null &&
+    Boolean(bots[currentActor]);
 
   function dispatch(action: Action): DispatchResult {
     const result = apply(state, action);
@@ -144,6 +201,11 @@ export function GameProvider({
       const result = apply(state, decision.action);
       if (!result.error) {
         setState(result.state);
+        setLastBotAction({
+          kind: decision.action.kind,
+          label: summarizeAction(decision.action),
+          at: Date.now(),
+        });
         if (result.events.length > 0) {
           setEvents((prev) => [...prev, ...result.events]);
         }
@@ -156,7 +218,9 @@ export function GameProvider({
   }, [state, bots]);
 
   return (
-    <GameContext.Provider value={{ state, dispatch, dispatchBatch, events, botPlayers }}>
+    <GameContext.Provider
+      value={{ state, dispatch, dispatchBatch, events, botPlayers, botThinking, lastBotAction }}
+    >
       {children}
     </GameContext.Provider>
   );
