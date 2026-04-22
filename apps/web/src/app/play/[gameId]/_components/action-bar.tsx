@@ -12,19 +12,12 @@ export function ActionBar() {
     return null;
   }
 
-  function handlePass() {
-    const res = dispatch({ kind: 'PassPhase', player: state.activePlayer });
-    if (res.error) setErrorMsg(res.error.code);
-    else setErrorMsg(null);
-  }
-
   function handleEndTurn() {
     const res = dispatch({ kind: 'EndTurn', player: state.activePlayer });
     if (res.error) setErrorMsg(res.error.code);
     else setErrorMsg(null);
   }
 
-  const showPass = state.phase === 'Refresh' || state.phase === 'Draw' || state.phase === 'Don';
   const showEndTurn = state.phase === 'Main';
 
   return (
@@ -33,11 +26,6 @@ export function ActionBar() {
         {state.phase} phase · P{state.activePlayer}&apos;s turn
       </span>
       <div className="ml-auto flex items-center gap-2">
-        {showPass && (
-          <Button size="sm" onClick={handlePass}>
-            Next phase
-          </Button>
-        )}
         {showEndTurn && (
           <Button size="sm" onClick={handleEndTurn}>
             End turn
