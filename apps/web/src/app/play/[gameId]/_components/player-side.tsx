@@ -6,7 +6,8 @@ import type { PlayerIndex } from '@optcg/engine';
 import { LeaderCard } from './leader-card';
 import { CharacterCard } from './character-card';
 import { Hand } from './hand';
-import { DonPool } from './don-pool';
+import { DonStack } from './don-stack';
+import { PileStack } from './pile-stack';
 import type { ActionMenuOption } from './action-menu';
 import { TargetPicker, buildAttackTargets, type AttackTarget } from './target-picker';
 
@@ -77,7 +78,7 @@ export function PlayerSide({ playerIndex }: { playerIndex: PlayerIndex }) {
         <span className="zone-label">Turn {state.turn}</span>
       </header>
 
-      <div className="grid grid-cols-[auto_1fr_auto] gap-3">
+      <div className="grid grid-cols-[auto_1fr_auto] gap-4">
         <div className="space-y-1">
           <div className="zone-label">Leader</div>
           <div className="zone-frame p-2">
@@ -87,7 +88,7 @@ export function PlayerSide({ playerIndex }: { playerIndex: PlayerIndex }) {
 
         <div className="space-y-2">
           <div className="zone-label">Characters</div>
-          <div className="zone-frame flex h-28 items-center gap-2 overflow-x-auto p-2">
+          <div className="zone-frame flex h-40 items-center gap-2 overflow-x-auto p-2">
             {p.characters.length === 0 ? (
               <span className="text-xs italic opacity-50">No characters</span>
             ) : (
@@ -127,28 +128,15 @@ export function PlayerSide({ playerIndex }: { playerIndex: PlayerIndex }) {
           </div>
         </div>
 
-        <div className="space-y-2">
-          <DonPool
-            active={p.donActive}
-            rested={p.donRested}
-            donDeck={p.donDeck}
-            compact
-            playerIndex={playerIndex}
-          />
-          <div className="zone-frame space-y-1 p-2 text-xs">
-            <div className="zone-label">Deck</div>
-            <div>{p.deck.length} cards</div>
+        <div className="flex flex-col gap-3">
+          <DonStack playerIndex={playerIndex} />
+          <div className="flex gap-3">
+            <PileStack count={p.deck.length} label="Deck" size="sm" />
+            <PileStack count={p.trash.length} label="Trash" size="sm" />
+            {p.banishZone.length > 0 && (
+              <PileStack count={p.banishZone.length} label="Banish" size="sm" />
+            )}
           </div>
-          <div className="zone-frame space-y-1 p-2 text-xs">
-            <div className="zone-label">Trash</div>
-            <div>{p.trash.length} cards</div>
-          </div>
-          {p.banishZone.length > 0 && (
-            <div className="zone-frame space-y-1 p-2 text-xs">
-              <div className="zone-label">Banished</div>
-              <div>{p.banishZone.length} cards</div>
-            </div>
-          )}
         </div>
       </div>
 

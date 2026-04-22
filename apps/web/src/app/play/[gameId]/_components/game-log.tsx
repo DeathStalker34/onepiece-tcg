@@ -36,7 +36,7 @@ export function GameLog() {
   const { events } = useGame();
   const last = events.slice(-50).reverse();
   return (
-    <aside className="zone-frame max-h-[400px] w-72 shrink-0 overflow-y-auto p-3 text-xs">
+    <aside className="zone-frame max-h-[400px] w-56 shrink-0 overflow-y-auto p-3 text-xs">
       <div className="zone-label mb-2">Game log</div>
       <ol className="space-y-1">
         {last.length === 0 ? (

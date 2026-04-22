@@ -17,14 +17,14 @@ export function CharacterCard({
   const clickable = actions.length > 0;
   const visual = (
     <div
-      className={`relative aspect-[5/7] w-16 overflow-hidden rounded border border-amber-900/70 transition-transform duration-200 ${char.rested ? 'rotate-90' : ''} ${char.summoningSickness ? 'opacity-60' : ''}`}
+      className={`relative aspect-[5/7] w-24 overflow-hidden rounded border border-amber-900/70 transition-transform duration-200 ${char.rested ? 'rotate-90' : ''} ${char.summoningSickness ? 'opacity-60' : ''}`}
       title={`${char.cardId}${char.summoningSickness ? ' (summoning sickness)' : ''}`}
     >
       <Image
         src={cardImagePath(char.cardId)}
         alt={char.cardId}
         fill
-        sizes="64px"
+        sizes="96px"
         className="object-cover"
       />
       {char.attachedDon > 0 && (

@@ -31,7 +31,7 @@ export function Hand({
           {cards.slice(0, Math.min(cards.length, 10)).map((_, i) => (
             <div
               key={i}
-              className="aspect-[5/7] w-10 rounded border border-amber-900/60 bg-stone-800"
+              className="aspect-[5/7] w-24 rounded border border-amber-900/60 bg-stone-800"
               aria-hidden
             />
           ))}
@@ -99,7 +99,7 @@ export function Hand({
             <button
               key={`${cardId}-${i}`}
               type="button"
-              className={`relative aspect-[5/7] w-16 shrink-0 overflow-hidden rounded border border-amber-900/60 transition ${clickable ? 'hover:ring-2 hover:ring-primary' : 'cursor-default'}`}
+              className={`relative aspect-[5/7] w-24 shrink-0 overflow-hidden rounded border border-amber-900/60 transition ${clickable ? 'hover:ring-2 hover:ring-primary' : 'cursor-default'}`}
               onClick={() => handleCardClick(cardId, i)}
               disabled={!clickable}
               aria-label={`Card ${cardId}`}
@@ -108,7 +108,7 @@ export function Hand({
                 src={cardImagePath(cardId)}
                 alt={cardId}
                 fill
-                sizes="64px"
+                sizes="96px"
                 className="object-cover"
               />
             </button>

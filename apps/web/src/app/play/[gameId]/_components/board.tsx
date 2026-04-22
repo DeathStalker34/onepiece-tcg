@@ -9,12 +9,12 @@ import { GameOver } from './game-over';
 import { GameLog } from './game-log';
 
 export function Board() {
-  useGame(); // subscribe
+  useGame();
 
   return (
     <div className="tabletop-bg min-h-screen">
       <ActionBar />
-      <div className="flex gap-4 p-6">
+      <div className="flex gap-4 p-4 xl:p-6">
         <div className="flex-1 space-y-4">
           <PlayerSide playerIndex={1} />
           <hr className="border-amber-800/40" />

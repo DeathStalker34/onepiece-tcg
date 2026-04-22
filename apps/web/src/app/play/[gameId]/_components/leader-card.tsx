@@ -20,13 +20,13 @@ export function LeaderCard({
 
   const visual = (
     <div
-      className={`relative aspect-[5/7] w-20 overflow-hidden rounded border-2 border-amber-900/70 transition-transform duration-200 ${leader.rested ? 'rotate-90' : ''}`}
+      className={`relative aspect-[5/7] w-32 overflow-hidden rounded border-2 border-amber-900/70 transition-transform duration-200 ${leader.rested ? 'rotate-90' : ''}`}
     >
       <Image
         src={cardImagePath(leader.cardId)}
         alt={leader.cardId}
         fill
-        sizes="80px"
+        sizes="128px"
         className="object-cover"
       />
       {leader.attachedDon > 0 && (
@@ -67,7 +67,7 @@ export function LeaderCard({
       {inner}
       <div className="text-center">
         <div className="zone-label">Life</div>
-        <div className="text-2xl font-bold leading-none">{lifeCount}</div>
+        <div className="text-3xl font-bold leading-none">{lifeCount}</div>
       </div>
       {actions.length > 1 && (
         <ActionMenu
