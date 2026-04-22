@@ -10,7 +10,7 @@ interface Props {
 }
 
 export function DonStack({ playerIndex }: Props) {
-  const { state, dispatch } = useGame();
+  const { state, dispatchBatch } = useGame();
   const [open, setOpen] = useState(false);
 
   const p = state.players[playerIndex];
@@ -21,6 +21,20 @@ export function DonStack({ playerIndex }: Props) {
     state.phase === 'Main' &&
     state.priorityWindow === null &&
     donActive > 0;
+
+  function attachTo(
+    target: { kind: 'Leader' } | { kind: 'Character'; instanceId: string },
+    n: number,
+  ) {
+    if (n <= 0) return;
+    const actions = Array.from({ length: n }, () => ({
+      kind: 'AttachDon' as const,
+      player: playerIndex,
+      target,
+    }));
+    dispatchBatch(actions);
+    setOpen(false);
+  }
 
   return (
     <>
@@ -99,43 +113,59 @@ export function DonStack({ playerIndex }: Props) {
         </div>
       </button>
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="max-w-sm">
+        <DialogContent className="max-w-md">
           <DialogHeader>
             <DialogTitle>Attach DON</DialogTitle>
           </DialogHeader>
-          <div className="flex flex-col gap-2">
-            <Button
-              variant="secondary"
-              onClick={() => {
-                dispatch({
-                  kind: 'AttachDon',
-                  player: playerIndex,
-                  target: { kind: 'Leader' },
-                });
-                setOpen(false);
-              }}
-            >
-              Attach 1 to Leader
-            </Button>
+          <div className="space-y-2">
+            <AttachRow
+              label="Leader"
+              available={p.donActive}
+              onAttach={(n) => attachTo({ kind: 'Leader' }, n)}
+            />
             {p.characters.map((c) => (
-              <Button
+              <AttachRow
                 key={c.instanceId}
-                variant="secondary"
-                onClick={() => {
-                  dispatch({
-                    kind: 'AttachDon',
-                    player: playerIndex,
-                    target: { kind: 'Character', instanceId: c.instanceId },
-                  });
-                  setOpen(false);
-                }}
-              >
-                Attach 1 to {c.cardId}
-              </Button>
+                label={c.cardId}
+                available={p.donActive}
+                onAttach={(n) => attachTo({ kind: 'Character', instanceId: c.instanceId }, n)}
+              />
             ))}
           </div>
         </DialogContent>
       </Dialog>
     </>
+  );
+}
+
+function AttachRow({
+  label,
+  available,
+  onAttach,
+}: {
+  label: string;
+  available: number;
+  onAttach: (n: number) => void;
+}) {
+  return (
+    <div className="flex items-center justify-between gap-3 rounded border p-2 text-sm">
+      <span className="truncate">{label}</span>
+      <div className="flex items-center gap-1">
+        <Button size="sm" variant="secondary" disabled={available < 1} onClick={() => onAttach(1)}>
+          +1
+        </Button>
+        <Button
+          size="sm"
+          variant="secondary"
+          disabled={available < 1}
+          onClick={() => onAttach(Math.min(5, available))}
+        >
+          +5
+        </Button>
+        <Button size="sm" disabled={available < 1} onClick={() => onAttach(available)}>
+          Max
+        </Button>
+      </div>
+    </div>
   );
 }
