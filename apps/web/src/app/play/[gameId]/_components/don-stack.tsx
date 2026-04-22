@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { useGame } from './game-provider';
@@ -147,23 +147,41 @@ function AttachRow({
   available: number;
   onAttach: (n: number) => void;
 }) {
+  const [count, setCount] = useState(1);
+
+  useEffect(() => {
+    if (count > available) {
+      setCount(Math.max(1, available));
+    }
+  }, [available, count]);
+
+  const canAttach = available >= 1 && count >= 1 && count <= available;
+
   return (
     <div className="flex items-center justify-between gap-3 rounded border p-2 text-sm">
-      <span className="truncate">{label}</span>
+      <span className="flex-1 truncate">{label}</span>
       <div className="flex items-center gap-1">
-        <Button size="sm" variant="secondary" disabled={available < 1} onClick={() => onAttach(1)}>
-          +1
-        </Button>
         <Button
           size="sm"
           variant="secondary"
-          disabled={available < 1}
-          onClick={() => onAttach(Math.min(5, available))}
+          disabled={count <= 1}
+          onClick={() => setCount((n) => Math.max(1, n - 1))}
+          aria-label="Decrease"
         >
-          +5
+          −
         </Button>
-        <Button size="sm" disabled={available < 1} onClick={() => onAttach(available)}>
-          Max
+        <span className="w-6 text-center text-sm tabular-nums">{count}</span>
+        <Button
+          size="sm"
+          variant="secondary"
+          disabled={count >= available}
+          onClick={() => setCount((n) => Math.min(available, n + 1))}
+          aria-label="Increase"
+        >
+          +
+        </Button>
+        <Button size="sm" disabled={!canAttach} onClick={() => onAttach(count)} className="ml-2">
+          Attach
         </Button>
       </div>
     </div>
