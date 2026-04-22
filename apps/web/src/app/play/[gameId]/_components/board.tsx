@@ -7,6 +7,7 @@ import { PriorityModal } from './priority-modal';
 import { HotseatHandoff } from './hotseat-handoff';
 import { GameOver } from './game-over';
 import { GameLog } from './game-log';
+import { TurnBanner } from './turn-banner';
 
 export function Board() {
   useGame();
@@ -14,6 +15,7 @@ export function Board() {
   return (
     <div className="tabletop-bg min-h-screen">
       <ActionBar />
+      <TurnBanner />
       <div className="flex gap-4 p-4 xl:p-6">
         <div className="flex-1 space-y-4">
           <PlayerSide playerIndex={1} />

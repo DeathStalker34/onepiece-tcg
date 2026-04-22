@@ -30,7 +30,7 @@ interface GameContextValue {
 const GameContext = createContext<GameContextValue | null>(null);
 
 const AUTO_PHASES = new Set<GameState['phase']>(['Refresh', 'Draw', 'Don']);
-const BOT_DELAY_MS = 400;
+const BOT_DELAY_MS = 1200;
 
 function botForPlayerIndex(aiOpponent: 'easy' | 'medium' | null): { 0?: Bot; 1?: Bot } {
   if (!aiOpponent) return {};
@@ -119,7 +119,7 @@ export function GameProvider({
     }
   }, [state, bots]);
 
-  // Bot runner — dispatches a bot's action with a 400ms delay.
+  // Bot runner — dispatches a bot's action with a BOT_DELAY_MS delay.
   useEffect(() => {
     if (state.winner !== null) return;
     if (state.phase === 'GameOver') return;
