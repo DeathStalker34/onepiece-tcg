@@ -96,6 +96,9 @@ importers:
       '@optcg/engine':
         specifier: workspace:*
         version: link:../../packages/engine
+      '@optcg/protocol':
+        specifier: workspace:*
+        version: link:../../packages/protocol
       '@radix-ui/react-checkbox':
         specifier: ^1.3.3
         version: 1.3.3(@types/react-dom@18.3.7(@types/react@18.3.28))(@types/react@18.3.28)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -132,6 +135,9 @@ importers:
       react-dom:
         specifier: ^18.3.0
         version: 18.3.1(react@18.3.1)
+      socket.io-client:
+        specifier: ^4.7.0
+        version: 4.8.3
       tailwind-merge:
         specifier: ^3.5.0
         version: 3.5.0
