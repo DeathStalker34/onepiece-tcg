@@ -23,6 +23,7 @@ export function NetGameProvider({ online, children }: { online: OnlineHook; chil
       botThinking: false,
       lastBotAction: null,
       isOnline: true,
+      myPlayerIndex: online.playerIndex,
       forfeit: online.forfeit,
       rematch: online.rematch,
       lastGameOverReason: online.lastGameOver?.reason,

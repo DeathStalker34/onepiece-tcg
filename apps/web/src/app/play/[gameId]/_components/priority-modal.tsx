@@ -51,7 +51,7 @@ function formatEffect(effect: Effect): string {
 }
 
 export function PriorityModal() {
-  const { state, dispatch, dispatchBatch, botPlayers } = useGame();
+  const { state, dispatch, dispatchBatch, botPlayers, isOnline, myPlayerIndex } = useGame();
   const pw = state.priorityWindow;
 
   if (!pw) return null;
@@ -64,6 +64,8 @@ export function PriorityModal() {
   else if (pw.kind === 'TriggerStep') actor = pw.owner;
 
   if (actor !== null && botPlayers[actor]) return null;
+  // In online mode only render for the local player; the opponent sees nothing.
+  if (isOnline && actor !== null && myPlayerIndex !== null && actor !== myPlayerIndex) return null;
 
   switch (pw.kind) {
     case 'Mulligan':

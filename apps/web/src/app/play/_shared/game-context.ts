@@ -1,7 +1,7 @@
 'use client';
 
 import { createContext, useContext } from 'react';
-import type { Action, EngineError, GameEvent, GameState } from '@optcg/engine';
+import type { Action, EngineError, GameEvent, GameState, PlayerIndex } from '@optcg/engine';
 
 export interface BotActionSummary {
   kind: Action['kind'];
@@ -18,6 +18,7 @@ export interface GameContextValue {
   botThinking: boolean;
   lastBotAction: BotActionSummary | null;
   isOnline: boolean;
+  myPlayerIndex: PlayerIndex | null;
   forfeit?: () => Promise<void>;
   rematch?: (ready: boolean) => Promise<void>;
   lastGameOverReason?: 'engine' | 'forfeit' | 'timeout';

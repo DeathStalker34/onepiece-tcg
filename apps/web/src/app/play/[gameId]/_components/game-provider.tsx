@@ -214,6 +214,7 @@ export function GameProvider({
         botThinking,
         lastBotAction,
         isOnline: false,
+        myPlayerIndex: null,
       }}
     >
       {children}
