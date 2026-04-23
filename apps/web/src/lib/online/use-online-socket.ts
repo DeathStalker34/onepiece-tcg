@@ -155,6 +155,7 @@ export function useOnlineSocket(bootMatchId?: string): OnlineHook {
           setS((p) => ({
             ...p,
             phase: 'finished',
+            state: p.state ? { ...p.state, winner: raw.winner, phase: 'GameOver' } : p.state,
             lastGameOver: { winner: raw.winner, reason: raw.reason },
           }));
           break;
