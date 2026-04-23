@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useContext, useEffect, useRef, useState, type ReactNode } from 'react';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
 import type {
   Action,
   EngineError,
@@ -13,29 +13,15 @@ import type {
 import { apply, createInitialState, createRng } from '@optcg/engine';
 import type { Bot } from '@optcg/ai';
 import { EasyBot, MediumBot } from '@optcg/ai';
+import { GameContext, type BotActionSummary } from '@/app/play/_shared/game-context';
+
+export { useGame } from '@/app/play/_shared/game-context';
+export type { BotActionSummary } from '@/app/play/_shared/game-context';
 
 interface DispatchResult {
   error?: EngineError;
   events: GameEvent[];
 }
-
-export interface BotActionSummary {
-  kind: Action['kind'];
-  label: string;
-  at: number;
-}
-
-interface GameContextValue {
-  state: GameState;
-  dispatch: (action: Action) => DispatchResult;
-  dispatchBatch: (actions: Action[]) => DispatchResult;
-  events: GameEvent[];
-  botPlayers: { 0?: true; 1?: true };
-  botThinking: boolean;
-  lastBotAction: BotActionSummary | null;
-}
-
-const GameContext = createContext<GameContextValue | null>(null);
 
 const AUTO_PHASES = new Set<GameState['phase']>(['Refresh', 'Draw', 'Don']);
 const BOT_DELAY_MS = 1200;
@@ -219,15 +205,18 @@ export function GameProvider({
 
   return (
     <GameContext.Provider
-      value={{ state, dispatch, dispatchBatch, events, botPlayers, botThinking, lastBotAction }}
+      value={{
+        state,
+        dispatch,
+        dispatchBatch,
+        events,
+        botPlayers,
+        botThinking,
+        lastBotAction,
+        isOnline: false,
+      }}
     >
       {children}
     </GameContext.Provider>
   );
-}
-
-export function useGame(): GameContextValue {
-  const ctx = useContext(GameContext);
-  if (!ctx) throw new Error('useGame must be used within GameProvider');
-  return ctx;
 }
