@@ -12,19 +12,21 @@ import { Button } from '@/components/ui/button';
 import { useGame } from './game-provider';
 
 export function HotseatHandoff() {
-  const { state } = useGame();
+  const { state, botPlayers } = useGame();
   const prevActive = useRef(state.activePlayer);
   const prevTurn = useRef(state.turn);
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
     if (state.phase === 'GameOver') return;
+    // In PvAI mode (any bot configured) there's no device to pass.
+    if (botPlayers[0] || botPlayers[1]) return;
     if (state.activePlayer !== prevActive.current && state.turn !== prevTurn.current) {
       setOpen(true);
     }
     prevActive.current = state.activePlayer;
     prevTurn.current = state.turn;
-  }, [state.activePlayer, state.turn, state.phase]);
+  }, [state.activePlayer, state.turn, state.phase, botPlayers]);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>

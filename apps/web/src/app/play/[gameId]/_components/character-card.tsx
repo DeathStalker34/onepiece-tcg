@@ -57,6 +57,7 @@ export function CharacterCard({
       {actions.length > 1 && (
         <ActionMenu
           title={`Character ${char.cardId}`}
+          cardId={char.cardId}
           options={actions}
           open={open}
           onOpenChange={setOpen}

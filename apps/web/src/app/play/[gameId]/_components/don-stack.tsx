@@ -1,8 +1,10 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
+import Image from 'next/image';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
+import { cardImagePath } from '@/lib/card-image';
 import { useGame } from './game-provider';
 
 interface Props {
@@ -22,7 +24,7 @@ export function DonStack({ playerIndex }: Props) {
     state.priorityWindow === null &&
     donActive > 0;
 
-  function attachTo(
+  function handleAttach(
     target: { kind: 'Leader' } | { kind: 'Character'; instanceId: string },
     n: number,
   ) {
@@ -121,78 +123,227 @@ export function DonStack({ playerIndex }: Props) {
           <span className="text-[10px] uppercase opacity-70">Deck</span>
         </div>
       </button>
+
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="max-w-md">
+        <DialogContent className="max-w-3xl">
           <DialogHeader>
             <DialogTitle>Attach DON</DialogTitle>
           </DialogHeader>
-          <div className="space-y-2">
-            <AttachRow
-              label="Leader"
-              available={p.donActive}
-              onAttach={(n) => attachTo({ kind: 'Leader' }, n)}
+          {open && (
+            <AttachFlow
+              available={donActive}
+              leaderCardId={p.leader.cardId}
+              characters={p.characters.map((c) => ({ instanceId: c.instanceId, cardId: c.cardId }))}
+              onAttach={handleAttach}
+              onCancel={() => setOpen(false)}
             />
-            {p.characters.map((c) => (
-              <AttachRow
-                key={c.instanceId}
-                label={c.cardId}
-                available={p.donActive}
-                onAttach={(n) => attachTo({ kind: 'Character', instanceId: c.instanceId }, n)}
-              />
-            ))}
-          </div>
+          )}
         </DialogContent>
       </Dialog>
     </>
   );
 }
 
-function AttachRow({
-  label,
+function AttachFlow({
   available,
+  leaderCardId,
+  characters,
   onAttach,
+  onCancel,
 }: {
-  label: string;
   available: number;
-  onAttach: (n: number) => void;
+  leaderCardId: string;
+  characters: { instanceId: string; cardId: string }[];
+  onAttach: (
+    target: { kind: 'Leader' } | { kind: 'Character'; instanceId: string },
+    n: number,
+  ) => void;
+  onCancel: () => void;
 }) {
-  const [count, setCount] = useState(1);
+  const [selected, setSelected] = useState<number>(1);
 
-  useEffect(() => {
-    if (count > available) {
-      setCount(Math.max(1, available));
-    }
-  }, [available, count]);
-
-  const canAttach = available >= 1 && count >= 1 && count <= available;
+  const toggle = (idx: number) => {
+    // Click on a DON tile sets the selection to that many (1..available).
+    setSelected((s) => (s === idx ? idx - 1 : idx));
+  };
 
   return (
-    <div className="flex items-center justify-between gap-3 rounded border p-2 text-sm">
-      <span className="flex-1 truncate">{label}</span>
-      <div className="flex items-center gap-1">
-        <Button
-          size="sm"
-          variant="secondary"
-          disabled={count <= 1}
-          onClick={() => setCount((n) => Math.max(1, n - 1))}
-          aria-label="Decrease"
-        >
-          −
-        </Button>
-        <span className="w-6 text-center text-sm tabular-nums">{count}</span>
-        <Button
-          size="sm"
-          variant="secondary"
-          disabled={count >= available}
-          onClick={() => setCount((n) => Math.min(available, n + 1))}
-          aria-label="Increase"
-        >
-          +
-        </Button>
-        <Button size="sm" disabled={!canAttach} onClick={() => onAttach(count)} className="ml-2">
-          Attach
+    <div className="space-y-4">
+      {/* Step 1: DON selection */}
+      <div>
+        <div className="mb-2 flex items-center justify-between">
+          <span className="text-xs uppercase tracking-wide opacity-70">
+            1. Select DON ({selected} / {available})
+          </span>
+          <div className="flex gap-1">
+            <Button
+              size="sm"
+              variant="secondary"
+              onClick={() => setSelected(available)}
+              disabled={selected === available}
+            >
+              All
+            </Button>
+            <Button
+              size="sm"
+              variant="secondary"
+              onClick={() => setSelected(0)}
+              disabled={selected === 0}
+            >
+              Clear
+            </Button>
+          </div>
+        </div>
+        <div className="flex flex-wrap gap-2">
+          {Array.from({ length: available }).map((_, i) => {
+            const idx = i + 1;
+            const isSelected = idx <= selected;
+            return (
+              <button
+                key={i}
+                type="button"
+                onClick={() => toggle(idx)}
+                className={`transition ${
+                  isSelected
+                    ? '-translate-y-1 drop-shadow-[0_4px_12px_rgba(245,158,11,0.55)]'
+                    : 'opacity-60 hover:-translate-y-0.5 hover:opacity-100'
+                }`}
+                aria-label={`DON ${idx}`}
+                aria-pressed={isSelected}
+              >
+                <DonCardGlyph />
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Step 2: Target */}
+      <div>
+        <div className="mb-2 text-xs uppercase tracking-wide opacity-70">2. Choose target</div>
+        <div className="flex flex-wrap gap-3">
+          <TargetTile
+            cardId={leaderCardId}
+            label="Leader"
+            disabled={selected === 0}
+            onPick={() => onAttach({ kind: 'Leader' }, selected)}
+          />
+          {characters.map((c) => (
+            <TargetTile
+              key={c.instanceId}
+              cardId={c.cardId}
+              label="Character"
+              disabled={selected === 0}
+              onPick={() => onAttach({ kind: 'Character', instanceId: c.instanceId }, selected)}
+            />
+          ))}
+        </div>
+        {selected === 0 && (
+          <p className="mt-2 text-xs italic opacity-60">Select at least 1 DON to continue.</p>
+        )}
+      </div>
+
+      <div className="flex justify-end">
+        <Button variant="secondary" onClick={onCancel}>
+          Cancel
         </Button>
       </div>
     </div>
+  );
+}
+
+function TargetTile({
+  cardId,
+  label,
+  disabled,
+  onPick,
+}: {
+  cardId: string;
+  label: string;
+  disabled: boolean;
+  onPick: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onPick}
+      disabled={disabled}
+      className={`flex flex-col items-center gap-1 rounded transition ${
+        disabled ? 'opacity-40' : 'hover:scale-105'
+      }`}
+      aria-label={`Attach to ${label}`}
+    >
+      <div className="relative aspect-[5/7] w-40 overflow-hidden rounded shadow-md">
+        <Image
+          src={cardImagePath(cardId)}
+          alt={cardId}
+          fill
+          sizes="160px"
+          className="object-cover"
+        />
+      </div>
+      <span className="text-[10px] uppercase tracking-wide opacity-70">{label}</span>
+    </button>
+  );
+}
+
+function DonCardGlyph() {
+  return (
+    <svg
+      viewBox="0 0 100 140"
+      className="h-24 w-[68px] rounded-lg"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden
+    >
+      <defs>
+        <radialGradient id="don-bg" cx="50%" cy="45%" r="70%">
+          <stop offset="0%" stopColor="#fde68a" />
+          <stop offset="55%" stopColor="#f59e0b" />
+          <stop offset="100%" stopColor="#78350f" />
+        </radialGradient>
+        <radialGradient id="don-sphere" cx="35%" cy="35%" r="65%">
+          <stop offset="0%" stopColor="#fffbeb" />
+          <stop offset="60%" stopColor="#f59e0b" />
+          <stop offset="100%" stopColor="#78350f" />
+        </radialGradient>
+      </defs>
+      <rect
+        x="2"
+        y="2"
+        width="96"
+        height="136"
+        rx="8"
+        fill="url(#don-bg)"
+        stroke="#78350f"
+        strokeWidth="2"
+      />
+      <g opacity="0.9">
+        <circle cx="50" cy="48" r="18" fill="url(#don-sphere)" />
+        <circle cx="30" cy="70" r="18" fill="url(#don-sphere)" />
+        <circle cx="70" cy="70" r="18" fill="url(#don-sphere)" />
+        <circle cx="50" cy="92" r="18" fill="url(#don-sphere)" />
+      </g>
+      <rect
+        x="14"
+        y="112"
+        width="72"
+        height="18"
+        rx="3"
+        fill="#7f1d1d"
+        stroke="#450a0a"
+        strokeWidth="1"
+      />
+      <text
+        x="50"
+        y="125"
+        textAnchor="middle"
+        fontSize="13"
+        fontWeight="900"
+        fill="#fef3c7"
+        fontFamily="system-ui, sans-serif"
+      >
+        DON!!
+      </text>
+    </svg>
   );
 }

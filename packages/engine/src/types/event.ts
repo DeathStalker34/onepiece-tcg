@@ -7,6 +7,7 @@ export type GameEvent =
   | { kind: 'CardPlayed'; player: PlayerIndex; cardId: string; donSpent: number }
   | { kind: 'DonAttached'; player: PlayerIndex; target: string; amount: number }
   | { kind: 'AttackDeclared'; attacker: string; target: string; power: number }
+  | { kind: 'AttackBlocked'; attackerPower: number; defensePower: number }
   | { kind: 'CounterPlayed'; player: PlayerIndex; cardId: string; counterAmount: number }
   | { kind: 'BlockerUsed'; blockerInstanceId: string }
   | { kind: 'CharacterKod'; instanceId: string; cardId: string }
