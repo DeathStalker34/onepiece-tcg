@@ -4,9 +4,9 @@ Simulador web del One Piece Trading Card Game — hotseat local, PvAI (3 niveles
 
 ## Estado actual
 
-- **Fase:** Fase 0 (Setup) completa, pendiente de push + merge a `main`.
-- **Próxima fase:** Fase 1 — Card data pipeline (apitcg.com → SQLite cache, galería con búsqueda).
-- **Fase-gated delivery:** no empieces la siguiente fase sin aprobación explícita del usuario.
+- **Fase:** Fases 0-5 mergeadas a `main`. Última PR: #6 (Fase 5 — AI Easy+Medium + PvAI UX polish) mergeada el 2026-04-23.
+- **Próxima fase:** Fase 6 — Multijugador online (servidor autoritativo Socket.IO, Fly.io).
+- **Fase-gated delivery:** no empieces la siguiente fase sin aprobación explícita del usuario. Pasa primero por `superpowers:brainstorming` → spec → `writing-plans` antes de tocar código.
 
 ## Fuentes de verdad
 
