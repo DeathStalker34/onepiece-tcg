@@ -131,6 +131,26 @@ export class Match {
     return state.activePlayer;
   }
 
+  private autoAdvance(
+    state: GameState,
+    events: GameEvent[],
+  ): { state: GameState; events: GameEvent[] } {
+    let current = state;
+    const autoPhases = new Set(['Refresh', 'Draw', 'Don']);
+    while (
+      current.winner === null &&
+      current.phase !== 'GameOver' &&
+      current.priorityWindow === null &&
+      autoPhases.has(current.phase)
+    ) {
+      const next = apply(current, { kind: 'PassPhase', player: current.activePlayer });
+      if (next.error) break;
+      current = next.state;
+      events.push(...next.events);
+    }
+    return { state: current, events };
+  }
+
   proposeAction(
     token: string,
     action: Action,
@@ -142,11 +162,12 @@ export class Match {
     if (expected !== p.index) return errResult('NotYourPriority');
     const result = apply(this.state, action);
     if (result.error) return { ok: false, reason: result.error };
-    this.state = result.state;
+    const advanced = this.autoAdvance(result.state, [...result.events]);
+    this.state = advanced.state;
     if (this.state.phase === 'GameOver' && this.state.winner !== null) {
       this.status = 'finished';
     }
-    return ok({ state: this.state, events: result.events });
+    return ok({ state: this.state, events: advanced.events });
   }
 
   proposeActionBatch(
@@ -176,11 +197,12 @@ export class Match {
       current = result.state;
       allEvents.push(...result.events);
     }
-    this.state = current;
+    const advanced = this.autoAdvance(current, allEvents);
+    this.state = advanced.state;
     if (this.state.phase === 'GameOver' && this.state.winner !== null) {
       this.status = 'finished';
     }
-    return ok({ state: this.state, events: allEvents });
+    return ok({ state: this.state, events: advanced.events });
   }
 
   forceFinish(winner: PlayerIndex, _reason: GameOverReason): void {

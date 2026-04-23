@@ -27,15 +27,18 @@ export function PlayerSide({
   playerIndex: PlayerIndex;
   mirror?: boolean;
 }) {
-  const { state, dispatch, botPlayers } = useGame();
+  const { state, dispatch, botPlayers, isOnline, myPlayerIndex } = useGame();
   const p = state.players[playerIndex];
   const opp = state.players[playerIndex === 0 ? 1 : 0];
   const isActive = state.activePlayer === playerIndex && state.priorityWindow === null;
-  const inMain =
+  const inMainRaw =
     state.phase === 'Main' && state.priorityWindow === null && state.activePlayer === playerIndex;
+  const inMain = inMainRaw && (!isOnline || myPlayerIndex === playerIndex);
   const isPvAI = Boolean(botPlayers[0] || botPlayers[1]);
-  const isYou = !botPlayers[playerIndex];
-  const friendlyName = isPvAI ? (isYou ? 'You' : 'Opponent') : `Player ${playerIndex}`;
+  const isYou =
+    isOnline && myPlayerIndex !== null ? playerIndex === myPlayerIndex : !botPlayers[playerIndex];
+  const friendlyName = isPvAI || isOnline ? (isYou ? 'You' : 'Opponent') : `Player ${playerIndex}`;
+  const isOpponentInOnline = isOnline && myPlayerIndex !== null && playerIndex !== myPlayerIndex;
 
   const [pendingAttacker, setPendingAttacker] = useState<
     { kind: 'Leader' } | { kind: 'Character'; instanceId: string } | null
@@ -229,18 +232,16 @@ export function PlayerSide({
         </div>
       </div>
 
-      {botPlayers[playerIndex] ? (
+      {botPlayers[playerIndex] || isOpponentInOnline ? (
         <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-4">
-          <div className="flex justify-end">
-            <OpponentStatus />
-          </div>
+          <div className="flex justify-end">{botPlayers[playerIndex] && <OpponentStatus />}</div>
           <Hand cards={p.hand} hidden clickable={false} playerIndex={playerIndex} />
           <div />
         </div>
       ) : (
         <Hand
           cards={p.hand}
-          hidden={!isPvAI && playerIndex !== state.activePlayer}
+          hidden={!isPvAI && !isOnline && playerIndex !== state.activePlayer}
           clickable={inMain}
           playerIndex={playerIndex}
         />
