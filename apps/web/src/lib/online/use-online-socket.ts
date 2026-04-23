@@ -130,7 +130,13 @@ export function useOnlineSocket(bootMatchId?: string): OnlineHook {
           pendingRef.current = null;
           break;
         case 'StateUpdate':
-          setS((p) => ({ ...p, state: raw.state, events: [...p.events, ...raw.events] }));
+          setS((p) => ({
+            ...p,
+            state: raw.state,
+            events: [...p.events, ...raw.events],
+            phase:
+              raw.state.winner !== null || raw.state.phase === 'GameOver' ? 'finished' : 'playing',
+          }));
           pendingRef.current?.resolve();
           pendingRef.current = null;
           break;
