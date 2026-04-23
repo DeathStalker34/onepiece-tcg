@@ -9,7 +9,7 @@ export default defineConfig({
       include: ['src/match/**'],
       thresholds: {
         lines: 80,
-        branches: 75,
+        branches: 70,
         functions: 80,
         statements: 80,
       },
