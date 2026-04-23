@@ -1,16 +1,19 @@
 import { execSync } from 'node:child_process';
-import { resolve } from 'node:path';
+import { resolve, dirname } from 'node:path';
 import { existsSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
 
 async function main(): Promise<void> {
-  const target = resolve(process.cwd(), 'apps/server/src/catalog.json');
-  const cardDataDir = resolve(process.cwd(), 'packages/card-data');
+  const scriptDir = dirname(fileURLToPath(import.meta.url));
+  const repoRoot = resolve(scriptDir, '../../..');
+  const target = resolve(repoRoot, 'apps/server/src/catalog.json');
+  const cardDataDir = resolve(repoRoot, 'packages/card-data');
   if (!existsSync(cardDataDir)) {
-    throw new Error(`Expected ${cardDataDir} to exist — run from repo root`);
+    throw new Error(`Expected ${cardDataDir} to exist`);
   }
   execSync(`corepack pnpm@9.7.0 --filter @optcg/card-data export:catalog -- ${target}`, {
     stdio: 'inherit',
-    cwd: process.cwd(),
+    cwd: repoRoot,
   });
 }
 

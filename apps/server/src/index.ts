@@ -1,6 +1,7 @@
 import Fastify, { type FastifyInstance } from 'fastify';
 import cors from '@fastify/cors';
 import { Server as SocketIOServer } from 'socket.io';
+import { fileURLToPath } from 'node:url';
 import { loadCatalog } from './catalog';
 import { createLogger } from './logger';
 import { MatchStore } from './match/store';
@@ -48,7 +49,7 @@ export async function buildServer(opts: ServerOptions): Promise<ServerHandle> {
 async function main(): Promise<void> {
   const port = Number(process.env.PORT ?? 3001);
   const catalogPath =
-    process.env.CATALOG_PATH ?? new URL('./catalog.json', import.meta.url).pathname;
+    process.env.CATALOG_PATH ?? fileURLToPath(new URL('./catalog.json', import.meta.url));
   const corsOrigin = process.env.CORS_ORIGIN;
 
   const app = await buildServer({ catalogPath, corsOrigin });
@@ -56,7 +57,7 @@ async function main(): Promise<void> {
   console.log(`server listening on :${port}`);
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) {
+if (process.argv[1]?.replace(/\\/g, '/').endsWith('/apps/server/src/index.ts')) {
   main().catch((err) => {
     console.error(err);
     process.exit(1);

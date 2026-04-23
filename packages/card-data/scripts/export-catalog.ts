@@ -60,7 +60,8 @@ export function buildCatalogFromRows(rows: Row[]): Record<string, CardStatic> {
 }
 
 async function main(): Promise<void> {
-  const outputPath = process.argv[2];
+  const args = process.argv.slice(2).filter((a) => a !== '--');
+  const outputPath = args[0];
   if (!outputPath) {
     console.error('Usage: export-catalog <output-path>');
     process.exit(1);
@@ -73,7 +74,7 @@ async function main(): Promise<void> {
   await prisma.$disconnect();
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) {
+if (process.argv[1]?.replace(/\\/g, '/').endsWith('export-catalog.ts')) {
   main().catch((err) => {
     console.error(err);
     process.exit(1);
