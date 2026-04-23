@@ -93,7 +93,12 @@ export default function PlaySetupPage() {
 
   return (
     <main className="mx-auto max-w-3xl p-8">
-      <h1 className="mb-6 text-2xl font-semibold">New match</h1>
+      <div className="mb-6 flex items-center justify-between">
+        <h1 className="text-2xl font-semibold">New match</h1>
+        <Button asChild variant="outline">
+          <Link href="/play/online">Play online</Link>
+        </Button>
+      </div>
 
       {decks === null && <p className="text-muted-foreground">Loading decks…</p>}
 

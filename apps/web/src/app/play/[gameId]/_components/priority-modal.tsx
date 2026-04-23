@@ -51,23 +51,34 @@ function formatEffect(effect: Effect): string {
 }
 
 export function PriorityModal() {
-  const { state, dispatch, dispatchBatch, botPlayers } = useGame();
+  const { state, dispatch, dispatchBatch, botPlayers, isOnline, myPlayerIndex } = useGame();
   const pw = state.priorityWindow;
 
   if (!pw) return null;
 
-  // Find the actor for this priority window
+  // Find the actor for this priority window.
+  // Mulligan is concurrent: in online mode, show the modal to the local player as long as
+  // they haven't mulliganed yet, regardless of whose turn the priorityWindow names.
   let actor: 0 | 1 | null = null;
-  if (pw.kind === 'Mulligan') actor = pw.player;
-  else if (pw.kind === 'CounterStep') actor = pw.defender.owner;
+  if (pw.kind === 'Mulligan') {
+    if (isOnline && myPlayerIndex !== null) {
+      actor = state.players[myPlayerIndex].mulliganTaken ? null : myPlayerIndex;
+    } else {
+      actor = pw.player;
+    }
+  } else if (pw.kind === 'CounterStep') actor = pw.defender.owner;
   else if (pw.kind === 'BlockerStep') actor = pw.originalTarget.owner;
   else if (pw.kind === 'TriggerStep') actor = pw.owner;
 
-  if (actor !== null && botPlayers[actor]) return null;
+  if (actor === null) return null;
+  if (botPlayers[actor]) return null;
+  // In online mode (non-mulligan windows) only render for the local player.
+  if (isOnline && pw.kind !== 'Mulligan' && myPlayerIndex !== null && actor !== myPlayerIndex)
+    return null;
 
   switch (pw.kind) {
     case 'Mulligan':
-      return <MulliganVariant pw={pw} />;
+      return <MulliganVariant pw={pw} localPlayer={actor} />;
     case 'CounterStep':
       return <CounterVariant pw={pw} />;
     case 'BlockerStep':
@@ -78,8 +89,14 @@ export function PriorityModal() {
       return null;
   }
 
-  function MulliganVariant({ pw }: { pw: Extract<PriorityWindow, { kind: 'Mulligan' }> }) {
-    const player = pw.player;
+  function MulliganVariant({
+    pw: _pw,
+    localPlayer,
+  }: {
+    pw: Extract<PriorityWindow, { kind: 'Mulligan' }>;
+    localPlayer: 0 | 1;
+  }) {
+    const player = localPlayer;
     const hand = state.players[player].hand;
     return (
       <Dialog open modal>

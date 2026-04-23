@@ -42,7 +42,7 @@ export function apply(state: GameState, action: Action): ApplyResult {
       if (state.priorityWindow?.kind !== 'Mulligan') {
         return errorResult(state, { code: 'NotYourPriority' });
       }
-      if (state.priorityWindow.player !== action.player) {
+      if (state.players[action.player].mulliganTaken) {
         return errorResult(state, { code: 'NotYourPriority' });
       }
       const res = doMulligan(state, action.player, action.mulligan);
