@@ -174,6 +174,16 @@ importers:
         specifier: ^1.6.0
         version: 1.6.1(@types/node@20.19.39)
 
+  packages/protocol:
+    dependencies:
+      '@optcg/engine':
+        specifier: workspace:*
+        version: link:../engine
+    devDependencies:
+      '@types/node':
+        specifier: ^20.12.0
+        version: 20.19.39
+
 packages:
 
   '@alloc/quick-lru@5.2.0':
