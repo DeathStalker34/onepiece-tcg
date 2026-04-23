@@ -158,8 +158,13 @@ export class Match {
     const p = this.playerByToken(token);
     if (!p) return errResult('Unauthorized');
     if (this.status !== 'playing' || !this.state) return errResult('WrongPhase');
-    const expected = this.actorIndex(this.state);
-    if (expected !== p.index) return errResult('NotYourPriority');
+    // Mulligan is concurrent — either player may act while their own mulligan is pending.
+    if (action.kind !== 'Mulligan') {
+      const expected = this.actorIndex(this.state);
+      if (expected !== p.index) return errResult('NotYourPriority');
+    } else if (action.player !== p.index) {
+      return errResult('NotYourPriority');
+    }
     const result = apply(this.state, action);
     if (result.error) return { ok: false, reason: result.error };
     const advanced = this.autoAdvance(result.state, [...result.events]);

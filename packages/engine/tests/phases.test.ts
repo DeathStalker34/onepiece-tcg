@@ -54,11 +54,19 @@ describe('Mulligan flow', () => {
     expect(res.state.players[0].mulliganTaken).toBe(true);
   });
 
-  it('wrong player trying mulligan errors with NotYourPriority', () => {
+  it('rejects second mulligan from same player', () => {
+    const s0 = createInitialState(mkSetup());
+    const s1 = apply(s0, { kind: 'Mulligan', player: 0, mulligan: false }).state;
+    const res = apply(s1, { kind: 'Mulligan', player: 0, mulligan: false });
+    expect(res.error).toEqual({ code: 'NotYourPriority' });
+    expect(res.state).toBe(s1);
+  });
+
+  it('allows either player to mulligan concurrently', () => {
     const s0 = createInitialState(mkSetup());
     const res = apply(s0, { kind: 'Mulligan', player: 1, mulligan: false });
-    expect(res.error).toEqual({ code: 'NotYourPriority' });
-    expect(res.state).toBe(s0);
+    expect(res.error).toBeUndefined();
+    expect(res.state.players[1].mulliganTaken).toBe(true);
   });
 
   it('logs actions on success', () => {
@@ -70,9 +78,11 @@ describe('Mulligan flow', () => {
 
   it('does not log on error', () => {
     const s0 = createInitialState(mkSetup());
-    const res = apply(s0, { kind: 'Mulligan', player: 1, mulligan: false });
+    const s1 = apply(s0, { kind: 'Mulligan', player: 0, mulligan: false }).state;
+    const before = s1.log.length;
+    const res = apply(s1, { kind: 'Mulligan', player: 0, mulligan: false });
     expect(res.error).toBeDefined();
-    expect(res.state.log.length).toBe(0);
+    expect(res.state.log.length).toBe(before);
   });
 });
 
