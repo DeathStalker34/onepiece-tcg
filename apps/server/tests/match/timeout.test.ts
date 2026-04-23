@@ -13,8 +13,12 @@ function setupPlaying(): Match {
 }
 
 describe('Match disconnect/reconnect', () => {
-  beforeEach(() => vi.useFakeTimers());
-  afterEach(() => vi.useRealTimers());
+  beforeEach(() => {
+    vi.useFakeTimers();
+  });
+  afterEach(() => {
+    vi.useRealTimers();
+  });
 
   it('disconnect starts a 60s timer', () => {
     const m = setupPlaying();
