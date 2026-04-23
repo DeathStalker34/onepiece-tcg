@@ -10,13 +10,19 @@ import { HotseatHandoff } from './hotseat-handoff';
 import { GameOver } from './game-over';
 import { GameLog } from './game-log';
 import { Button } from '@/components/ui/button';
+import { DisconnectBanner } from '@/app/play/online/[code]/_components/disconnect-banner';
 
 export function Board() {
-  const { state, dispatch, botPlayers } = useGame();
+  const { state, dispatch, botPlayers, isOnline, forfeit } = useGame();
   const [logOpen, setLogOpen] = useState(false);
 
   const canEndTurn =
     state.phase === 'Main' && state.priorityWindow === null && !botPlayers[state.activePlayer];
+
+  async function handleForfeit(): Promise<void> {
+    if (!forfeit) return;
+    if (window.confirm('Forfeit the match?')) await forfeit();
+  }
 
   return (
     <div className="tabletop-bg min-h-screen">
@@ -32,7 +38,13 @@ export function Board() {
         <Button size="sm" variant="secondary" onClick={() => setLogOpen(true)}>
           Log
         </Button>
+        {isOnline && state.phase !== 'GameOver' && (
+          <Button size="sm" variant="destructive" onClick={handleForfeit}>
+            Forfeit
+          </Button>
+        )}
       </div>
+      {isOnline && <DisconnectBanner />}
 
       <div className="space-y-4 p-4 xl:p-6">
         <PlayerSide playerIndex={1} mirror />
