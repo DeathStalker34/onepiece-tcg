@@ -21,6 +21,7 @@ export type {
   Phase,
   AttackerRef,
   DefenderRef,
+  TargetRef,
   PriorityWindow,
   LeaderInPlay,
   CharacterInPlay,
