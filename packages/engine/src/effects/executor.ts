@@ -174,7 +174,7 @@ function applySearch(
   from: 'deck' | 'trash',
   filter: CardFilter,
   amount: number,
-): GameState {
+): { state: GameState; picked: string[] } {
   const p = state.players[context.sourcePlayer];
   const pool = from === 'deck' ? p.deck : p.trash;
   const picked: string[] = [];
@@ -198,7 +198,7 @@ function applySearch(
   const newPlayers = state.players.map((pp, i) =>
     i === context.sourcePlayer ? updated : pp,
   ) as GameState['players'];
-  return { ...state, players: newPlayers };
+  return { state: { ...state, players: newPlayers }, picked };
 }
 
 /**
@@ -306,10 +306,21 @@ export function applyEffect(
     case 'returnToHand':
     case 'power':
       return resolveTargetedEffect(state, effect, context);
-    case 'search':
-      next = applySearch(state, context, effect.from, effect.filter, effect.amount);
+    case 'search': {
+      const r = applySearch(state, context, effect.from, effect.filter, effect.amount);
+      next = r.state;
+      if (r.picked.length > 0) {
+        events.push({
+          kind: 'CardSearched',
+          sourceCardId: context.sourceCardId,
+          sourcePlayer: context.sourcePlayer,
+          from: effect.from,
+          picked: r.picked,
+        });
+      }
       events.push({ kind: 'EffectResolved', effect, sourceCardId: context.sourceCardId });
       break;
+    }
     case 'sequence': {
       for (const step of effect.steps) {
         const r = applyEffect(next, step, context);
