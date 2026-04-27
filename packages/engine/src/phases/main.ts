@@ -249,12 +249,31 @@ export function activateMain(
     }
     // Pay cost: rest leader
     const restedPlayer = { ...p, leader: { ...p.leader, rested: true } };
-    const withRest: GameState = {
+    let withRest: GameState = {
       ...state,
       players: state.players.map((pp, i) =>
         i === action.player ? restedPlayer : pp,
       ) as GameState['players'],
     };
+    // Pay DON cost if any
+    const donCost = eff.cost?.donX ?? 0;
+    if (donCost > 0) {
+      if (p.donActive < donCost) {
+        return {
+          state,
+          events: [],
+          error: { code: 'NotEnoughDon', need: donCost, have: p.donActive },
+        };
+      }
+      withRest = {
+        ...withRest,
+        players: withRest.players.map((pp, i) =>
+          i === action.player
+            ? { ...pp, donActive: pp.donActive - donCost, donRested: pp.donRested + donCost }
+            : pp,
+        ) as GameState['players'],
+      };
+    }
     const context: EffectContext = {
       sourcePlayer: action.player,
       sourceCardId: p.leader.cardId,
@@ -296,12 +315,31 @@ export function activateMain(
   const newChars = [...p.characters];
   newChars[charIdx] = { ...char, rested: true };
   const restedPlayer = { ...p, characters: newChars };
-  const withRest: GameState = {
+  let withRest: GameState = {
     ...state,
     players: state.players.map((pp, i) =>
       i === action.player ? restedPlayer : pp,
     ) as GameState['players'],
   };
+  // Pay DON cost if any
+  const donCost = eff.cost?.donX ?? 0;
+  if (donCost > 0) {
+    if (p.donActive < donCost) {
+      return {
+        state,
+        events: [],
+        error: { code: 'NotEnoughDon', need: donCost, have: p.donActive },
+      };
+    }
+    withRest = {
+      ...withRest,
+      players: withRest.players.map((pp, i) =>
+        i === action.player
+          ? { ...pp, donActive: pp.donActive - donCost, donRested: pp.donRested + donCost }
+          : pp,
+      ) as GameState['players'],
+    };
+  }
   const context: EffectContext = {
     sourcePlayer: action.player,
     sourceCardId: char.cardId,
