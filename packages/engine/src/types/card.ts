@@ -34,10 +34,16 @@ export interface EffectCondition {
 export type Effect =
   | { kind: 'draw'; amount: number }
   | { kind: 'search'; from: 'deck' | 'trash'; filter: CardFilter; amount: number }
-  | { kind: 'ko'; target: TargetSpec }
-  | { kind: 'power'; target: TargetSpec; delta: number; duration: 'thisTurn' | 'permanent' }
-  | { kind: 'returnToHand'; target: TargetSpec }
-  | { kind: 'banish'; target: TargetSpec }
+  | { kind: 'ko'; target: TargetSpec; optional?: boolean }
+  | {
+      kind: 'power';
+      target: TargetSpec;
+      delta: number;
+      duration: 'thisTurn' | 'permanent';
+      optional?: boolean;
+    }
+  | { kind: 'returnToHand'; target: TargetSpec; optional?: boolean }
+  | { kind: 'banish'; target: TargetSpec; optional?: boolean }
   | { kind: 'sequence'; steps: Effect[] }
   | { kind: 'choice'; options: Effect[] }
   | { kind: 'manual'; text: string };
