@@ -27,4 +27,5 @@ export type Action =
   | { kind: 'DeclineCounter'; player: PlayerIndex }
   | { kind: 'UseBlocker'; player: PlayerIndex; blockerInstanceId: string }
   | { kind: 'DeclineBlocker'; player: PlayerIndex }
-  | { kind: 'ActivateTrigger'; player: PlayerIndex; activate: boolean };
+  | { kind: 'ActivateTrigger'; player: PlayerIndex; activate: boolean }
+  | { kind: 'SelectEffectTarget'; player: PlayerIndex; targetIndex: number | null };
