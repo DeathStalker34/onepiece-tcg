@@ -10,9 +10,11 @@ import { CardHoverPreview } from './card-hover-preview';
 export function CharacterCard({
   char,
   actions = [],
+  highlighted = false,
 }: {
   char: CharacterInPlay;
   actions?: ActionMenuOption[];
+  highlighted?: boolean;
 }) {
   const [open, setOpen] = useState(false);
   const clickable = actions.length > 0;
@@ -34,7 +36,7 @@ export function CharacterCard({
           onClick={handleClick}
           aria-disabled={!clickable}
           tabIndex={clickable ? 0 : -1}
-          className={`relative aspect-[5/7] w-24 overflow-hidden rounded border border-amber-900/70 animate-in fade-in-0 slide-in-from-bottom-16 duration-500 ease-out transition-transform duration-700 ease-in-out ${char.rested ? 'rotate-90' : ''} ${char.summoningSickness ? 'opacity-60' : ''} ${clickable ? 'cursor-pointer hover:ring-2 hover:ring-primary' : 'cursor-default'}`}
+          className={`relative aspect-[5/7] w-24 overflow-hidden rounded border border-amber-900/70 animate-in fade-in-0 slide-in-from-bottom-16 duration-500 ease-out transition-transform duration-700 ease-in-out ${char.rested ? 'rotate-90' : ''} ${char.summoningSickness ? 'opacity-60' : ''} ${clickable ? 'cursor-pointer hover:ring-2 hover:ring-primary' : 'cursor-default'} ${highlighted ? 'ring-2 ring-amber-400 ring-offset-1 ring-offset-stone-900 animate-pulse' : ''}`}
           title={`${char.cardId}${char.summoningSickness ? ' (summoning sickness)' : ''}`}
         >
           <Image

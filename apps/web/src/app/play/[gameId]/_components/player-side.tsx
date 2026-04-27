@@ -40,6 +40,16 @@ export function PlayerSide({
   const friendlyName = isPvAI || isOnline ? (isYou ? 'You' : 'Opponent') : `Player ${playerIndex}`;
   const isOpponentInOnline = isOnline && myPlayerIndex !== null && playerIndex !== myPlayerIndex;
 
+  function isHighlightedRef(refKind: 'Leader' | 'Character', instanceId?: string): boolean {
+    const pw = state.priorityWindow;
+    if (pw?.kind !== 'EffectTargetSelection') return false;
+    return pw.validTargets.some((t) => {
+      if (t.kind !== refKind) return false;
+      if (t.kind === 'Leader') return t.owner === playerIndex;
+      return t.owner === playerIndex && t.instanceId === instanceId;
+    });
+  }
+
   const [pendingAttacker, setPendingAttacker] = useState<
     { kind: 'Leader' } | { kind: 'Character'; instanceId: string } | null
   >(null);
@@ -126,7 +136,12 @@ export function PlayerSide({
         <div className="space-y-1">
           <div className="zone-label">Leader</div>
           <div className="zone-frame p-2">
-            <LeaderCard leader={p.leader} lifeCount={p.life.length} actions={leaderActions} />
+            <LeaderCard
+              leader={p.leader}
+              lifeCount={p.life.length}
+              actions={leaderActions}
+              highlighted={isHighlightedRef('Leader')}
+            />
           </div>
         </div>
 
@@ -168,7 +183,14 @@ export function PlayerSide({
                         });
                       }
                     }
-                    return <CharacterCard key={c.instanceId} char={c} actions={actions} />;
+                    return (
+                      <CharacterCard
+                        key={c.instanceId}
+                        char={c}
+                        actions={actions}
+                        highlighted={isHighlightedRef('Character', c.instanceId)}
+                      />
+                    );
                   }
                   return (
                     <div
