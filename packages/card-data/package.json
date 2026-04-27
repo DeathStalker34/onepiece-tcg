@@ -19,13 +19,13 @@
     "test:coverage": "vitest run --coverage",
     "sync": "tsx scripts/sync.ts",
     "export:catalog": "tsx scripts/export-catalog.ts",
+    "export:cards": "tsx scripts/export-cards.ts",
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate dev",
     "db:reset": "prisma migrate reset --force"
   },
   "dependencies": {
     "@prisma/client": "^5.14.0",
-    "sharp": "^0.33.0",
     "zod": "^3.23.0"
   },
   "devDependencies": {
@@ -33,6 +33,7 @@
     "@types/node": "^20.12.0",
     "dotenv": "^16.4.0",
     "prisma": "^5.14.0",
+    "sharp": "^0.33.0",
     "tsx": "^4.19.0",
     "vitest": "^1.6.0"
   }

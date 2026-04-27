@@ -4,8 +4,8 @@ Simulador web del One Piece Trading Card Game — hotseat local, PvAI (3 niveles
 
 ## Estado actual
 
-- **Fase:** Fases 0-6 mergeadas a `main`. Última PR: Fase 6 — Multijugador local (Socket.IO + `apps/server`, sin despliegue).
-- **Próxima fase:** Fase 6.5 — Despliegue a Fly.io (`docs/deploy-fly.md`) o Fase 7 — Pulido (parser expandido, stats, replay, chat, polish UX).
+- **Fase:** Fases 0-6.5 mergeadas a `main`. Multijugador online en producción: server en https://optcg-server.fly.dev, web en https://optcg-web.fly.dev (Fly.io, región `cdg`).
+- **Próxima fase:** Fase 7 — Pulido (parser expandido de efectos, stats por mazo, replay, chat, drag&drop, atajos de teclado).
 - **Fase-gated delivery:** no empieces la siguiente fase sin aprobación explícita del usuario. Pasa primero por `superpowers:brainstorming` → spec → `writing-plans` antes de tocar código.
 
 ## Fuentes de verdad
