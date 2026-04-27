@@ -134,6 +134,220 @@ describe('applyEffect target selection', () => {
   });
 });
 
+import { apply } from '../../src/apply';
+
+describe('SelectEffectTarget action handler', () => {
+  it('resolves pending effect against chosen target', () => {
+    const state = makeState([makeChar('a'), makeChar('b')]);
+    const stateWithWindow: GameState = {
+      ...state,
+      priorityWindow: {
+        kind: 'EffectTargetSelection',
+        sourceCardId: 'src',
+        sourceOwner: 0,
+        effect: { kind: 'ko', target: { kind: 'opponentCharacter' } },
+        validTargets: [
+          { kind: 'Character', instanceId: 'a', owner: 1 },
+          { kind: 'Character', instanceId: 'b', owner: 1 },
+        ],
+        optional: false,
+        pendingChain: [],
+      },
+    };
+    const r = apply(stateWithWindow, {
+      kind: 'SelectEffectTarget',
+      player: 0,
+      targetIndex: 0,
+    });
+    expect(r.error).toBeUndefined();
+    expect(r.state.priorityWindow).toBeNull();
+    expect(r.state.players[1].characters).toHaveLength(1);
+    expect(r.state.players[1].characters[0].instanceId).toBe('b');
+  });
+
+  it('rejects null targetIndex when not optional', () => {
+    const state = makeState([makeChar('a')]);
+    const stateWithWindow: GameState = {
+      ...state,
+      priorityWindow: {
+        kind: 'EffectTargetSelection',
+        sourceCardId: 'src',
+        sourceOwner: 0,
+        effect: { kind: 'ko', target: { kind: 'opponentCharacter' } },
+        validTargets: [{ kind: 'Character', instanceId: 'a', owner: 1 }],
+        optional: false,
+        pendingChain: [],
+      },
+    };
+    const r = apply(stateWithWindow, {
+      kind: 'SelectEffectTarget',
+      player: 0,
+      targetIndex: null,
+    });
+    expect(r.error).toEqual({
+      code: 'InvalidTarget',
+      reason: 'cannot skip mandatory effect',
+    });
+  });
+
+  it('null targetIndex cancels optional effect', () => {
+    const state = makeState([makeChar('a')]);
+    const stateWithWindow: GameState = {
+      ...state,
+      priorityWindow: {
+        kind: 'EffectTargetSelection',
+        sourceCardId: 'src',
+        sourceOwner: 0,
+        effect: { kind: 'ko', target: { kind: 'opponentCharacter' }, optional: true },
+        validTargets: [{ kind: 'Character', instanceId: 'a', owner: 1 }],
+        optional: true,
+        pendingChain: [],
+      },
+    };
+    const r = apply(stateWithWindow, {
+      kind: 'SelectEffectTarget',
+      player: 0,
+      targetIndex: null,
+    });
+    expect(r.error).toBeUndefined();
+    expect(r.state.priorityWindow).toBeNull();
+    expect(r.state.players[1].characters).toHaveLength(1); // not KO'd
+  });
+
+  it('rejects out-of-range targetIndex', () => {
+    const state = makeState([makeChar('a')]);
+    const stateWithWindow: GameState = {
+      ...state,
+      priorityWindow: {
+        kind: 'EffectTargetSelection',
+        sourceCardId: 'src',
+        sourceOwner: 0,
+        effect: { kind: 'ko', target: { kind: 'opponentCharacter' } },
+        validTargets: [{ kind: 'Character', instanceId: 'a', owner: 1 }],
+        optional: false,
+        pendingChain: [],
+      },
+    };
+    const r = apply(stateWithWindow, {
+      kind: 'SelectEffectTarget',
+      player: 0,
+      targetIndex: 5,
+    });
+    expect(r.error?.code).toBe('InvalidTarget');
+  });
+
+  it('processes pendingChain after resolution', () => {
+    const baseState = makeState([makeChar('a'), makeChar('b')]);
+    const stateWithDeck: GameState = {
+      ...baseState,
+      players: [
+        { ...baseState.players[0], deck: ['C', 'C'] },
+        baseState.players[1],
+      ] as GameState['players'],
+    };
+    const stateWithWindow: GameState = {
+      ...stateWithDeck,
+      priorityWindow: {
+        kind: 'EffectTargetSelection',
+        sourceCardId: 'src',
+        sourceOwner: 0,
+        effect: { kind: 'ko', target: { kind: 'opponentCharacter' } },
+        validTargets: [
+          { kind: 'Character', instanceId: 'a', owner: 1 },
+          { kind: 'Character', instanceId: 'b', owner: 1 },
+        ],
+        optional: false,
+        pendingChain: [{ kind: 'draw', amount: 1 }],
+      },
+    };
+    const r = apply(stateWithWindow, {
+      kind: 'SelectEffectTarget',
+      player: 0,
+      targetIndex: 0,
+    });
+    expect(r.error).toBeUndefined();
+    expect(r.state.priorityWindow).toBeNull();
+    // KO'd 'a'
+    expect(r.state.players[1].characters).toHaveLength(1);
+    expect(r.state.players[1].characters[0].instanceId).toBe('b');
+    // Drew 1 from chain
+    expect(r.state.players[0].hand).toHaveLength(1);
+  });
+
+  it('chains multiple target selections', () => {
+    const state = makeState([makeChar('a'), makeChar('b')]);
+    const stateWithWindow: GameState = {
+      ...state,
+      priorityWindow: {
+        kind: 'EffectTargetSelection',
+        sourceCardId: 'src',
+        sourceOwner: 0,
+        effect: { kind: 'ko', target: { kind: 'opponentCharacter' } },
+        validTargets: [
+          { kind: 'Character', instanceId: 'a', owner: 1 },
+          { kind: 'Character', instanceId: 'b', owner: 1 },
+        ],
+        optional: false,
+        // pendingChain has another targeted effect that, after resolving the first KO,
+        // will need its own selection (still 1 char left → mandatory single → resolves directly)
+        pendingChain: [
+          {
+            kind: 'power',
+            target: { kind: 'opponentCharacter' },
+            delta: -1000,
+            duration: 'thisTurn',
+          },
+        ],
+      },
+    };
+    const r = apply(stateWithWindow, {
+      kind: 'SelectEffectTarget',
+      player: 0,
+      targetIndex: 0,
+    });
+    expect(r.error).toBeUndefined();
+    // After KO'ing 'a', only 'b' remains. The second effect targets opponentCharacter; only 'b' qualifies (1 mandatory) → resolves directly.
+    expect(r.state.priorityWindow).toBeNull();
+    expect(r.state.players[1].characters).toHaveLength(1);
+    expect(r.state.players[1].characters[0].instanceId).toBe('b');
+    expect(r.state.players[1].characters[0].powerThisTurn).toBe(-1000);
+  });
+
+  it('fizzles + continues chain when chosen target no longer exists', () => {
+    const state = makeState([makeChar('b')]); // 'a' from validTargets has gone stale
+    const stateWithDeck: GameState = {
+      ...state,
+      players: [{ ...state.players[0], deck: ['C'] }, state.players[1]] as GameState['players'],
+    };
+    const stateWithWindow: GameState = {
+      ...stateWithDeck,
+      priorityWindow: {
+        kind: 'EffectTargetSelection',
+        sourceCardId: 'src',
+        sourceOwner: 0,
+        effect: { kind: 'ko', target: { kind: 'opponentCharacter' } },
+        validTargets: [
+          { kind: 'Character', instanceId: 'a', owner: 1 }, // stale
+          { kind: 'Character', instanceId: 'b', owner: 1 },
+        ],
+        optional: false,
+        pendingChain: [{ kind: 'draw', amount: 1 }],
+      },
+    };
+    const r = apply(stateWithWindow, {
+      kind: 'SelectEffectTarget',
+      player: 0,
+      targetIndex: 0, // pick stale 'a'
+    });
+    expect(r.error).toBeUndefined();
+    // 'a' is gone — fizzle. 'b' remains. Chain still runs.
+    expect(r.state.priorityWindow).toBeNull();
+    expect(r.state.players[1].characters).toHaveLength(1);
+    expect(r.state.players[1].characters[0].instanceId).toBe('b');
+    expect(r.state.players[0].hand).toHaveLength(1); // chain ran
+  });
+});
+
 import { triggerHook } from '../../src/effects/triggers';
 
 describe('triggerHook pendingChain', () => {
