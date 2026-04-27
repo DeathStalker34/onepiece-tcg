@@ -45,3 +45,5 @@ export { apply } from './apply';
 export type { ApplyResult } from './apply';
 
 export { CARD_EFFECT_LIBRARY, getEffectsForCard } from './effects/library';
+
+export { computeEffectivePower } from './effects/power';
