@@ -54,6 +54,27 @@ function mapEvent(
       return { text: 'Blocker activated', variant: 'warning' };
     case 'AttackBlocked':
       return { text: 'Attack blocked!', variant: 'warning' };
+    case 'EffectResolved': {
+      const e = ev.effect;
+      if (e.kind === 'ko') return { text: 'Character KO\u2019d by effect', variant: 'danger' };
+      if (e.kind === 'banish') return { text: 'Character banished', variant: 'danger' };
+      if (e.kind === 'returnToHand')
+        return { text: 'Character returned to hand', variant: 'warning' };
+      if (e.kind === 'power') {
+        const sign = e.delta >= 0 ? '+' : '';
+        return {
+          text: `Power ${sign}${e.delta}`,
+          variant: e.delta >= 0 ? 'info' : 'warning',
+        };
+      }
+      if (e.kind === 'draw') {
+        return { text: `${ev.sourceCardId} drew ${e.amount}`, variant: 'info' };
+      }
+      if (e.kind === 'search') {
+        return { text: `${ev.sourceCardId} searched`, variant: 'info' };
+      }
+      return null;
+    }
     default:
       return null;
   }
