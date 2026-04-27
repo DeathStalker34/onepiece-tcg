@@ -5,8 +5,7 @@ const OP01_TOTAL = 121;
 const REQUIRED = 85;
 
 describe('OP01 library coverage', () => {
-  // Skipped during Task 16 — re-enabled in Task 18 once >=85 cards are populated
-  it.skip(`has at least ${REQUIRED} OP01 cards with effects`, () => {
+  it(`has at least ${REQUIRED} OP01 cards with effects`, () => {
     const op01Covered = Object.entries(CARD_EFFECT_LIBRARY).filter(
       ([id, fx]) => id.startsWith('OP01-') && fx.length > 0,
     ).length;
