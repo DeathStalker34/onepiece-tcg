@@ -11,13 +11,25 @@ export function CharacterCard({
   char,
   actions = [],
   highlighted = false,
+  effectivePower,
+  basePower,
 }: {
   char: CharacterInPlay;
   actions?: ActionMenuOption[];
   highlighted?: boolean;
+  effectivePower: number;
+  basePower: number;
 }) {
   const [open, setOpen] = useState(false);
   const clickable = actions.length > 0;
+  const powerDelta = effectivePower - basePower;
+  const isBuffed = powerDelta > 0;
+  const isDebuffed = powerDelta < 0;
+  const glow = isBuffed
+    ? 'shadow-[0_0_14px_rgba(252,211,77,0.75)]'
+    : isDebuffed
+      ? 'shadow-[0_0_10px_rgba(220,38,38,0.6)]'
+      : '';
 
   function handleClick() {
     if (!clickable) return;
@@ -36,7 +48,7 @@ export function CharacterCard({
           onClick={handleClick}
           aria-disabled={!clickable}
           tabIndex={clickable ? 0 : -1}
-          className={`relative aspect-[5/7] w-24 overflow-hidden rounded border border-amber-900/70 animate-in fade-in-0 slide-in-from-bottom-16 duration-500 ease-out transition-transform duration-700 ease-in-out ${char.rested ? 'rotate-90' : ''} ${char.summoningSickness ? 'opacity-60' : ''} ${clickable ? 'cursor-pointer hover:ring-2 hover:ring-primary' : 'cursor-default'} ${highlighted ? 'ring-2 ring-amber-400 ring-offset-1 ring-offset-stone-900 animate-pulse' : ''}`}
+          className={`relative aspect-[5/7] w-24 overflow-hidden rounded border border-amber-900/70 animate-in fade-in-0 slide-in-from-bottom-16 duration-500 ease-out transition-transform duration-700 ease-in-out ${char.rested ? 'rotate-90' : ''} ${char.summoningSickness ? 'opacity-60' : ''} ${clickable ? 'cursor-pointer hover:ring-2 hover:ring-primary' : 'cursor-default'} ${highlighted ? 'ring-2 ring-amber-400 ring-offset-1 ring-offset-stone-900 animate-pulse' : ''} ${glow}`}
           title={`${char.cardId}${char.summoningSickness ? ' (summoning sickness)' : ''}`}
         >
           <Image
@@ -54,6 +66,18 @@ export function CharacterCard({
               +{char.attachedDon}
             </span>
           )}
+          <span
+            className={`absolute bottom-0.5 right-0.5 rounded px-1 text-[10px] font-bold transition-colors ${
+              isBuffed
+                ? 'bg-yellow-400 text-stone-900'
+                : isDebuffed
+                  ? 'bg-red-700 text-white'
+                  : 'bg-stone-900/85 text-amber-100'
+            }`}
+            aria-label={`Power ${effectivePower}`}
+          >
+            {effectivePower}
+          </span>
         </button>
       </CardHoverPreview>
       {actions.length > 1 && (

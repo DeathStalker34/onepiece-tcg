@@ -141,6 +141,8 @@ export function PlayerSide({
               lifeCount={p.life.length}
               actions={leaderActions}
               highlighted={isHighlightedRef('Leader')}
+              effectivePower={computeEffectivePower(state, { kind: 'Leader', owner: playerIndex })}
+              basePower={state.catalog[p.leader.cardId]?.power ?? 0}
             />
           </div>
         </div>
@@ -189,6 +191,12 @@ export function PlayerSide({
                         char={c}
                         actions={actions}
                         highlighted={isHighlightedRef('Character', c.instanceId)}
+                        effectivePower={computeEffectivePower(state, {
+                          kind: 'Character',
+                          instanceId: c.instanceId,
+                          owner: playerIndex,
+                        })}
+                        basePower={charStatic?.power ?? 0}
                       />
                     );
                   }
