@@ -2,24 +2,12 @@ import type { GameState, PlayerIndex, AttackerRef, DefenderRef } from '../types/
 import type { Action } from '../types/action';
 import type { GameEvent } from '../types/event';
 import type { EngineError } from '../types/error';
-import type { CardStatic } from '../types/card';
+import { computeEffectivePower } from '../effects/power';
 
 export interface CombatResult {
   state: GameState;
   events: GameEvent[];
   error?: EngineError;
-}
-
-function powerOf(card: CardStatic): number {
-  return card.power ?? 0;
-}
-
-function computeAttackPower(
-  baseCard: CardStatic,
-  attachedDon: number,
-  powerThisTurn: number,
-): number {
-  return powerOf(baseCard) + attachedDon * 1000 + powerThisTurn;
 }
 
 export function declareAttack(
@@ -56,10 +44,9 @@ export function declareAttack(
     if (ap.leader.rested) {
       return { state, events: [], error: { code: 'CharacterIsRested' } };
     }
-    const leaderCard = state.catalog[ap.leader.cardId];
-    if (!leaderCard)
+    if (!state.catalog[ap.leader.cardId])
       return { state, events: [], error: { code: 'Unknown', detail: 'leader not in catalog' } };
-    attackerPower = computeAttackPower(leaderCard, ap.leader.attachedDon, ap.leader.powerThisTurn);
+    attackerPower = computeEffectivePower(state, { kind: 'Leader', owner: attackerOwner });
     attackerRef = {
       owner: attackerOwner,
       source: { kind: 'Leader' },
@@ -75,14 +62,17 @@ export function declareAttack(
     const char = ap.characters[idx];
     if (char.rested) return { state, events: [], error: { code: 'CharacterIsRested' } };
     if (char.summoningSickness) return { state, events: [], error: { code: 'SummoningSickness' } };
-    const charCard = state.catalog[char.cardId];
-    if (!charCard)
+    if (!state.catalog[char.cardId])
       return {
         state,
         events: [],
         error: { code: 'Unknown', detail: 'character card not in catalog' },
       };
-    attackerPower = computeAttackPower(charCard, char.attachedDon, char.powerThisTurn);
+    attackerPower = computeEffectivePower(state, {
+      kind: 'Character',
+      instanceId: char.instanceId,
+      owner: attackerOwner,
+    });
     attackerRef = {
       owner: attackerOwner,
       source: { kind: 'Character', instanceId: char.instanceId },
@@ -97,14 +87,13 @@ export function declareAttack(
   let defenderRef: DefenderRef;
 
   if (action.target.kind === 'Leader') {
-    const leaderCard = state.catalog[dp.leader.cardId];
-    if (!leaderCard)
+    if (!state.catalog[dp.leader.cardId])
       return {
         state,
         events: [],
         error: { code: 'Unknown', detail: 'target leader not in catalog' },
       };
-    defensePower = powerOf(leaderCard);
+    defensePower = computeEffectivePower(state, { kind: 'Leader', owner: defenderOwner });
     defenderRef = { owner: defenderOwner, target: { kind: 'Leader' }, defensePower };
   } else {
     if (action.target.owner !== defenderOwner) {
@@ -131,14 +120,17 @@ export function declareAttack(
         error: { code: 'InvalidTarget', reason: 'character must be rested to be targeted' },
       };
     }
-    const chCard = state.catalog[ch.cardId];
-    if (!chCard)
+    if (!state.catalog[ch.cardId])
       return {
         state,
         events: [],
         error: { code: 'Unknown', detail: 'target character card not in catalog' },
       };
-    defensePower = powerOf(chCard);
+    defensePower = computeEffectivePower(state, {
+      kind: 'Character',
+      instanceId: ch.instanceId,
+      owner: defenderOwner,
+    });
     defenderRef = {
       owner: defenderOwner,
       target: { kind: 'Character', instanceId: ch.instanceId },
