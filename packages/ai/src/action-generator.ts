@@ -15,6 +15,7 @@ export function generatePriorityAction(state: GameState, player: PlayerIndex): A
   if (pw.kind === 'TriggerStep' && pw.owner === player) {
     return { kind: 'ActivateTrigger', player, activate: false };
   }
+  // EffectTargetSelection is handled individually by each bot (needs RNG / heuristics)
   return null;
 }
 

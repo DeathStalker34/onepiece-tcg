@@ -1,4 +1,5 @@
 import type { Action, GameState, PlayerIndex } from '@optcg/engine';
+import { computeEffectivePower } from '@optcg/engine';
 import { generateMainActions } from './action-generator';
 import type { Bot, BotDecision } from './types';
 
@@ -79,12 +80,52 @@ function pickPriorityAction(state: GameState, player: PlayerIndex): Action | nul
   return null;
 }
 
+function pickEffectTarget(state: GameState, player: PlayerIndex): Action | null {
+  const pw = state.priorityWindow;
+  if (pw?.kind !== 'EffectTargetSelection' || pw.sourceOwner !== player) return null;
+
+  if (pw.validTargets.length === 0) {
+    return { kind: 'SelectEffectTarget', player: pw.sourceOwner, targetIndex: null };
+  }
+
+  const isThreatRemoval =
+    pw.effect.kind === 'ko' ||
+    pw.effect.kind === 'banish' ||
+    pw.effect.kind === 'returnToHand' ||
+    (pw.effect.kind === 'power' && pw.effect.delta < 0);
+
+  // For threat-removal and self-buff alike, pick the highest-power target
+  // (threat-removal: remove biggest threat; self-buff: potentiate strongest ally)
+  let chosenIdx = 0;
+  let bestScore = -Infinity;
+  for (let i = 0; i < pw.validTargets.length; i += 1) {
+    const t = pw.validTargets[i];
+    const power = computeEffectivePower(state, t);
+    const score = isThreatRemoval ? power : power;
+    if (score > bestScore) {
+      bestScore = score;
+      chosenIdx = i;
+    }
+  }
+
+  return { kind: 'SelectEffectTarget', player: pw.sourceOwner, targetIndex: chosenIdx };
+}
+
 export const MediumBot: Bot = {
   id: 'medium',
   name: 'Medium',
   pick(state, player, rng): BotDecision {
     const priority = pickPriorityAction(state, player);
     if (priority) return { action: priority, rng };
+
+    const effectTarget = pickEffectTarget(state, player);
+    if (effectTarget) {
+      return {
+        action: effectTarget,
+        rng,
+        rationale: `medium effect-target heuristic`,
+      };
+    }
 
     if (state.phase === 'Main' && state.activePlayer === player && state.priorityWindow === null) {
       const actions = generateMainActions(state, player);
