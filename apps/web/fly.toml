@@ -1,8 +1,8 @@
 app = "optcg-web"
-primary_region = "mad"
+primary_region = "cdg"
 
 [build]
-  dockerfile = "apps/web/Dockerfile"
+  dockerfile = "Dockerfile"
 
 [env]
   NODE_ENV = "production"

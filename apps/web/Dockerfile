@@ -13,7 +13,7 @@ COPY packages ./packages
 COPY apps/web ./apps/web
 
 # Install all needed for web (engine, card-data, ai, protocol)
-RUN corepack pnpm@9.7.0 install --frozen-lockfile --filter @optcg/web...
+RUN corepack pnpm@9.7.0 install --filter @optcg/web...
 
 # Generate prisma client (uses placeholder DATABASE_URL — engine never connects at build time)
 ENV DATABASE_URL=file:/tmp/build-placeholder.db

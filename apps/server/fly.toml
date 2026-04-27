@@ -1,8 +1,8 @@
 app = "optcg-server"
-primary_region = "mad"
+primary_region = "cdg"
 
 [build]
-  dockerfile = "apps/server/Dockerfile"
+  dockerfile = "Dockerfile"
 
 [env]
   PORT = "3001"
