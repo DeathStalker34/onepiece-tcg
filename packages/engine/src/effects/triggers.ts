@@ -9,7 +9,10 @@ export interface TriggerResult {
 }
 
 /**
- * Fires all TriggeredEffects on a card matching `hook`. Returns updated state + events.
+ * Fires all TriggeredEffects on a card matching `hook`, in order.
+ * If one effect opens a priority window (e.g. EffectTargetSelection),
+ * the remaining same-trigger effects are queued in `pendingChain`
+ * for resumption after the window resolves.
  */
 export function triggerHook(
   state: GameState,
@@ -21,12 +24,21 @@ export function triggerHook(
   if (!card) return { state, events: [] };
   const events: GameEvent[] = [];
   let next = state;
-  for (const te of card.effects) {
-    if (te.trigger !== hook) continue;
-    const context: EffectContext = { sourcePlayer, sourceCardId };
-    const r = applyEffect(next, te.effect, context);
+  const context: EffectContext = { sourcePlayer, sourceCardId };
+
+  const queue = card.effects.filter((te) => te.trigger === hook).map((te) => te.effect);
+  while (queue.length > 0) {
+    const effect = queue.shift()!;
+    const r = applyEffect(next, effect, context);
     next = r.state;
     events.push(...r.events);
+    if (next.priorityWindow?.kind === 'EffectTargetSelection') {
+      next = {
+        ...next,
+        priorityWindow: { ...next.priorityWindow, pendingChain: queue.slice() },
+      };
+      break;
+    }
   }
   return { state: next, events };
 }
