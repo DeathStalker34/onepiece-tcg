@@ -12,7 +12,8 @@ import {
 import { Button } from '@/components/ui/button';
 import { cardImagePath } from '@/lib/card-image';
 import { useGame } from './game-provider';
-import type { Action, Effect, PriorityWindow, TargetSpec } from '@optcg/engine';
+import { computeEffectivePower } from '@optcg/engine';
+import type { Action, Effect, PriorityWindow, TargetRef, TargetSpec } from '@optcg/engine';
 
 function targetLabel(target: TargetSpec): string {
   switch (target.kind) {
@@ -69,6 +70,7 @@ export function PriorityModal() {
   } else if (pw.kind === 'CounterStep') actor = pw.defender.owner;
   else if (pw.kind === 'BlockerStep') actor = pw.originalTarget.owner;
   else if (pw.kind === 'TriggerStep') actor = pw.owner;
+  else if (pw.kind === 'EffectTargetSelection') actor = pw.sourceOwner;
 
   if (actor === null) return null;
   if (botPlayers[actor]) return null;
@@ -85,6 +87,8 @@ export function PriorityModal() {
       return <BlockerVariant pw={pw} />;
     case 'TriggerStep':
       return <TriggerVariant pw={pw} />;
+    case 'EffectTargetSelection':
+      return <EffectTargetVariant pw={pw} localPlayer={actor} />;
     default:
       return null;
   }
@@ -394,6 +398,84 @@ export function PriorityModal() {
             >
               Decline blocker
             </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+    );
+  }
+
+  function EffectTargetVariant({
+    pw,
+    localPlayer,
+  }: {
+    pw: Extract<PriorityWindow, { kind: 'EffectTargetSelection' }>;
+    localPlayer: 0 | 1;
+  }) {
+    const sourceCard = state.catalog[pw.sourceCardId];
+    const sourceName = sourceCard?.id ?? pw.sourceCardId;
+    const description = formatEffect(pw.effect);
+
+    function pick(targetIndex: number | null): void {
+      dispatch({ kind: 'SelectEffectTarget', player: localPlayer, targetIndex });
+    }
+
+    function targetMeta(t: TargetRef): { cardId: string; power: number; label: string } {
+      if (t.kind === 'Leader') {
+        const cardId = state.players[t.owner].leader.cardId;
+        return {
+          cardId,
+          power: computeEffectivePower(state, t),
+          label: t.owner === pw.sourceOwner ? 'Your Leader' : "Opponent's Leader",
+        };
+      }
+      const c = state.players[t.owner].characters.find((x) => x.instanceId === t.instanceId);
+      return {
+        cardId: c?.cardId ?? '???',
+        power: computeEffectivePower(state, t),
+        label: t.owner === pw.sourceOwner ? 'Your Character' : "Opponent's Character",
+      };
+    }
+
+    return (
+      <Dialog open modal>
+        <DialogContent className="max-w-3xl" onInteractOutside={(e) => e.preventDefault()}>
+          <DialogHeader>
+            <DialogTitle>{sourceName} — choose target</DialogTitle>
+            <DialogDescription>{description}</DialogDescription>
+          </DialogHeader>
+          <div className="grid grid-cols-3 gap-3 py-2">
+            {pw.validTargets.map((t, i) => {
+              const meta = targetMeta(t);
+              return (
+                <button
+                  key={i}
+                  type="button"
+                  onClick={() => pick(i)}
+                  className="rounded border border-amber-700/50 p-2 hover:border-amber-400"
+                >
+                  <div className="relative aspect-[5/7] w-full overflow-hidden rounded">
+                    <Image
+                      src={cardImagePath(meta.cardId)}
+                      alt={meta.cardId}
+                      fill
+                      sizes="200px"
+                      className="object-cover"
+                    />
+                  </div>
+                  <div className="mt-1 text-center text-xs">
+                    <div className="opacity-70">{meta.label}</div>
+                    <div className="font-semibold">Power {meta.power}</div>
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+          <div className="flex justify-end gap-2">
+            {pw.optional && (
+              <Button variant="secondary" onClick={() => pick(null)}>
+                Skip
+              </Button>
+            )}
           </div>
         </DialogContent>
       </Dialog>
