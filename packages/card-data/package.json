@@ -19,6 +19,7 @@
     "test:coverage": "vitest run --coverage",
     "sync": "tsx scripts/sync.ts",
     "export:catalog": "tsx scripts/export-catalog.ts",
+    "export:cards": "tsx scripts/export-cards.ts",
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate dev",
     "db:reset": "prisma migrate reset --force"

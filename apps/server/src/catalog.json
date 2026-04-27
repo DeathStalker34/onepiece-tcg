@@ -1,0 +1,3479 @@
+{
+  "OP01-001": {
+    "id": "OP01-001",
+    "type": "LEADER",
+    "colors": [
+      "Red"
+    ],
+    "cost": null,
+    "power": 5000,
+    "life": 5,
+    "counter": null,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[DON!! x1] [Your Turn] All of your Characters gain +1000 power."
+  },
+  "OP01-002": {
+    "id": "OP01-002",
+    "type": "LEADER",
+    "colors": [
+      "Red",
+      "Green"
+    ],
+    "cost": null,
+    "power": 5000,
+    "life": 4,
+    "counter": null,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[Activate: Main] [Once Per Turn] ➁ (You may rest the specified number of DON!! cards in your cost area.): If you have 5 Characters, return 1 of your Characters to the owner's hand. Then, play up to 1 Character with a cost of 5 or less from your hand that is a different color than the returned Character."
+  },
+  "OP01-003": {
+    "id": "OP01-003",
+    "type": "LEADER",
+    "colors": [
+      "Red",
+      "Green"
+    ],
+    "cost": null,
+    "power": 5000,
+    "life": 4,
+    "counter": null,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[Activate: Main] [Once Per Turn] ➃ (You may rest the specified number of DON!! cards in your cost area.): Set up to 1 of your {Supernovas} or {Straw Hat Crew} type Character cards with a cost of 5 or less as active. It gains +1000 power during this turn."
+  },
+  "OP01-004": {
+    "id": "OP01-004",
+    "type": "CHARACTER",
+    "colors": [
+      "Red"
+    ],
+    "cost": 2,
+    "power": 3000,
+    "life": null,
+    "counter": 2000,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[DON!! x1] [Your Turn] [Once Per Turn] Draw 1 card when your opponent activates an Event."
+  },
+  "OP01-005": {
+    "id": "OP01-005",
+    "type": "CHARACTER",
+    "colors": [
+      "Red"
+    ],
+    "cost": 4,
+    "power": 4000,
+    "life": null,
+    "counter": null,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[On Play] Add up to 1 red Character card other than [Uta] with a cost of 3 or less from your trash to your hand."
+  },
+  "OP01-006": {
+    "id": "OP01-006",
+    "type": "CHARACTER",
+    "colors": [
+      "Red"
+    ],
+    "cost": 1,
+    "power": null,
+    "life": null,
+    "counter": 2000,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[On Play] Give up to 1 of your opponent's Characters −2000 power during this turn."
+  },
+  "OP01-007": {
+    "id": "OP01-007",
+    "type": "CHARACTER",
+    "colors": [
+      "Red"
+    ],
+    "cost": 3,
+    "power": 4000,
+    "life": null,
+    "counter": 1000,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[On K.O.] K.O. up to 1 of your opponent's Characters with 4000 power or less."
+  },
+  "OP01-008": {
+    "id": "OP01-008",
+    "type": "CHARACTER",
+    "colors": [
+      "Red"
+    ],
+    "cost": 4,
+    "power": 5000,
+    "life": null,
+    "counter": null,
+    "keywords": [
+      "Rush"
+    ],
+    "effects": [],
+    "manualText": "[On Play] You may add 1 card from your Life area to your hand: This Character gains [Rush] during this turn. (This card can attack on the turn in which it is played.)"
+  },
+  "OP01-009": {
+    "id": "OP01-009",
+    "type": "CHARACTER",
+    "colors": [
+      "Red"
+    ],
+    "cost": 2,
+    "power": 3000,
+    "life": null,
+    "counter": 1000,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[Trigger] Play this card."
+  },
+  "OP01-010": {
+    "id": "OP01-010",
+    "type": "CHARACTER",
+    "colors": [
+      "Red"
+    ],
+    "cost": 1,
+    "power": 3000,
+    "life": null,
+    "counter": 1000,
+    "keywords": [],
+    "effects": [],
+    "manualText": "-"
+  },
+  "OP01-011": {
+    "id": "OP01-011",
+    "type": "CHARACTER",
+    "colors": [
+      "Red"
+    ],
+    "cost": 2,
+    "power": 3000,
+    "life": null,
+    "counter": 2000,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[On Play] You may place 1 card from your hand at the bottom of your deck: Draw 1 card."
+  },
+  "OP01-012": {
+    "id": "OP01-012",
+    "type": "CHARACTER",
+    "colors": [
+      "Red"
+    ],
+    "cost": 2,
+    "power": 4000,
+    "life": null,
+    "counter": 1000,
+    "keywords": [],
+    "effects": [],
+    "manualText": "-"
+  },
+  "OP01-013": {
+    "id": "OP01-013",
+    "type": "CHARACTER",
+    "colors": [
+      "Red"
+    ],
+    "cost": 2,
+    "power": 3000,
+    "life": null,
+    "counter": 2000,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[Activate: Main] [Once Per Turn] You may add 1 card from your Life area to your hand: This Character gains +2000 power during this turn. Then, give this Character up to 2 rested DON!! cards."
+  },
+  "OP01-014": {
+    "id": "OP01-014",
+    "type": "CHARACTER",
+    "colors": [
+      "Red"
+    ],
+    "cost": 4,
+    "power": 5000,
+    "life": null,
+    "counter": null,
+    "keywords": [
+      "Blocker"
+    ],
+    "effects": [],
+    "manualText": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)<br>[DON!! x1] [On Block] Play up to 1 red Character card with a cost of 2 or less from your hand."
+  },
+  "OP02-001": {
+    "id": "OP02-001",
+    "type": "LEADER",
+    "colors": [
+      "Red"
+    ],
+    "cost": null,
+    "power": 6000,
+    "life": 6,
+    "counter": null,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[End of Your Turn] Add 1 card from the top of your Life cards to your hand."
+  },
+  "OP02-002": {
+    "id": "OP02-002",
+    "type": "LEADER",
+    "colors": [
+      "Red",
+      "Black"
+    ],
+    "cost": null,
+    "power": 5000,
+    "life": 4,
+    "counter": null,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[Your Turn] When this Leader or any of your Characters is given a DON!! card, give up to 1 of your opponent's Characters with a cost of 7 or less −1 cost during this turn."
+  },
+  "OP02-003": {
+    "id": "OP02-003",
+    "type": "CHARACTER",
+    "colors": [
+      "Red"
+    ],
+    "cost": 4,
+    "power": 6000,
+    "life": null,
+    "counter": 1000,
+    "keywords": [],
+    "effects": [],
+    "manualText": "-"
+  },
+  "OP02-004": {
+    "id": "OP02-004",
+    "type": "CHARACTER",
+    "colors": [
+      "Red"
+    ],
+    "cost": 9,
+    "power": 10000,
+    "life": null,
+    "counter": null,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[On Play] Up to 1 of your Leader gains +2000 power until the start of your next turn. Then, you cannot add Life cards to your hand using your own effects during this turn.<br>[DON!! x2] [When Attacking] K.O. up to 1 of your opponent's Characters with 3000 power or less."
+  },
+  "OP02-005": {
+    "id": "OP02-005",
+    "type": "CHARACTER",
+    "colors": [
+      "Red"
+    ],
+    "cost": 2,
+    "power": 3000,
+    "life": null,
+    "counter": 1000,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[On Play] Look at up to 5 cards from the top of your deck; reveal up to 1 red Character with a cost of 1 and add it to your hand. Then, place the rest at the bottom of your deck in any order."
+  },
+  "OP02-006": {
+    "id": "OP02-006",
+    "type": "CHARACTER",
+    "colors": [
+      "Red"
+    ],
+    "cost": 5,
+    "power": 7000,
+    "life": null,
+    "counter": 1000,
+    "keywords": [],
+    "effects": [],
+    "manualText": "-"
+  },
+  "OP01-015": {
+    "id": "OP01-015",
+    "type": "CHARACTER",
+    "colors": [
+      "Red"
+    ],
+    "cost": 3,
+    "power": 4000,
+    "life": null,
+    "counter": 1000,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[DON!! x1] [When Attacking] You may trash 1 card from your hand: Add up to 1 {Straw Hat Crew} type Character card other than [Tony Tony.Chopper] with a cost of 4 or less from your trash to your hand."
+  },
+  "OP01-016": {
+    "id": "OP01-016",
+    "type": "CHARACTER",
+    "colors": [
+      "Red"
+    ],
+    "cost": 1,
+    "power": 2000,
+    "life": null,
+    "counter": 1000,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[On Play] Look at 5 cards from the top of your deck; reveal up to 1 {Straw Hat Crew} type card other than [Nami] and add it to your hand. Then, place the rest at the bottom of your deck in any order."
+  },
+  "OP01-017": {
+    "id": "OP01-017",
+    "type": "CHARACTER",
+    "colors": [
+      "Red"
+    ],
+    "cost": 3,
+    "power": 4000,
+    "life": null,
+    "counter": 1000,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[DON!! x1] [When Attacking] K.O. up to 1 of your opponent's Characters with 3000 power or less."
+  },
+  "OP01-018": {
+    "id": "OP01-018",
+    "type": "CHARACTER",
+    "colors": [
+      "Red"
+    ],
+    "cost": 4,
+    "power": 6000,
+    "life": null,
+    "counter": 1000,
+    "keywords": [],
+    "effects": [],
+    "manualText": "-"
+  },
+  "OP01-019": {
+    "id": "OP01-019",
+    "type": "CHARACTER",
+    "colors": [
+      "Red"
+    ],
+    "cost": 2,
+    "power": 2000,
+    "life": null,
+    "counter": 1000,
+    "keywords": [
+      "Blocker"
+    ],
+    "effects": [],
+    "manualText": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)<br>[DON!! x2] [Opponent's Turn] This Character gains +3000 power."
+  },
+  "OP01-020": {
+    "id": "OP01-020",
+    "type": "CHARACTER",
+    "colors": [
+      "Red"
+    ],
+    "cost": 2,
+    "power": 3000,
+    "life": null,
+    "counter": 1000,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[Activate: Main] You may rest this Character: Up to 1 of your Leader or Character cards gains +2000 power during this turn."
+  },
+  "OP01-021": {
+    "id": "OP01-021",
+    "type": "CHARACTER",
+    "colors": [
+      "Red"
+    ],
+    "cost": 3,
+    "power": 4000,
+    "life": null,
+    "counter": null,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[DON!! x1] This Character can also attack your opponent's active Characters."
+  },
+  "OP01-022": {
+    "id": "OP01-022",
+    "type": "CHARACTER",
+    "colors": [
+      "Red"
+    ],
+    "cost": 4,
+    "power": 5000,
+    "life": null,
+    "counter": 1000,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[DON!! x1] [When Attacking] Give up to 2 of your opponent's Characters −2000 power during this turn."
+  },
+  "OP01-023": {
+    "id": "OP01-023",
+    "type": "CHARACTER",
+    "colors": [
+      "Red"
+    ],
+    "cost": 3,
+    "power": 5000,
+    "life": null,
+    "counter": 1000,
+    "keywords": [],
+    "effects": [],
+    "manualText": "-"
+  },
+  "OP01-024": {
+    "id": "OP01-024",
+    "type": "CHARACTER",
+    "colors": [
+      "Red"
+    ],
+    "cost": 2,
+    "power": 3000,
+    "life": null,
+    "counter": 1000,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[DON!! x2] This Character cannot be K.O.'d in battle by ＜Strike＞ attribute Characters.<br>[Activate: Main] [Once Per Turn] Give this Character up to 2 rested DON!! cards."
+  },
+  "OP01-025": {
+    "id": "OP01-025",
+    "type": "CHARACTER",
+    "colors": [
+      "Red"
+    ],
+    "cost": 3,
+    "power": 5000,
+    "life": null,
+    "counter": null,
+    "keywords": [
+      "Rush"
+    ],
+    "effects": [],
+    "manualText": "[Rush] (This card can attack on the turn in which it is played.)"
+  },
+  "OP01-026": {
+    "id": "OP01-026",
+    "type": "EVENT",
+    "colors": [
+      "Red"
+    ],
+    "cost": 2,
+    "power": null,
+    "life": null,
+    "counter": null,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[Counter] Up to 1 of your Leader or Character cards gains +4000 power during this battle. Then, K.O. up to 1 of your opponent's Characters with 4000 power or less."
+  },
+  "OP01-027": {
+    "id": "OP01-027",
+    "type": "EVENT",
+    "colors": [
+      "Red"
+    ],
+    "cost": 4,
+    "power": null,
+    "life": null,
+    "counter": null,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[Main] Give up to 1 of your opponent's Characters −10000 power during this turn."
+  },
+  "OP01-028": {
+    "id": "OP01-028",
+    "type": "EVENT",
+    "colors": [
+      "Red"
+    ],
+    "cost": 1,
+    "power": null,
+    "life": null,
+    "counter": null,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[Counter] Give up to 1 of your opponent's Leader or Character cards −2000 power during this turn."
+  },
+  "OP01-029": {
+    "id": "OP01-029",
+    "type": "EVENT",
+    "colors": [
+      "Red"
+    ],
+    "cost": 1,
+    "power": null,
+    "life": null,
+    "counter": null,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[Counter] Up to 1 of your Leader or Character cards gains +2000 power during this battle. Then, if you have 2 or less Life cards, that card gains an additional +2000 power."
+  },
+  "OP01-030": {
+    "id": "OP01-030",
+    "type": "EVENT",
+    "colors": [
+      "Red"
+    ],
+    "cost": 1,
+    "power": null,
+    "life": null,
+    "counter": null,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[Main] Look at 5 cards from the top of your deck; reveal up to 1 {Straw Hat Crew} type Character card and add it to your hand. Then, place the rest at the bottom of your deck in any order."
+  },
+  "OP01-031": {
+    "id": "OP01-031",
+    "type": "LEADER",
+    "colors": [
+      "Green"
+    ],
+    "cost": null,
+    "power": 5000,
+    "life": 5,
+    "counter": null,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[Activate: Main] [Once Per Turn] You can trash 1 {Land of Wano} type card from your hand: Set up to 2 of your DON!! cards as active."
+  },
+  "OP01-032": {
+    "id": "OP01-032",
+    "type": "CHARACTER",
+    "colors": [
+      "Green"
+    ],
+    "cost": 3,
+    "power": 4000,
+    "life": null,
+    "counter": 1000,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[DON!! x1] If your opponent has 2 or more rested Characters, this Character gains +2000 power."
+  },
+  "OP01-033": {
+    "id": "OP01-033",
+    "type": "CHARACTER",
+    "colors": [
+      "Green"
+    ],
+    "cost": 3,
+    "power": 3000,
+    "life": null,
+    "counter": 2000,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[On Play] Rest up to 1 of your opponent's Characters with a cost of 4 or less."
+  },
+  "OP01-034": {
+    "id": "OP01-034",
+    "type": "CHARACTER",
+    "colors": [
+      "Green"
+    ],
+    "cost": 3,
+    "power": 4000,
+    "life": null,
+    "counter": 1000,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[DON!! x2] [When Attacking] Set up to 1 of your DON!! cards as active."
+  },
+  "OP01-035": {
+    "id": "OP01-035",
+    "type": "CHARACTER",
+    "colors": [
+      "Green"
+    ],
+    "cost": 3,
+    "power": 5000,
+    "life": null,
+    "counter": null,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[DON!! x1] [When Attacking] [Once Per Turn] Rest up to 1 of your opponent's Characters with a cost of 5 or less."
+  },
+  "OP01-036": {
+    "id": "OP01-036",
+    "type": "CHARACTER",
+    "colors": [
+      "Green"
+    ],
+    "cost": 1,
+    "power": 3000,
+    "life": null,
+    "counter": 1000,
+    "keywords": [],
+    "effects": [],
+    "manualText": "-"
+  },
+  "OP01-037": {
+    "id": "OP01-037",
+    "type": "CHARACTER",
+    "colors": [
+      "Green"
+    ],
+    "cost": 2,
+    "power": 3000,
+    "life": null,
+    "counter": 1000,
+    "keywords": [],
+    "effects": [],
+    "manualText": "-"
+  },
+  "OP01-038": {
+    "id": "OP01-038",
+    "type": "CHARACTER",
+    "colors": [
+      "Green"
+    ],
+    "cost": 2,
+    "power": 3000,
+    "life": null,
+    "counter": 1000,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[DON!! x1] [When Attacking] K.O. up to 1 of your opponent's rested Characters with a cost of 2 or less.<br>[On K.O.] Your opponent chooses 1 card from your hand; trash that card."
+  },
+  "OP01-039": {
+    "id": "OP01-039",
+    "type": "CHARACTER",
+    "colors": [
+      "Green"
+    ],
+    "cost": 2,
+    "power": 2000,
+    "life": null,
+    "counter": 1000,
+    "keywords": [
+      "Blocker"
+    ],
+    "effects": [],
+    "manualText": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)<br>[DON!! x1] [On Block] If you have 3 or more Characters, draw 1 card."
+  },
+  "OP01-040": {
+    "id": "OP01-040",
+    "type": "CHARACTER",
+    "colors": [
+      "Green"
+    ],
+    "cost": 6,
+    "power": 6000,
+    "life": null,
+    "counter": null,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[On Play] If your Leader is [Kouzuki Oden], play up to 1 {The Akazaya Nine} type Character card with a cost of 3 or less from your hand.<br>[DON!! x1] [When Attacking] [Once Per Turn] Set up to 1 of your {The Akazaya Nine} type Character cards with a cost of 3 or less as active."
+  },
+  "OP01-041": {
+    "id": "OP01-041",
+    "type": "CHARACTER",
+    "colors": [
+      "Green"
+    ],
+    "cost": 1,
+    "power": null,
+    "life": null,
+    "counter": 1000,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[Activate: Main] ➀ (You may rest the specified number of DON!! cards in your cost area) You may rest this Character: Look at 5 cards from the top of your deck; reveal up to 1 {Land of Wano} type card and add it to your hand. Then, place the rest at the bottom of your deck in any order."
+  },
+  "OP01-042": {
+    "id": "OP01-042",
+    "type": "CHARACTER",
+    "colors": [
+      "Green"
+    ],
+    "cost": 1,
+    "power": null,
+    "life": null,
+    "counter": 1000,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[On Play] ③ (You may rest the specified number of DON!! cards in your cost area.): If your Leader is [Kouzuki Oden], set up to 1 of your {Land of Wano} type Character cards with a cost of 3 or less as active."
+  },
+  "OP01-043": {
+    "id": "OP01-043",
+    "type": "CHARACTER",
+    "colors": [
+      "Green"
+    ],
+    "cost": 3,
+    "power": 5000,
+    "life": null,
+    "counter": 1000,
+    "keywords": [],
+    "effects": [],
+    "manualText": "-"
+  },
+  "OP01-044": {
+    "id": "OP01-044",
+    "type": "CHARACTER",
+    "colors": [
+      "Green"
+    ],
+    "cost": 3,
+    "power": 4000,
+    "life": null,
+    "counter": 1000,
+    "keywords": [
+      "Blocker"
+    ],
+    "effects": [],
+    "manualText": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)<br>[On Play] If you don't have [Penguin], play up to 1 [Penguin] from your hand."
+  },
+  "OP01-045": {
+    "id": "OP01-045",
+    "type": "CHARACTER",
+    "colors": [
+      "Green"
+    ],
+    "cost": 4,
+    "power": 6000,
+    "life": null,
+    "counter": 1000,
+    "keywords": [],
+    "effects": [],
+    "manualText": "-"
+  },
+  "OP01-046": {
+    "id": "OP01-046",
+    "type": "CHARACTER",
+    "colors": [
+      "Green"
+    ],
+    "cost": 5,
+    "power": 7000,
+    "life": null,
+    "counter": null,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[DON!! x1] [When Attacking] If your Leader is [Kouzuki Oden], set up to 2 of your DON!! cards as active."
+  },
+  "OP01-047": {
+    "id": "OP01-047",
+    "type": "CHARACTER",
+    "colors": [
+      "Green"
+    ],
+    "cost": 5,
+    "power": 6000,
+    "life": null,
+    "counter": null,
+    "keywords": [
+      "Blocker"
+    ],
+    "effects": [],
+    "manualText": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)<br>[On Play] You may return 1 Character to your hand: Play up to 1 Character card with a cost of 3 or less from your hand."
+  },
+  "OP01-048": {
+    "id": "OP01-048",
+    "type": "CHARACTER",
+    "colors": [
+      "Green"
+    ],
+    "cost": 2,
+    "power": 3000,
+    "life": null,
+    "counter": 1000,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[On Play] Rest up to 1 of your opponent's Characters with a cost of 3 or less."
+  },
+  "OP01-049": {
+    "id": "OP01-049",
+    "type": "CHARACTER",
+    "colors": [
+      "Green"
+    ],
+    "cost": 4,
+    "power": 4000,
+    "life": null,
+    "counter": 2000,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[DON!! x1] [When Attacking] Play up to 1 {Heart Pirates} type Character card other than [Bepo] with a cost of 4 or less from your hand."
+  },
+  "OP01-050": {
+    "id": "OP01-050",
+    "type": "CHARACTER",
+    "colors": [
+      "Green"
+    ],
+    "cost": 3,
+    "power": 2000,
+    "life": null,
+    "counter": 1000,
+    "keywords": [
+      "Blocker"
+    ],
+    "effects": [],
+    "manualText": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)<br>[On Play] If you don't have [Shachi], play up to 1 [Shachi] from your hand."
+  },
+  "OP01-051": {
+    "id": "OP01-051",
+    "type": "CHARACTER",
+    "colors": [
+      "Green"
+    ],
+    "cost": 8,
+    "power": 8000,
+    "life": null,
+    "counter": null,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[DON!! x1] [Opponent's Turn] If this Character is rested, your opponent cannot attack any card other than the Character [Eustass\"Captain\"Kid].<br>[Activate: Main] [Once Per Turn] You may rest this Character: Play up to 1 Character card with a cost of 3 or less from your hand."
+  },
+  "OP01-052": {
+    "id": "OP01-052",
+    "type": "CHARACTER",
+    "colors": [
+      "Green"
+    ],
+    "cost": 3,
+    "power": 4000,
+    "life": null,
+    "counter": 1000,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[When Attacking] [Once Per Turn] If you have 2 or more rested Characters, draw 1 card."
+  },
+  "OP01-053": {
+    "id": "OP01-053",
+    "type": "CHARACTER",
+    "colors": [
+      "Green"
+    ],
+    "cost": 2,
+    "power": 4000,
+    "life": null,
+    "counter": 1000,
+    "keywords": [],
+    "effects": [],
+    "manualText": "-"
+  },
+  "OP01-054": {
+    "id": "OP01-054",
+    "type": "CHARACTER",
+    "colors": [
+      "Green"
+    ],
+    "cost": 5,
+    "power": 6000,
+    "life": null,
+    "counter": 1000,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[On Play] K.O. up to 1 of your opponent's rested Characters with a cost of 4 or less."
+  },
+  "OP01-055": {
+    "id": "OP01-055",
+    "type": "EVENT",
+    "colors": [
+      "Green"
+    ],
+    "cost": 1,
+    "power": null,
+    "life": null,
+    "counter": null,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[Main] You may rest 2 of your Characters: Draw 2 cards."
+  },
+  "OP01-056": {
+    "id": "OP01-056",
+    "type": "EVENT",
+    "colors": [
+      "Green"
+    ],
+    "cost": 6,
+    "power": null,
+    "life": null,
+    "counter": null,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[Main] K.O. up to 2 of your opponent's rested Characters with a cost of 5 or less."
+  },
+  "OP01-057": {
+    "id": "OP01-057",
+    "type": "EVENT",
+    "colors": [
+      "Green"
+    ],
+    "cost": 1,
+    "power": null,
+    "life": null,
+    "counter": null,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[Counter] Up to 1 of your Leader or Character cards gains +2000 power during this battle. Then, set up to 1 of your Characters as active."
+  },
+  "OP01-058": {
+    "id": "OP01-058",
+    "type": "EVENT",
+    "colors": [
+      "Green"
+    ],
+    "cost": 2,
+    "power": null,
+    "life": null,
+    "counter": null,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[Counter] Up to 1 of your Leader or Character cards gains +4000 power during this battle. Then, rest up to 1 of your opponent's Characters with a cost of 4 or less."
+  },
+  "OP01-059": {
+    "id": "OP01-059",
+    "type": "EVENT",
+    "colors": [
+      "Green"
+    ],
+    "cost": 3,
+    "power": null,
+    "life": null,
+    "counter": null,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[Main] You may trash 1 {Land of Wano} type card from your hand: Set up to 1 of your {Land of Wano} type Character cards with a cost of 3 or less as active."
+  },
+  "OP01-060": {
+    "id": "OP01-060",
+    "type": "LEADER",
+    "colors": [
+      "Blue"
+    ],
+    "cost": null,
+    "power": 5000,
+    "life": 5,
+    "counter": null,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[DON!! x2] [When Attacking] ➀ (You may rest the specified number of DON!! cards in your cost area.): Reveal 1 card from the top of your deck. If that card is a {The Seven Warlords of the Sea} type Character card with a cost of 4 or less, you may play that card rested."
+  },
+  "OP01-061": {
+    "id": "OP01-061",
+    "type": "LEADER",
+    "colors": [
+      "Blue",
+      "Purple"
+    ],
+    "cost": null,
+    "power": 5000,
+    "life": 4,
+    "counter": null,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[DON!! x1] [Your Turn] [Once Per Turn] When your opponent's Character is K.O.'d, add up to 1 DON!! card from your DON!! deck and set it as active."
+  },
+  "OP01-062": {
+    "id": "OP01-062",
+    "type": "LEADER",
+    "colors": [
+      "Blue",
+      "Purple"
+    ],
+    "cost": null,
+    "power": 5000,
+    "life": 4,
+    "counter": null,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[DON!! x1] When you activate an Event, you may draw 1 card if you have 4 or less cards in your hand and haven't drawn a card using this Leader's effect during this turn."
+  },
+  "OP01-063": {
+    "id": "OP01-063",
+    "type": "CHARACTER",
+    "colors": [
+      "Blue"
+    ],
+    "cost": 4,
+    "power": 5000,
+    "life": null,
+    "counter": 1000,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[DON!! x1] [Activate: Main] You may rest this Character: Choose 1 card from your opponent's hand; your opponent reveals that card. If the revealed card is an Event, place up to 1 card from your opponent's Life area at the bottom of the owner's deck."
+  },
+  "OP01-064": {
+    "id": "OP01-064",
+    "type": "CHARACTER",
+    "colors": [
+      "Blue"
+    ],
+    "cost": 2,
+    "power": 3000,
+    "life": null,
+    "counter": 2000,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[DON!! x1] [When Attacking] You may trash 1 card from your hand: Return up to 1 of your opponent's Characters with a cost of 3 or less to the owner's hand."
+  },
+  "OP01-065": {
+    "id": "OP01-065",
+    "type": "CHARACTER",
+    "colors": [
+      "Blue"
+    ],
+    "cost": 5,
+    "power": 7000,
+    "life": null,
+    "counter": 1000,
+    "keywords": [],
+    "effects": [],
+    "manualText": "-"
+  },
+  "OP01-066": {
+    "id": "OP01-066",
+    "type": "CHARACTER",
+    "colors": [
+      "Blue"
+    ],
+    "cost": 4,
+    "power": 6000,
+    "life": null,
+    "counter": 1000,
+    "keywords": [],
+    "effects": [],
+    "manualText": "-"
+  },
+  "OP01-067": {
+    "id": "OP01-067",
+    "type": "CHARACTER",
+    "colors": [
+      "Blue"
+    ],
+    "cost": 7,
+    "power": 7000,
+    "life": null,
+    "counter": 1000,
+    "keywords": [
+      "Banish"
+    ],
+    "effects": [],
+    "manualText": "[Banish] (When this card deals damage, the target card is trashed without activating its Trigger.)<br>[DON!! x1] Give blue Events in your hand −1 cost."
+  },
+  "OP01-068": {
+    "id": "OP01-068",
+    "type": "CHARACTER",
+    "colors": [
+      "Blue"
+    ],
+    "cost": 4,
+    "power": 5000,
+    "life": null,
+    "counter": 1000,
+    "keywords": [
+      "DoubleAttack"
+    ],
+    "effects": [],
+    "manualText": "[Your Turn] This Character gains [Double Attack] if you have 5 or more cards in your hand.<br>(This card deals 2 damage.)"
+  },
+  "OP01-069": {
+    "id": "OP01-069",
+    "type": "CHARACTER",
+    "colors": [
+      "Blue"
+    ],
+    "cost": 4,
+    "power": 5000,
+    "life": null,
+    "counter": 1000,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[On K.O.] Play up to 1 [Smiley] from your deck, then shuffle your deck."
+  },
+  "OP01-070": {
+    "id": "OP01-070",
+    "type": "CHARACTER",
+    "colors": [
+      "Blue"
+    ],
+    "cost": 9,
+    "power": 9000,
+    "life": null,
+    "counter": null,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[On Play] Place up to 1 Character with a cost of 7 or less at the bottom of the owner's deck."
+  },
+  "OP01-071": {
+    "id": "OP01-071",
+    "type": "CHARACTER",
+    "colors": [
+      "Blue"
+    ],
+    "cost": 4,
+    "power": 2000,
+    "life": null,
+    "counter": null,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[On Play] Place up to 1 Character with a cost of 3 or less at the bottom of the owner's deck."
+  },
+  "OP01-072": {
+    "id": "OP01-072",
+    "type": "CHARACTER",
+    "colors": [
+      "Blue"
+    ],
+    "cost": 3,
+    "power": 1000,
+    "life": null,
+    "counter": 1000,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[DON!! x1] [Your Turn] This Character gains +1000 power for every card in your hand."
+  },
+  "OP01-073": {
+    "id": "OP01-073",
+    "type": "CHARACTER",
+    "colors": [
+      "Blue"
+    ],
+    "cost": 3,
+    "power": 4000,
+    "life": null,
+    "counter": 1000,
+    "keywords": [
+      "Blocker"
+    ],
+    "effects": [],
+    "manualText": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)<br>[On Play] Look at 5 cards from the top of your deck and place them at the top or bottom of the deck in any order."
+  },
+  "OP01-074": {
+    "id": "OP01-074",
+    "type": "CHARACTER",
+    "colors": [
+      "Blue"
+    ],
+    "cost": 4,
+    "power": 5000,
+    "life": null,
+    "counter": 1000,
+    "keywords": [
+      "Blocker"
+    ],
+    "effects": [],
+    "manualText": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)<br>[On K.O.] Play up to 1 [Pacifista] with a cost of 4 or less from your hand."
+  },
+  "OP01-075": {
+    "id": "OP01-075",
+    "type": "CHARACTER",
+    "colors": [
+      "Blue"
+    ],
+    "cost": 4,
+    "power": 5000,
+    "life": null,
+    "counter": null,
+    "keywords": [
+      "Blocker"
+    ],
+    "effects": [],
+    "manualText": "Under the rules of this game, you may have any number of this card in your deck.<br>[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)"
+  },
+  "OP01-076": {
+    "id": "OP01-076",
+    "type": "CHARACTER",
+    "colors": [
+      "Blue"
+    ],
+    "cost": 2,
+    "power": 4000,
+    "life": null,
+    "counter": 1000,
+    "keywords": [],
+    "effects": [],
+    "manualText": "-"
+  },
+  "OP01-077": {
+    "id": "OP01-077",
+    "type": "CHARACTER",
+    "colors": [
+      "Blue"
+    ],
+    "cost": 1,
+    "power": 2000,
+    "life": null,
+    "counter": 1000,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[On Play] Look at 5 cards from the top of your deck and place them at the top or bottom of the deck in any order."
+  },
+  "OP01-078": {
+    "id": "OP01-078",
+    "type": "CHARACTER",
+    "colors": [
+      "Blue"
+    ],
+    "cost": 4,
+    "power": 5000,
+    "life": null,
+    "counter": 1000,
+    "keywords": [
+      "Blocker"
+    ],
+    "effects": [],
+    "manualText": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)<br>[DON!! x1] [When Attacking]/[On Block] Draw 1 card if you have 5 or less cards in your hand."
+  },
+  "OP01-079": {
+    "id": "OP01-079",
+    "type": "CHARACTER",
+    "colors": [
+      "Blue"
+    ],
+    "cost": 3,
+    "power": 1000,
+    "life": null,
+    "counter": 1000,
+    "keywords": [
+      "Blocker"
+    ],
+    "effects": [],
+    "manualText": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)<br>[On K.O.] If your Leader has the {Baroque Works} type, add up to 1 Event from your trash to your hand."
+  },
+  "OP01-080": {
+    "id": "OP01-080",
+    "type": "CHARACTER",
+    "colors": [
+      "Blue"
+    ],
+    "cost": 3,
+    "power": 4000,
+    "life": null,
+    "counter": 1000,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[On K.O.] Draw 1 card."
+  },
+  "OP01-081": {
+    "id": "OP01-081",
+    "type": "CHARACTER",
+    "colors": [
+      "Blue"
+    ],
+    "cost": 3,
+    "power": 5000,
+    "life": null,
+    "counter": 1000,
+    "keywords": [],
+    "effects": [],
+    "manualText": "-"
+  },
+  "OP01-082": {
+    "id": "OP01-082",
+    "type": "CHARACTER",
+    "colors": [
+      "Blue"
+    ],
+    "cost": 2,
+    "power": 3000,
+    "life": null,
+    "counter": 1000,
+    "keywords": [],
+    "effects": [],
+    "manualText": "-"
+  },
+  "OP01-083": {
+    "id": "OP01-083",
+    "type": "CHARACTER",
+    "colors": [
+      "Blue"
+    ],
+    "cost": 2,
+    "power": 3000,
+    "life": null,
+    "counter": 1000,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[DON!! x1] [Your Turn] If your Leader has the {Baroque Works} type, this Character gains +1000 power for every 2 Events in your trash."
+  },
+  "OP01-084": {
+    "id": "OP01-084",
+    "type": "CHARACTER",
+    "colors": [
+      "Blue"
+    ],
+    "cost": 3,
+    "power": 4000,
+    "life": null,
+    "counter": 2000,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[DON!! x1] [When Attacking] Look at 5 cards from the top of your deck; reveal up to 1 {Baroque Works} type Event card and add it to your hand. Then, place the rest at the bottom of your deck in any order."
+  },
+  "OP01-085": {
+    "id": "OP01-085",
+    "type": "CHARACTER",
+    "colors": [
+      "Blue"
+    ],
+    "cost": 2,
+    "power": 3000,
+    "life": null,
+    "counter": 1000,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[On Play] If your Leader has the {Baroque Works} type, select up to 1 of your opponent's Characters with a cost of 4 or less. The selected Character cannot attack until the end of your opponent's next turn."
+  },
+  "OP01-086": {
+    "id": "OP01-086",
+    "type": "EVENT",
+    "colors": [
+      "Blue"
+    ],
+    "cost": 2,
+    "power": null,
+    "life": null,
+    "counter": null,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[Counter] Up to 1 of your Leader or Character cards gains +4000 power during this battle. Then, return up to 1 active Character with a cost of 3 or less to the owner's hand."
+  },
+  "OP01-087": {
+    "id": "OP01-087",
+    "type": "EVENT",
+    "colors": [
+      "Blue"
+    ],
+    "cost": 2,
+    "power": null,
+    "life": null,
+    "counter": null,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[Counter] Play up to 1 {Baroque Works} type Character card with a cost of 3 or less from your hand."
+  },
+  "OP01-088": {
+    "id": "OP01-088",
+    "type": "EVENT",
+    "colors": [
+      "Blue"
+    ],
+    "cost": 1,
+    "power": null,
+    "life": null,
+    "counter": null,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[Counter] Up to 1 of your Leader or Character cards gains +2000 power during this battle. Then, look at 3 cards from the top of your deck and place them at the top or bottom of the deck in any order."
+  },
+  "OP01-089": {
+    "id": "OP01-089",
+    "type": "EVENT",
+    "colors": [
+      "Blue"
+    ],
+    "cost": 3,
+    "power": null,
+    "life": null,
+    "counter": null,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[Counter] If your Leader has the {The Seven Warlords of the Sea} type, return up to 1 Character with a cost of 5 or less to the owner's hand."
+  },
+  "OP01-090": {
+    "id": "OP01-090",
+    "type": "EVENT",
+    "colors": [
+      "Blue"
+    ],
+    "cost": 1,
+    "power": null,
+    "life": null,
+    "counter": null,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[Main] Look at 5 cards from the top of your deck; reveal up to 1 {Baroque Works} type card other than [Baroque Works] and add it to your hand. Then, place the rest at the bottom of your deck in any order."
+  },
+  "OP01-091": {
+    "id": "OP01-091",
+    "type": "LEADER",
+    "colors": [
+      "Purple"
+    ],
+    "cost": null,
+    "power": 5000,
+    "life": 5,
+    "counter": null,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[Your Turn] If you have 10 DON!! cards on your field, give all of your opponent's Characters −1000 power."
+  },
+  "OP01-092": {
+    "id": "OP01-092",
+    "type": "CHARACTER",
+    "colors": [
+      "Purple"
+    ],
+    "cost": 7,
+    "power": 9000,
+    "life": null,
+    "counter": 1000,
+    "keywords": [],
+    "effects": [],
+    "manualText": "-"
+  },
+  "OP01-093": {
+    "id": "OP01-093",
+    "type": "CHARACTER",
+    "colors": [
+      "Purple"
+    ],
+    "cost": 2,
+    "power": 3000,
+    "life": null,
+    "counter": null,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[On Play] ① (You may rest the specified number of DON!! cards in your cost area.): Add up to 1 DON!! card from your DON!! deck and rest it."
+  },
+  "OP01-094": {
+    "id": "OP01-094",
+    "type": "CHARACTER",
+    "colors": [
+      "Purple"
+    ],
+    "cost": 10,
+    "power": 12000,
+    "life": null,
+    "counter": null,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[On Play] DON!! −6 (You may return the specified number of DON!! cards from your field to your DON!! deck.): If your Leader has the {Animal Kingdom Pirates} type, K.O. all Characters other than this Character."
+  },
+  "OP01-095": {
+    "id": "OP01-095",
+    "type": "CHARACTER",
+    "colors": [
+      "Purple"
+    ],
+    "cost": 5,
+    "power": 6000,
+    "life": null,
+    "counter": 1000,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[On Play] Draw 1 card if you have 8 or more DON!! cards on your field."
+  },
+  "OP01-096": {
+    "id": "OP01-096",
+    "type": "CHARACTER",
+    "colors": [
+      "Purple"
+    ],
+    "cost": 7,
+    "power": 7000,
+    "life": null,
+    "counter": null,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[On Play] DON!! −2 (You may return the specified number of DON!! cards from your field to your DON!! deck.): K.O. up to 1 of your opponent's Characters with a cost of 3 or less and up to 1 of your opponent's Characters with a cost of 2 or less."
+  },
+  "OP01-097": {
+    "id": "OP01-097",
+    "type": "CHARACTER",
+    "colors": [
+      "Purple"
+    ],
+    "cost": 6,
+    "power": 5000,
+    "life": null,
+    "counter": 1000,
+    "keywords": [
+      "Rush"
+    ],
+    "effects": [],
+    "manualText": "[On Play] DON!! −1 (You may return the specified number of DON!! cards from your field to your DON!! deck.): This Character gains [Rush] during this turn. Then, give up to 1 of your opponent's Characters −2000 power during this turn.<br>(This card can attack on the turn in which it is played.)"
+  },
+  "OP01-098": {
+    "id": "OP01-098",
+    "type": "CHARACTER",
+    "colors": [
+      "Purple"
+    ],
+    "cost": 1,
+    "power": 2000,
+    "life": null,
+    "counter": 2000,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[On Play] Reveal up to 1 [Artificial Devil Fruit SMILE] from your deck and add it to your hand. Then, shuffle your deck."
+  },
+  "OP01-099": {
+    "id": "OP01-099",
+    "type": "CHARACTER",
+    "colors": [
+      "Purple"
+    ],
+    "cost": 2,
+    "power": 3000,
+    "life": null,
+    "counter": 1000,
+    "keywords": [],
+    "effects": [],
+    "manualText": "{Kurozumi Clan} type Characters other than your [Kurozumi Semimaru] cannot be K.O.'d in battle."
+  },
+  "OP01-100": {
+    "id": "OP01-100",
+    "type": "CHARACTER",
+    "colors": [
+      "Purple"
+    ],
+    "cost": 2,
+    "power": 3000,
+    "life": null,
+    "counter": 1000,
+    "keywords": [
+      "Blocker"
+    ],
+    "effects": [],
+    "manualText": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)"
+  },
+  "OP01-101": {
+    "id": "OP01-101",
+    "type": "CHARACTER",
+    "colors": [
+      "Purple"
+    ],
+    "cost": 3,
+    "power": 4000,
+    "life": null,
+    "counter": 2000,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[DON!! x1] [When Attacking] You may trash 1 card from your hand: Add up to 1 DON!! card from your DON!! deck and rest it."
+  },
+  "OP01-102": {
+    "id": "OP01-102",
+    "type": "CHARACTER",
+    "colors": [
+      "Purple"
+    ],
+    "cost": 3,
+    "power": 4000,
+    "life": null,
+    "counter": 1000,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[When Attacking] DON!! −1 (You may return the specified number of DON!! cards from your field to your DON!! deck.): Your opponent trashes 1 card from their hand."
+  },
+  "OP01-103": {
+    "id": "OP01-103",
+    "type": "CHARACTER",
+    "colors": [
+      "Purple"
+    ],
+    "cost": 4,
+    "power": 6000,
+    "life": null,
+    "counter": 1000,
+    "keywords": [],
+    "effects": [],
+    "manualText": "-"
+  },
+  "OP01-104": {
+    "id": "OP01-104",
+    "type": "CHARACTER",
+    "colors": [
+      "Purple"
+    ],
+    "cost": 2,
+    "power": 3000,
+    "life": null,
+    "counter": 1000,
+    "keywords": [],
+    "effects": [],
+    "manualText": "-"
+  },
+  "OP01-105": {
+    "id": "OP01-105",
+    "type": "CHARACTER",
+    "colors": [
+      "Purple"
+    ],
+    "cost": 2,
+    "power": 3000,
+    "life": null,
+    "counter": 1000,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[On Play] Choose 2 cards from your opponent's hand; your opponent reveals those cards."
+  },
+  "OP01-106": {
+    "id": "OP01-106",
+    "type": "CHARACTER",
+    "colors": [
+      "Purple"
+    ],
+    "cost": 4,
+    "power": 2000,
+    "life": null,
+    "counter": 1000,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[On Play] Add up to 1 DON!! card from your DON!! deck and rest it."
+  },
+  "OP01-107": {
+    "id": "OP01-107",
+    "type": "CHARACTER",
+    "colors": [
+      "Purple"
+    ],
+    "cost": 5,
+    "power": 7000,
+    "life": null,
+    "counter": 1000,
+    "keywords": [],
+    "effects": [],
+    "manualText": "-"
+  },
+  "OP01-108": {
+    "id": "OP01-108",
+    "type": "CHARACTER",
+    "colors": [
+      "Purple"
+    ],
+    "cost": 4,
+    "power": 5000,
+    "life": null,
+    "counter": 1000,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[On K.O.] DON!! −1 (You may return the specified number of DON!! cards from your field to your DON!! deck.): K.O. up to 1 of your opponent's Characters with a cost of 5 or less."
+  },
+  "OP01-109": {
+    "id": "OP01-109",
+    "type": "CHARACTER",
+    "colors": [
+      "Purple"
+    ],
+    "cost": 2,
+    "power": 3000,
+    "life": null,
+    "counter": 1000,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[DON!! x1] [Your Turn] If you have 8 or more DON!! cards on your field, this Character gains +1000 power."
+  },
+  "OP01-110": {
+    "id": "OP01-110",
+    "type": "CHARACTER",
+    "colors": [
+      "Purple"
+    ],
+    "cost": 6,
+    "power": 8000,
+    "life": null,
+    "counter": 1000,
+    "keywords": [],
+    "effects": [],
+    "manualText": "-"
+  },
+  "OP01-111": {
+    "id": "OP01-111",
+    "type": "CHARACTER",
+    "colors": [
+      "Purple"
+    ],
+    "cost": 4,
+    "power": 5000,
+    "life": null,
+    "counter": 1000,
+    "keywords": [
+      "Blocker"
+    ],
+    "effects": [],
+    "manualText": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)<br>[On Block] DON!! −1 (You may return the specified number of DON!! cards from your field to your DON!! deck.): This Character gains +1000 power during this turn."
+  },
+  "OP01-112": {
+    "id": "OP01-112",
+    "type": "CHARACTER",
+    "colors": [
+      "Purple"
+    ],
+    "cost": 4,
+    "power": 5000,
+    "life": null,
+    "counter": 1000,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[Activate: Main] [Once Per Turn] DON!! −1 (You may return the specified number of DON!! cards from your field to your DON!! deck.): This Character can also attack your opponent's active Characters during this turn."
+  },
+  "OP01-113": {
+    "id": "OP01-113",
+    "type": "CHARACTER",
+    "colors": [
+      "Purple"
+    ],
+    "cost": 3,
+    "power": 4000,
+    "life": null,
+    "counter": 1000,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[On K.O.] Add up to 1 DON!! card from your DON!! deck and rest it."
+  },
+  "OP01-114": {
+    "id": "OP01-114",
+    "type": "CHARACTER",
+    "colors": [
+      "Purple"
+    ],
+    "cost": 5,
+    "power": 5000,
+    "life": null,
+    "counter": 2000,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[On Play] DON!! −1 (You may return the specified number of DON!! cards from your field to your DON!! deck.): Your opponent trashes 1 card from their hand."
+  },
+  "OP01-115": {
+    "id": "OP01-115",
+    "type": "EVENT",
+    "colors": [
+      "Purple"
+    ],
+    "cost": 4,
+    "power": null,
+    "life": null,
+    "counter": null,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[Main] K.O. up to 1 of your opponent's Characters with a cost of 2 or less, then add up to 1 DON!! card from your DON!! deck and set it as active."
+  },
+  "OP01-116": {
+    "id": "OP01-116",
+    "type": "EVENT",
+    "colors": [
+      "Purple"
+    ],
+    "cost": 2,
+    "power": null,
+    "life": null,
+    "counter": null,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[Main] Look at 5 cards from the top of your deck; play up to 1 {SMILE} type Character card with a cost of 3 or less. Then, place the rest at the bottom of your deck in any order."
+  },
+  "OP01-117": {
+    "id": "OP01-117",
+    "type": "EVENT",
+    "colors": [
+      "Purple"
+    ],
+    "cost": 2,
+    "power": null,
+    "life": null,
+    "counter": null,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[Main] DON!! −1 (You may return the specified number of DON!! cards from your field to your DON!! deck.): Rest up to 1 of your opponent's Characters with a cost of 6 or less."
+  },
+  "OP01-118": {
+    "id": "OP01-118",
+    "type": "EVENT",
+    "colors": [
+      "Purple"
+    ],
+    "cost": 1,
+    "power": null,
+    "life": null,
+    "counter": null,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[Counter] DON!! −2 (You may return the specified number of DON!! cards from your field to your DON!! deck.): Up to 1 of your Leader or Character cards gains +2000 power during this battle. Then, draw 1 card."
+  },
+  "OP01-119": {
+    "id": "OP01-119",
+    "type": "EVENT",
+    "colors": [
+      "Purple"
+    ],
+    "cost": 2,
+    "power": null,
+    "life": null,
+    "counter": null,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[Counter] Up to 1 of your Leader or Character cards gains +4000 power during this battle. Then, if you have 2 or less Life cards, add up to 1 DON!! card from your DON!! deck and rest it."
+  },
+  "OP01-120": {
+    "id": "OP01-120",
+    "type": "CHARACTER",
+    "colors": [
+      "Red"
+    ],
+    "cost": 9,
+    "power": 10000,
+    "life": null,
+    "counter": null,
+    "keywords": [
+      "Rush",
+      "Blocker"
+    ],
+    "effects": [],
+    "manualText": "[Rush] (This card can attack on the turn in which it is played.)<br>[When Attacking] Your opponent cannot activate a [Blocker] Character that has 2000 or less power during this battle."
+  },
+  "OP01-121": {
+    "id": "OP01-121",
+    "type": "CHARACTER",
+    "colors": [
+      "Green"
+    ],
+    "cost": 5,
+    "power": 5000,
+    "life": null,
+    "counter": 1000,
+    "keywords": [
+      "DoubleAttack",
+      "Banish"
+    ],
+    "effects": [],
+    "manualText": "Also treat this card's name as [Kouzuki Oden] according to the rules.<br>[Double Attack] (This card deals 2 damage.)<br>[Banish] (When this card deals damage, the target card is trashed without activating its Trigger.)"
+  },
+  "OP02-007": {
+    "id": "OP02-007",
+    "type": "CHARACTER",
+    "colors": [
+      "Red"
+    ],
+    "cost": 6,
+    "power": 8000,
+    "life": null,
+    "counter": 1000,
+    "keywords": [],
+    "effects": [],
+    "manualText": "-"
+  },
+  "OP02-008": {
+    "id": "OP02-008",
+    "type": "CHARACTER",
+    "colors": [
+      "Red"
+    ],
+    "cost": 4,
+    "power": 4000,
+    "life": null,
+    "counter": 2000,
+    "keywords": [
+      "Rush"
+    ],
+    "effects": [],
+    "manualText": "[DON!! x1] If you have 2 or less Life cards and your Leader's type includes \"Whitebeard Pirates\", this Character gains [Rush].<br>(This card can attack on the turn in which it is played.)"
+  },
+  "OP02-009": {
+    "id": "OP02-009",
+    "type": "CHARACTER",
+    "colors": [
+      "Red"
+    ],
+    "cost": 3,
+    "power": 5000,
+    "life": null,
+    "counter": null,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[On Play] If your Leader's type includes \"Whitebeard Pirates\", give up to 1 of your opponent's Characters −4000 power during this turn and add 1 card from the top of your Life cards to your hand."
+  },
+  "OP02-010": {
+    "id": "OP02-010",
+    "type": "CHARACTER",
+    "colors": [
+      "Red"
+    ],
+    "cost": 1,
+    "power": 2000,
+    "life": null,
+    "counter": 1000,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[Activate: Main] You may rest this Character: Play up to 1 red Character other than [Dogura] with a cost of 1 from your hand."
+  },
+  "OP02-011": {
+    "id": "OP02-011",
+    "type": "CHARACTER",
+    "colors": [
+      "Red"
+    ],
+    "cost": 3,
+    "power": 3000,
+    "life": null,
+    "counter": 1000,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[On Play] K.O. up to 1 of your opponent's Characters with 3000 power or less."
+  },
+  "OP02-012": {
+    "id": "OP02-012",
+    "type": "CHARACTER",
+    "colors": [
+      "Red"
+    ],
+    "cost": 2,
+    "power": 3000,
+    "life": null,
+    "counter": null,
+    "keywords": [
+      "Blocker"
+    ],
+    "effects": [],
+    "manualText": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)"
+  },
+  "OP02-013": {
+    "id": "OP02-013",
+    "type": "CHARACTER",
+    "colors": [
+      "Red"
+    ],
+    "cost": 7,
+    "power": 7000,
+    "life": null,
+    "counter": null,
+    "keywords": [
+      "Rush"
+    ],
+    "effects": [],
+    "manualText": "[On Play] Give up to 2 of your opponent's Characters −3000 power during this turn. Then, if your Leader's type includes \"Whitebeard Pirates\", this Character gains [Rush] during this turn.<br>(This card can attack on the turn in which it is played.)"
+  },
+  "OP02-014": {
+    "id": "OP02-014",
+    "type": "CHARACTER",
+    "colors": [
+      "Red"
+    ],
+    "cost": 1,
+    "power": 2000,
+    "life": null,
+    "counter": 1000,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[DON!! x1] This Character can also attack your opponent's active Characters."
+  },
+  "OP02-015": {
+    "id": "OP02-015",
+    "type": "CHARACTER",
+    "colors": [
+      "Red"
+    ],
+    "cost": 1,
+    "power": null,
+    "life": null,
+    "counter": 2000,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[Activate: Main] You may rest this Character: Up to 1 of your red Characters with a cost of 1 gains +3000 power during this turn."
+  },
+  "OP02-016": {
+    "id": "OP02-016",
+    "type": "CHARACTER",
+    "colors": [
+      "Red"
+    ],
+    "cost": 1,
+    "power": 2000,
+    "life": null,
+    "counter": 1000,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[On Play] Up to 1 of your red Characters with a cost of 1 gains +3000 power during this turn."
+  },
+  "OP02-017": {
+    "id": "OP02-017",
+    "type": "CHARACTER",
+    "colors": [
+      "Red"
+    ],
+    "cost": 2,
+    "power": 3000,
+    "life": null,
+    "counter": 2000,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[DON!! x2] [When Attacking] K.O. up to 1 of your opponent's Characters with 2000 power or less."
+  },
+  "OP02-018": {
+    "id": "OP02-018",
+    "type": "CHARACTER",
+    "colors": [
+      "Red"
+    ],
+    "cost": 4,
+    "power": 5000,
+    "life": null,
+    "counter": 1000,
+    "keywords": [
+      "Blocker"
+    ],
+    "effects": [],
+    "manualText": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)<br>[On K.O.] You may trash 1 card with a type including \"Whitebeard Pirates\" from your hand: If you have 2 or less Life cards, play this Character card from your trash rested."
+  },
+  "OP02-019": {
+    "id": "OP02-019",
+    "type": "CHARACTER",
+    "colors": [
+      "Red"
+    ],
+    "cost": 3,
+    "power": 4000,
+    "life": null,
+    "counter": 1000,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[DON!! x1] [Your Turn] All of your Characters with a type including \"Whitebeard Pirates\" gain +1000 power."
+  },
+  "OP02-020": {
+    "id": "OP02-020",
+    "type": "CHARACTER",
+    "colors": [
+      "Red"
+    ],
+    "cost": 7,
+    "power": 9000,
+    "life": null,
+    "counter": 1000,
+    "keywords": [],
+    "effects": [],
+    "manualText": "-"
+  },
+  "OP02-021": {
+    "id": "OP02-021",
+    "type": "EVENT",
+    "colors": [
+      "Red"
+    ],
+    "cost": 1,
+    "power": null,
+    "life": null,
+    "counter": null,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[Main] If your Leader's type includes \"Whitebeard Pirates\", K.O. up to 1 of your opponent's Characters with 3000 power or less."
+  },
+  "OP02-022": {
+    "id": "OP02-022",
+    "type": "EVENT",
+    "colors": [
+      "Red"
+    ],
+    "cost": 1,
+    "power": null,
+    "life": null,
+    "counter": null,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[Main] Look at 5 cards from the top of your deck; reveal up to 1 Character card with a type including \"Whitebeard Pirates\" and add it to your hand. Then, place the rest at the bottom of your deck in any order."
+  },
+  "OP02-023": {
+    "id": "OP02-023",
+    "type": "EVENT",
+    "colors": [
+      "Red"
+    ],
+    "cost": 1,
+    "power": null,
+    "life": null,
+    "counter": null,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[Main] If you have 3 or less Life cards, you cannot add Life cards to your hand using your own effects during this turn."
+  },
+  "OP02-024": {
+    "id": "OP02-024",
+    "type": "STAGE",
+    "colors": [
+      "Red"
+    ],
+    "cost": 2,
+    "power": null,
+    "life": null,
+    "counter": null,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[Your Turn] If you have 1 or less Life cards, your [Edward.Newgate] and all your Characters with a type including \"Whitebeard Pirates\" gain +2000 power."
+  },
+  "OP02-025": {
+    "id": "OP02-025",
+    "type": "LEADER",
+    "colors": [
+      "Green"
+    ],
+    "cost": null,
+    "power": 5000,
+    "life": 5,
+    "counter": null,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[Activate: Main] [Once Per Turn] If you have 1 or less Characters, the next time you play a {Land of Wano} type Character card with a cost of 3 or more from your hand during this turn, the cost will be reduced by 1."
+  },
+  "OP02-026": {
+    "id": "OP02-026",
+    "type": "LEADER",
+    "colors": [
+      "Green",
+      "Blue"
+    ],
+    "cost": null,
+    "power": 5000,
+    "life": 4,
+    "counter": null,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[Once Per Turn] When you play a Character with no base effect from your hand, if you have 3 or less Characters, set up to 2 of your DON!! cards as active."
+  },
+  "OP02-027": {
+    "id": "OP02-027",
+    "type": "CHARACTER",
+    "colors": [
+      "Green"
+    ],
+    "cost": 3,
+    "power": 4000,
+    "life": null,
+    "counter": 1000,
+    "keywords": [],
+    "effects": [],
+    "manualText": "If all of your DON!! cards are rested, this Character cannot be removed from the field by your opponent's effects."
+  },
+  "OP02-028": {
+    "id": "OP02-028",
+    "type": "CHARACTER",
+    "colors": [
+      "Green"
+    ],
+    "cost": 3,
+    "power": 5000,
+    "life": null,
+    "counter": 1000,
+    "keywords": [],
+    "effects": [],
+    "manualText": "-"
+  },
+  "OP02-029": {
+    "id": "OP02-029",
+    "type": "CHARACTER",
+    "colors": [
+      "Green"
+    ],
+    "cost": 5,
+    "power": 5000,
+    "life": null,
+    "counter": 2000,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[End of Your Turn] Set up to 1 of your DON!! cards as active."
+  },
+  "OP02-030": {
+    "id": "OP02-030",
+    "type": "CHARACTER",
+    "colors": [
+      "Green"
+    ],
+    "cost": 8,
+    "power": 8000,
+    "life": null,
+    "counter": null,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[Activate: Main] [Once Per Turn] ③ (You may rest the specified number of DON!! cards in your cost area.): Set this Character as active.<br>[On K.O.] Play up to 1 green {Land of Wano} type Character card with a cost of 3 from your deck. Then, shuffle your deck."
+  },
+  "OP02-031": {
+    "id": "OP02-031",
+    "type": "CHARACTER",
+    "colors": [
+      "Green"
+    ],
+    "cost": 1,
+    "power": null,
+    "life": null,
+    "counter": 1000,
+    "keywords": [
+      "Blocker"
+    ],
+    "effects": [],
+    "manualText": "If you have a [Kouzuki Oden] Character, this Character gains [Blocker].<br>(After your opponent declares an attack, you may rest this card to make it the new target of the attack.)"
+  },
+  "OP02-032": {
+    "id": "OP02-032",
+    "type": "CHARACTER",
+    "colors": [
+      "Green"
+    ],
+    "cost": 2,
+    "power": 3000,
+    "life": null,
+    "counter": 1000,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[On Play] ② (You may rest the specified number of DON!! cards in your cost area.): Set up to 1 of your {Minks} type Characters with a cost of 5 or less as active."
+  },
+  "OP02-033": {
+    "id": "OP02-033",
+    "type": "CHARACTER",
+    "colors": [
+      "Green"
+    ],
+    "cost": 2,
+    "power": 4000,
+    "life": null,
+    "counter": 1000,
+    "keywords": [],
+    "effects": [],
+    "manualText": "-"
+  },
+  "OP02-034": {
+    "id": "OP02-034",
+    "type": "CHARACTER",
+    "colors": [
+      "Green"
+    ],
+    "cost": 2,
+    "power": 2000,
+    "life": null,
+    "counter": 2000,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[DON!! x1] [When Attacking] Rest up to 1 of your opponent's Characters with a cost of 2 or less."
+  },
+  "OP02-035": {
+    "id": "OP02-035",
+    "type": "CHARACTER",
+    "colors": [
+      "Green"
+    ],
+    "cost": 2,
+    "power": 3000,
+    "life": null,
+    "counter": 1000,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[Activate: Main] ➀ (You may rest the specified number of DON!! cards in your cost area.) You may return this Character to the owner's hand: Play up to 1 Character with a cost of 3 from your hand."
+  },
+  "OP02-036": {
+    "id": "OP02-036",
+    "type": "CHARACTER",
+    "colors": [
+      "Green"
+    ],
+    "cost": 3,
+    "power": 5000,
+    "life": null,
+    "counter": null,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[On Play]/[When Attacking] ➀ (You may rest the specified number of DON!! cards in your cost area.): Look at 3 cards from the top of your deck; reveal up to 1 {FILM} type card other than [Nami] and add it to your hand. Then, place the rest at the bottom of your deck in any order."
+  },
+  "OP02-037": {
+    "id": "OP02-037",
+    "type": "CHARACTER",
+    "colors": [
+      "Green"
+    ],
+    "cost": 3,
+    "power": 4000,
+    "life": null,
+    "counter": 1000,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[On Play] Play up to 1 {FILM} or {Straw Hat Crew} type Character card with a cost of 2 or less from your hand."
+  },
+  "OP02-038": {
+    "id": "OP02-038",
+    "type": "CHARACTER",
+    "colors": [
+      "Green"
+    ],
+    "cost": 3,
+    "power": 4000,
+    "life": null,
+    "counter": null,
+    "keywords": [
+      "Blocker"
+    ],
+    "effects": [],
+    "manualText": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)"
+  },
+  "OP02-039": {
+    "id": "OP02-039",
+    "type": "CHARACTER",
+    "colors": [
+      "Green"
+    ],
+    "cost": 5,
+    "power": 7000,
+    "life": null,
+    "counter": 1000,
+    "keywords": [],
+    "effects": [],
+    "manualText": "-"
+  },
+  "OP02-040": {
+    "id": "OP02-040",
+    "type": "CHARACTER",
+    "colors": [
+      "Green"
+    ],
+    "cost": 4,
+    "power": 5000,
+    "life": null,
+    "counter": 1000,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[On Play] Play up to 1 {FILM} or {Straw Hat Crew} type Character card with a cost of 3 or less from your hand."
+  },
+  "OP02-041": {
+    "id": "OP02-041",
+    "type": "CHARACTER",
+    "colors": [
+      "Green"
+    ],
+    "cost": 7,
+    "power": 7000,
+    "life": null,
+    "counter": null,
+    "keywords": [
+      "Blocker"
+    ],
+    "effects": [],
+    "manualText": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)<br>[On Play] Play up to 1 {FILM} or {Straw Hat Crew} type Character card with a cost of 4 or less from your hand."
+  },
+  "OP02-042": {
+    "id": "OP02-042",
+    "type": "CHARACTER",
+    "colors": [
+      "Green"
+    ],
+    "cost": 4,
+    "power": 6000,
+    "life": null,
+    "counter": null,
+    "keywords": [],
+    "effects": [],
+    "manualText": "Also treat this card's name as [Kouzuki Oden] according to the rules.<br>[On Play] Rest up to 1 of your opponent's Characters with a cost of 6 or less."
+  },
+  "OP02-043": {
+    "id": "OP02-043",
+    "type": "CHARACTER",
+    "colors": [
+      "Green"
+    ],
+    "cost": 4,
+    "power": 6000,
+    "life": null,
+    "counter": 1000,
+    "keywords": [],
+    "effects": [],
+    "manualText": "-"
+  },
+  "OP02-044": {
+    "id": "OP02-044",
+    "type": "CHARACTER",
+    "colors": [
+      "Green"
+    ],
+    "cost": 2,
+    "power": 3000,
+    "life": null,
+    "counter": 1000,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[On Play] Play up to 1 {Minks} type Character card other than [Wanda] with a cost of 3 or less from your hand."
+  },
+  "OP02-045": {
+    "id": "OP02-045",
+    "type": "EVENT",
+    "colors": [
+      "Green"
+    ],
+    "cost": 3,
+    "power": null,
+    "life": null,
+    "counter": null,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[Counter] Up to 1 of your Leader or Character cards gains +6000 power during this battle. Then, play up to 1 Character card with a cost of 3 or less and no base effect from your hand.<br>"
+  },
+  "OP02-046": {
+    "id": "OP02-046",
+    "type": "EVENT",
+    "colors": [
+      "Green"
+    ],
+    "cost": 2,
+    "power": null,
+    "life": null,
+    "counter": null,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[Main] K.O. up to 1 of your opponent's rested Characters with a cost of 4 or less.<br>"
+  },
+  "OP02-047": {
+    "id": "OP02-047",
+    "type": "EVENT",
+    "colors": [
+      "Green"
+    ],
+    "cost": 1,
+    "power": null,
+    "life": null,
+    "counter": null,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[Main] Rest up to 1 of your opponent's Characters with a cost of 4 or less."
+  },
+  "OP02-048": {
+    "id": "OP02-048",
+    "type": "STAGE",
+    "colors": [
+      "Green"
+    ],
+    "cost": 1,
+    "power": null,
+    "life": null,
+    "counter": null,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[Activate: Main] You may trash 1 {Land of Wano} type card from your hand and rest this Stage: Set up to 1 of your DON!! cards as active."
+  },
+  "OP02-049": {
+    "id": "OP02-049",
+    "type": "LEADER",
+    "colors": [
+      "Blue"
+    ],
+    "cost": null,
+    "power": 5000,
+    "life": 5,
+    "counter": null,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[End of Your Turn] If you have 0 cards in your hand, draw 2 cards."
+  },
+  "OP02-050": {
+    "id": "OP02-050",
+    "type": "CHARACTER",
+    "colors": [
+      "Blue"
+    ],
+    "cost": 4,
+    "power": 5000,
+    "life": null,
+    "counter": 1000,
+    "keywords": [
+      "Blocker"
+    ],
+    "effects": [],
+    "manualText": "If you have 1 or less cards in your hand, this Character gains +2000 power.<br>[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)"
+  },
+  "OP02-051": {
+    "id": "OP02-051",
+    "type": "CHARACTER",
+    "colors": [
+      "Blue"
+    ],
+    "cost": 7,
+    "power": 7000,
+    "life": null,
+    "counter": null,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[On Play] Draw card(s) so that you have 3 cards in your hand and then play up to 1 blue {Impel Down} type Character card with a cost of 6 or less from your hand."
+  },
+  "OP02-052": {
+    "id": "OP02-052",
+    "type": "CHARACTER",
+    "colors": [
+      "Blue"
+    ],
+    "cost": 2,
+    "power": 3000,
+    "life": null,
+    "counter": 1000,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[On Play] If you have [Mohji], draw 2 cards and trash 1 card from your hand."
+  },
+  "OP02-053": {
+    "id": "OP02-053",
+    "type": "CHARACTER",
+    "colors": [
+      "Blue"
+    ],
+    "cost": 5,
+    "power": 7000,
+    "life": null,
+    "counter": 1000,
+    "keywords": [],
+    "effects": [],
+    "manualText": "-"
+  },
+  "OP02-054": {
+    "id": "OP02-054",
+    "type": "CHARACTER",
+    "colors": [
+      "Blue"
+    ],
+    "cost": 4,
+    "power": 6000,
+    "life": null,
+    "counter": 1000,
+    "keywords": [],
+    "effects": [],
+    "manualText": "-"
+  },
+  "OP02-055": {
+    "id": "OP02-055",
+    "type": "CHARACTER",
+    "colors": [
+      "Blue"
+    ],
+    "cost": 6,
+    "power": 8000,
+    "life": null,
+    "counter": 1000,
+    "keywords": [],
+    "effects": [],
+    "manualText": "-"
+  },
+  "OP02-056": {
+    "id": "OP02-056",
+    "type": "CHARACTER",
+    "colors": [
+      "Blue"
+    ],
+    "cost": 1,
+    "power": 2000,
+    "life": null,
+    "counter": null,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[On Play] Look at 3 cards from the top of your deck and place them at the top or bottom of the deck in any order.<br>[DON!! x1] [When Attacking] You may trash 1 card from your hand: Place up to 1 of your opponent's Characters with a cost of 1 or less at the bottom of the owner's deck."
+  },
+  "OP02-057": {
+    "id": "OP02-057",
+    "type": "CHARACTER",
+    "colors": [
+      "Blue"
+    ],
+    "cost": 3,
+    "power": 3000,
+    "life": null,
+    "counter": 1000,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[On Play] Look at 2 cards from the top of your deck; reveal up to 1 {The Seven Warlords of the Sea} type card and add it to your hand. Then, place the rest at the top or bottom of the deck in any order."
+  },
+  "OP02-058": {
+    "id": "OP02-058",
+    "type": "CHARACTER",
+    "colors": [
+      "Blue"
+    ],
+    "cost": 1,
+    "power": 2000,
+    "life": null,
+    "counter": 1000,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[On Play] Look at 5 cards from the top of your deck; reveal up to 1 blue {Impel Down} type card other than [Buggy] and add it to your hand. Then, place the rest at the bottom of your deck in any order."
+  },
+  "OP02-059": {
+    "id": "OP02-059",
+    "type": "CHARACTER",
+    "colors": [
+      "Blue"
+    ],
+    "cost": 4,
+    "power": 5000,
+    "life": null,
+    "counter": 1000,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[When Attacking] Draw 1 card and trash 1 card from your hand. Then, trash up to 3 cards from your hand."
+  },
+  "OP02-060": {
+    "id": "OP02-060",
+    "type": "CHARACTER",
+    "colors": [
+      "Blue"
+    ],
+    "cost": 1,
+    "power": 3000,
+    "life": null,
+    "counter": 1000,
+    "keywords": [],
+    "effects": [],
+    "manualText": "-"
+  },
+  "OP02-061": {
+    "id": "OP02-061",
+    "type": "CHARACTER",
+    "colors": [
+      "Blue"
+    ],
+    "cost": 4,
+    "power": 5000,
+    "life": null,
+    "counter": 1000,
+    "keywords": [
+      "Blocker"
+    ],
+    "effects": [],
+    "manualText": "[When Attacking] If you have 1 or less cards in your hand, your opponent cannot activate the [Blocker] of any Character with a cost of 5 or less during this battle."
+  },
+  "OP02-062": {
+    "id": "OP02-062",
+    "type": "CHARACTER",
+    "colors": [
+      "Blue"
+    ],
+    "cost": 6,
+    "power": 7000,
+    "life": null,
+    "counter": null,
+    "keywords": [
+      "DoubleAttack"
+    ],
+    "effects": [],
+    "manualText": "[On Play]/[When Attacking] You may trash 2 cards from your hand: Return up to 1 Character with a cost of 4 or less to the owner's hand. Then, this Character gains [Double Attack] during this turn.<br>(This card deals 2 damage.)"
+  },
+  "OP02-063": {
+    "id": "OP02-063",
+    "type": "CHARACTER",
+    "colors": [
+      "Blue"
+    ],
+    "cost": 1,
+    "power": 1000,
+    "life": null,
+    "counter": 1000,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[On Play] Add up to 1 blue Event card with a cost of 1 from your trash to your hand."
+  },
+  "OP02-064": {
+    "id": "OP02-064",
+    "type": "CHARACTER",
+    "colors": [
+      "Blue"
+    ],
+    "cost": 5,
+    "power": 5000,
+    "life": null,
+    "counter": 2000,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[DON!! x1] [When Attacking] You may trash 1 card from your hand: Place up to 1 Character with a cost of 2 or less at the bottom of the owner's deck. Then, at the end of this battle, place this Character at the bottom of the owner's deck."
+  },
+  "OP02-065": {
+    "id": "OP02-065",
+    "type": "CHARACTER",
+    "colors": [
+      "Blue"
+    ],
+    "cost": 4,
+    "power": 5000,
+    "life": null,
+    "counter": 1000,
+    "keywords": [
+      "Blocker"
+    ],
+    "effects": [],
+    "manualText": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)<br>[End of Your Turn] You may trash 1 card from your hand: Set this Character as active."
+  },
+  "OP02-066": {
+    "id": "OP02-066",
+    "type": "EVENT",
+    "colors": [
+      "Blue"
+    ],
+    "cost": 1,
+    "power": null,
+    "life": null,
+    "counter": null,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[Main] You may trash 2 cards from your hand: If your Leader has the {Impel Down} type, draw up to 2 cards."
+  },
+  "OP02-067": {
+    "id": "OP02-067",
+    "type": "EVENT",
+    "colors": [
+      "Blue"
+    ],
+    "cost": 2,
+    "power": null,
+    "life": null,
+    "counter": null,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[Main] Return up to 1 Character with a cost of 4 or less to the owner's hand."
+  },
+  "OP02-068": {
+    "id": "OP02-068",
+    "type": "EVENT",
+    "colors": [
+      "Blue"
+    ],
+    "cost": null,
+    "power": null,
+    "life": null,
+    "counter": null,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[Counter] You may trash 1 card from your hand: Up to 1 of your Leader or Character cards gains +3000 power during this battle."
+  },
+  "OP02-069": {
+    "id": "OP02-069",
+    "type": "EVENT",
+    "colors": [
+      "Blue"
+    ],
+    "cost": 3,
+    "power": null,
+    "life": null,
+    "counter": null,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[Counter] Up to 1 of your Leader or Character cards gains +6000 power during this battle. Then, draw cards so that you have 2 cards in your hand."
+  },
+  "OP02-070": {
+    "id": "OP02-070",
+    "type": "STAGE",
+    "colors": [
+      "Blue"
+    ],
+    "cost": 1,
+    "power": null,
+    "life": null,
+    "counter": null,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[Activate: Main] You may rest this Stage: If your Leader is [Emporio.Ivankov], draw 1 card and trash 1 card from your hand. Then, trash up to 3 cards from your hand."
+  },
+  "OP02-071": {
+    "id": "OP02-071",
+    "type": "LEADER",
+    "colors": [
+      "Purple"
+    ],
+    "cost": null,
+    "power": 5000,
+    "life": 5,
+    "counter": null,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[Your Turn] [Once Per Turn] When a DON!! card on the field is returned to your DON!! deck, this Leader gains +1000 power during this turn."
+  },
+  "OP02-072": {
+    "id": "OP02-072",
+    "type": "LEADER",
+    "colors": [
+      "Purple",
+      "Black"
+    ],
+    "cost": null,
+    "power": 5000,
+    "life": 4,
+    "counter": null,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[When Attacking] DON!! −4 (You may return the specified number of DON!! cards from your field to your DON!! deck.): K.O. up to 1 of your opponent's Characters with a cost of 3 or less. Then, this Leader gains +1000 power during this turn."
+  },
+  "OP02-073": {
+    "id": "OP02-073",
+    "type": "CHARACTER",
+    "colors": [
+      "Purple"
+    ],
+    "cost": 3,
+    "power": 3000,
+    "life": null,
+    "counter": 2000,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[On Play] Play up to 1 {Jailer Beast} type Character card from your hand."
+  },
+  "OP02-074": {
+    "id": "OP02-074",
+    "type": "CHARACTER",
+    "colors": [
+      "Purple"
+    ],
+    "cost": 1,
+    "power": 2000,
+    "life": null,
+    "counter": 1000,
+    "keywords": [
+      "Blocker"
+    ],
+    "effects": [],
+    "manualText": "Your [Blugori] gains [Blocker].<br>(After your opponent declares an attack, you may rest this card to make it the new target of the attack.)"
+  },
+  "OP02-075": {
+    "id": "OP02-075",
+    "type": "CHARACTER",
+    "colors": [
+      "Purple"
+    ],
+    "cost": 2,
+    "power": 3000,
+    "life": null,
+    "counter": 2000,
+    "keywords": [],
+    "effects": [],
+    "manualText": "-"
+  },
+  "OP02-076": {
+    "id": "OP02-076",
+    "type": "CHARACTER",
+    "colors": [
+      "Purple"
+    ],
+    "cost": 4,
+    "power": 5000,
+    "life": null,
+    "counter": 1000,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[On Play] DON!! −1 (You may return the specified number of DON!! cards from your field to your DON!! deck.): K.O. up to 1 of your opponent's Characters with a cost of 1 or less."
+  },
+  "OP02-077": {
+    "id": "OP02-077",
+    "type": "CHARACTER",
+    "colors": [
+      "Purple"
+    ],
+    "cost": 3,
+    "power": 5000,
+    "life": null,
+    "counter": 1000,
+    "keywords": [],
+    "effects": [],
+    "manualText": "-"
+  },
+  "OP02-078": {
+    "id": "OP02-078",
+    "type": "CHARACTER",
+    "colors": [
+      "Purple"
+    ],
+    "cost": 3,
+    "power": 5000,
+    "life": null,
+    "counter": null,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[On Play] DON!! −2 (You may return the specified number of DON!! cards from your field to your DON!! deck.): Play up to 1 {SMILE} type Character card other than [Daifugo] with a cost of 3 or less from your hand."
+  },
+  "OP02-079": {
+    "id": "OP02-079",
+    "type": "CHARACTER",
+    "colors": [
+      "Purple"
+    ],
+    "cost": 5,
+    "power": 6000,
+    "life": null,
+    "counter": 1000,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[On Play] DON!! −1 (You may return the specified number of DON!! cards from your field to your DON!! deck.): Rest up to 1 of your opponent's Characters with a cost of 4 or less."
+  },
+  "OP02-080": {
+    "id": "OP02-080",
+    "type": "CHARACTER",
+    "colors": [
+      "Purple"
+    ],
+    "cost": 2,
+    "power": 4000,
+    "life": null,
+    "counter": 1000,
+    "keywords": [],
+    "effects": [],
+    "manualText": "-"
+  },
+  "OP02-081": {
+    "id": "OP02-081",
+    "type": "CHARACTER",
+    "colors": [
+      "Purple"
+    ],
+    "cost": 2,
+    "power": 2000,
+    "life": null,
+    "counter": 1000,
+    "keywords": [
+      "Blocker"
+    ],
+    "effects": [],
+    "manualText": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)"
+  },
+  "OP02-082": {
+    "id": "OP02-082",
+    "type": "CHARACTER",
+    "colors": [
+      "Purple"
+    ],
+    "cost": 8,
+    "power": 8000,
+    "life": null,
+    "counter": null,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[Activate: Main] DON!! −8 (You may return the specified number of DON!! cards from your field to your DON!! deck.): This Character gains +792000 power during this turn."
+  },
+  "OP02-083": {
+    "id": "OP02-083",
+    "type": "CHARACTER",
+    "colors": [
+      "Purple"
+    ],
+    "cost": 1,
+    "power": 2000,
+    "life": null,
+    "counter": 1000,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[On Play] Look at 5 cards from the top of your deck; reveal up to 1 purple {Impel Down} type card other than [Hannyabal] and add it to your hand. Then, place the rest at the bottom of your deck in any order."
+  },
+  "OP02-084": {
+    "id": "OP02-084",
+    "type": "CHARACTER",
+    "colors": [
+      "Purple"
+    ],
+    "cost": 1,
+    "power": 3000,
+    "life": null,
+    "counter": 1000,
+    "keywords": [],
+    "effects": [],
+    "manualText": "-"
+  },
+  "OP02-085": {
+    "id": "OP02-085",
+    "type": "CHARACTER",
+    "colors": [
+      "Purple"
+    ],
+    "cost": 5,
+    "power": 6000,
+    "life": null,
+    "counter": null,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[On Play] DON!! −1 (You may return the specified number of DON!! cards from your field to your DON!! deck.): Your opponent returns 1 DON!! card from their field to their DON!! deck.<br>[Opponent's Turn] When this Character is K.O.'d, your opponent returns 2 DON!! cards from their field to their DON!! deck."
+  },
+  "OP02-086": {
+    "id": "OP02-086",
+    "type": "CHARACTER",
+    "colors": [
+      "Purple"
+    ],
+    "cost": 4,
+    "power": 5000,
+    "life": null,
+    "counter": 1000,
+    "keywords": [
+      "Blocker"
+    ],
+    "effects": [],
+    "manualText": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)<br>[On K.O.] If your Leader has the {Impel Down} type, add up to 1 DON!! card from your DON!! deck and rest it."
+  },
+  "OP02-087": {
+    "id": "OP02-087",
+    "type": "CHARACTER",
+    "colors": [
+      "Purple"
+    ],
+    "cost": 4,
+    "power": 5000,
+    "life": null,
+    "counter": 1000,
+    "keywords": [
+      "DoubleAttack"
+    ],
+    "effects": [],
+    "manualText": "[Double Attack] (This card deals 2 damage.)<br>[On K.O.] If your Leader has the {Impel Down} type, add up to 1 DON!! card from your DON!! deck and rest it."
+  },
+  "OP02-088": {
+    "id": "OP02-088",
+    "type": "CHARACTER",
+    "colors": [
+      "Purple"
+    ],
+    "cost": 4,
+    "power": 6000,
+    "life": null,
+    "counter": 1000,
+    "keywords": [],
+    "effects": [],
+    "manualText": "-"
+  },
+  "OP02-089": {
+    "id": "OP02-089",
+    "type": "EVENT",
+    "colors": [
+      "Purple"
+    ],
+    "cost": 2,
+    "power": null,
+    "life": null,
+    "counter": null,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[Counter] DON!! −1 (You may return the specified number of DON!! cards from your field to your DON!! deck.): Give up to a total of 2 of your opponent's Leader or Character cards −3000 power during this turn."
+  },
+  "OP02-090": {
+    "id": "OP02-090",
+    "type": "EVENT",
+    "colors": [
+      "Purple"
+    ],
+    "cost": 1,
+    "power": null,
+    "life": null,
+    "counter": null,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[Main] DON!! −1 (You may return the specified number of DON!! cards from your field to your DON!! deck.): Give up to 1 of your opponent's Characters −3000 power during this turn."
+  },
+  "OP02-091": {
+    "id": "OP02-091",
+    "type": "EVENT",
+    "colors": [
+      "Purple"
+    ],
+    "cost": 3,
+    "power": null,
+    "life": null,
+    "counter": null,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[Main] Add up to 1 DON!! card from your DON!! deck and set it as active."
+  },
+  "OP02-092": {
+    "id": "OP02-092",
+    "type": "STAGE",
+    "colors": [
+      "Purple"
+    ],
+    "cost": 1,
+    "power": null,
+    "life": null,
+    "counter": null,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[Activate: Main] You may trash 1 card from your hand and rest this Stage: Look at 3 cards from the top of your deck; reveal up to 1 {Impel Down} type card and add it to your hand. Then, place the rest at the bottom of your deck in any order."
+  },
+  "OP02-093": {
+    "id": "OP02-093",
+    "type": "LEADER",
+    "colors": [
+      "Black"
+    ],
+    "cost": null,
+    "power": 5000,
+    "life": 5,
+    "counter": null,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[DON!! x1] [Activate: Main] [Once Per Turn] Give up to 1 of your opponent's Characters −1 cost during this turn. Then, if there is a Character with a cost of 0, this Leader gains +1000 power during this turn."
+  },
+  "OP02-094": {
+    "id": "OP02-094",
+    "type": "CHARACTER",
+    "colors": [
+      "Black"
+    ],
+    "cost": 3,
+    "power": 4000,
+    "life": null,
+    "counter": 1000,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[DON!! x1] [Once Per Turn] When this Character battles and K.O.'s your opponent's Character, set this Character as active."
+  },
+  "OP02-095": {
+    "id": "OP02-095",
+    "type": "CHARACTER",
+    "colors": [
+      "Black"
+    ],
+    "cost": 5,
+    "power": 6000,
+    "life": null,
+    "counter": 1000,
+    "keywords": [
+      "Banish"
+    ],
+    "effects": [],
+    "manualText": "If there is a Character with a cost of 0, this Character gains [Banish].<br>(When this card deals damage, the target card is trashed without activating its Trigger.)"
+  },
+  "OP02-096": {
+    "id": "OP02-096",
+    "type": "CHARACTER",
+    "colors": [
+      "Black"
+    ],
+    "cost": 4,
+    "power": 5000,
+    "life": null,
+    "counter": null,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[On Play] Draw 1 card.<br>[When Attacking] Give up to 1 of your opponent's Characters −4 cost during this turn."
+  },
+  "OP02-097": {
+    "id": "OP02-097",
+    "type": "CHARACTER",
+    "colors": [
+      "Black"
+    ],
+    "cost": 1,
+    "power": 3000,
+    "life": null,
+    "counter": 1000,
+    "keywords": [],
+    "effects": [],
+    "manualText": "-"
+  },
+  "OP02-098": {
+    "id": "OP02-098",
+    "type": "CHARACTER",
+    "colors": [
+      "Black"
+    ],
+    "cost": 3,
+    "power": 4000,
+    "life": null,
+    "counter": 1000,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[On Play] You may trash 1 card from your hand: K.O. up to 1 of your opponent's Characters with a cost of 3 or less."
+  },
+  "OP02-099": {
+    "id": "OP02-099",
+    "type": "CHARACTER",
+    "colors": [
+      "Black"
+    ],
+    "cost": 6,
+    "power": 7000,
+    "life": null,
+    "counter": null,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[On Play] You may trash 1 card from your hand: K.O. up to 1 of your opponent's Characters with a cost of 5 or less."
+  },
+  "OP02-100": {
+    "id": "OP02-100",
+    "type": "CHARACTER",
+    "colors": [
+      "Black"
+    ],
+    "cost": 2,
+    "power": 3000,
+    "life": null,
+    "counter": 1000,
+    "keywords": [],
+    "effects": [],
+    "manualText": "If you have [Fullbody], this Character cannot be K.O.'d in battle."
+  },
+  "OP02-101": {
+    "id": "OP02-101",
+    "type": "CHARACTER",
+    "colors": [
+      "Black"
+    ],
+    "cost": 4,
+    "power": 5000,
+    "life": null,
+    "counter": null,
+    "keywords": [
+      "Blocker"
+    ],
+    "effects": [],
+    "manualText": "[When Attacking] If there is a Character with a cost of 0, your opponent cannot activate the [Blocker] of any Character with a cost of 5 or less during this battle."
+  },
+  "OP02-102": {
+    "id": "OP02-102",
+    "type": "CHARACTER",
+    "colors": [
+      "Black"
+    ],
+    "cost": 3,
+    "power": 4000,
+    "life": null,
+    "counter": 1000,
+    "keywords": [],
+    "effects": [],
+    "manualText": "This Character cannot be K.O.'d by effects.<br>[When Attacking] If there is a Character with a cost of 0, this Character gains +2000 power during this battle."
+  },
+  "OP02-103": {
+    "id": "OP02-103",
+    "type": "CHARACTER",
+    "colors": [
+      "Black"
+    ],
+    "cost": 2,
+    "power": 3000,
+    "life": null,
+    "counter": 2000,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[DON!! x1] [When Attacking] Give up to 1 of your opponent's Characters −2 cost during this turn."
+  },
+  "OP02-104": {
+    "id": "OP02-104",
+    "type": "CHARACTER",
+    "colors": [
+      "Black"
+    ],
+    "cost": 2,
+    "power": 3000,
+    "life": null,
+    "counter": 1000,
+    "keywords": [],
+    "effects": [],
+    "manualText": "-"
+  },
+  "OP02-105": {
+    "id": "OP02-105",
+    "type": "CHARACTER",
+    "colors": [
+      "Black"
+    ],
+    "cost": 3,
+    "power": 5000,
+    "life": null,
+    "counter": null,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[DON!! x1] [When Attacking] Give up to 1 of your opponent's Characters −3 cost during this turn."
+  },
+  "OP02-106": {
+    "id": "OP02-106",
+    "type": "CHARACTER",
+    "colors": [
+      "Black"
+    ],
+    "cost": 1,
+    "power": null,
+    "life": null,
+    "counter": 2000,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[On Play] Give up to 1 of your opponent's Characters −2 cost during this turn."
+  },
+  "OP02-107": {
+    "id": "OP02-107",
+    "type": "CHARACTER",
+    "colors": [
+      "Black"
+    ],
+    "cost": 2,
+    "power": 4000,
+    "life": null,
+    "counter": 1000,
+    "keywords": [],
+    "effects": [],
+    "manualText": "-"
+  },
+  "OP02-108": {
+    "id": "OP02-108",
+    "type": "CHARACTER",
+    "colors": [
+      "Black"
+    ],
+    "cost": 2,
+    "power": 2000,
+    "life": null,
+    "counter": 1000,
+    "keywords": [
+      "Blocker"
+    ],
+    "effects": [],
+    "manualText": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)"
+  },
+  "OP02-109": {
+    "id": "OP02-109",
+    "type": "CHARACTER",
+    "colors": [
+      "Black"
+    ],
+    "cost": 4,
+    "power": 6000,
+    "life": null,
+    "counter": 1000,
+    "keywords": [],
+    "effects": [],
+    "manualText": "-"
+  },
+  "OP02-110": {
+    "id": "OP02-110",
+    "type": "CHARACTER",
+    "colors": [
+      "Black"
+    ],
+    "cost": 5,
+    "power": 6000,
+    "life": null,
+    "counter": 1000,
+    "keywords": [
+      "Blocker"
+    ],
+    "effects": [],
+    "manualText": "[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)<br>[On Block] Select up to 1 of your opponent's Characters with a cost of 6 or less. The selected Character cannot attack during this turn."
+  },
+  "OP02-111": {
+    "id": "OP02-111",
+    "type": "CHARACTER",
+    "colors": [
+      "Black"
+    ],
+    "cost": 2,
+    "power": 3000,
+    "life": null,
+    "counter": 1000,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[When Attacking] If you have [Jango], this card gains +3000 power during this battle."
+  },
+  "OP02-112": {
+    "id": "OP02-112",
+    "type": "CHARACTER",
+    "colors": [
+      "Black"
+    ],
+    "cost": 1,
+    "power": 1000,
+    "life": null,
+    "counter": 1000,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[Activate: Main] You may rest this Character: Give up to 1 of your opponent's Characters −1 cost during this turn. Then, up to 1 of your Leader or Character cards gains +1000 power during this turn."
+  },
+  "OP02-113": {
+    "id": "OP02-113",
+    "type": "CHARACTER",
+    "colors": [
+      "Black"
+    ],
+    "cost": 3,
+    "power": 3000,
+    "life": null,
+    "counter": 1000,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[When Attacking] Give up to 1 of your opponent's Characters −2 cost during this turn. Then, if there is a Character with a cost of 0, this Character gains +2000 power during this battle."
+  },
+  "OP02-114": {
+    "id": "OP02-114",
+    "type": "CHARACTER",
+    "colors": [
+      "Black"
+    ],
+    "cost": 4,
+    "power": 5000,
+    "life": null,
+    "counter": 1000,
+    "keywords": [
+      "Blocker"
+    ],
+    "effects": [],
+    "manualText": "[Opponent's Turn] This Character gains +1000 power and cannot be K.O.'d by effects.<br>[Blocker] (After your opponent declares an attack, you may rest this card to make it the new target of the attack.)"
+  },
+  "OP02-115": {
+    "id": "OP02-115",
+    "type": "CHARACTER",
+    "colors": [
+      "Black"
+    ],
+    "cost": 2,
+    "power": 3000,
+    "life": null,
+    "counter": 2000,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[DON!! x2] [When Attacking] K.O. up to 1 of your opponent's Characters with a cost of 0."
+  },
+  "OP02-116": {
+    "id": "OP02-116",
+    "type": "CHARACTER",
+    "colors": [
+      "Black"
+    ],
+    "cost": 3,
+    "power": 5000,
+    "life": null,
+    "counter": 1000,
+    "keywords": [],
+    "effects": [],
+    "manualText": "-"
+  },
+  "OP02-117": {
+    "id": "OP02-117",
+    "type": "EVENT",
+    "colors": [
+      "Black"
+    ],
+    "cost": 1,
+    "power": null,
+    "life": null,
+    "counter": null,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[Main] Give up to 1 of your opponent's Characters −5 cost during this turn."
+  },
+  "OP02-118": {
+    "id": "OP02-118",
+    "type": "EVENT",
+    "colors": [
+      "Black"
+    ],
+    "cost": 1,
+    "power": null,
+    "life": null,
+    "counter": null,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[Counter] You may trash 1 card from your hand: Select up to 1 of your Characters. The selected Character cannot be K.O.'d during this battle."
+  },
+  "OP02-119": {
+    "id": "OP02-119",
+    "type": "EVENT",
+    "colors": [
+      "Black"
+    ],
+    "cost": 2,
+    "power": null,
+    "life": null,
+    "counter": null,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[Main] K.O. up to 1 of your opponent's Characters with a cost of 1 or less."
+  },
+  "OP02-120": {
+    "id": "OP02-120",
+    "type": "CHARACTER",
+    "colors": [
+      "Purple"
+    ],
+    "cost": 8,
+    "power": 8000,
+    "life": null,
+    "counter": null,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[On Play] DON!! −2 (You may return the specified number of DON!! cards from your field to your DON!! deck.): Your Leader and all of your Characters gain +1000 power until the start of your next turn."
+  },
+  "OP02-121": {
+    "id": "OP02-121",
+    "type": "CHARACTER",
+    "colors": [
+      "Black"
+    ],
+    "cost": 10,
+    "power": 10000,
+    "life": null,
+    "counter": null,
+    "keywords": [],
+    "effects": [],
+    "manualText": "[Your Turn] Give all of your opponent's Characters −5 cost.<br>[On Play] K.O. up to 1 of your opponent's Characters with a cost of 0."
+  }
+}
