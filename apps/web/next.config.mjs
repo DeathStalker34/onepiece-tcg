@@ -1,7 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  transpilePackages: ['@optcg/engine', '@optcg/card-data'],
+  output: 'standalone',
+  transpilePackages: ['@optcg/engine', '@optcg/card-data', '@optcg/protocol', '@optcg/ai'],
   experimental: {
     typedRoutes: true,
   },
