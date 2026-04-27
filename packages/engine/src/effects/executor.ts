@@ -24,6 +24,8 @@ function matchesFilter(card: CardStatic, filter: CardFilter | undefined): boolea
   }
   if (filter.costMin !== undefined && (card.cost ?? 0) < filter.costMin) return false;
   if (filter.costMax !== undefined && (card.cost ?? 0) > filter.costMax) return false;
+  if (filter.powerMin !== undefined && (card.power ?? 0) < filter.powerMin) return false;
+  if (filter.powerMax !== undefined && (card.power ?? 0) > filter.powerMax) return false;
   if (filter.keyword && !card.keywords.includes(filter.keyword)) return false;
   return true;
 }

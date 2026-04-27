@@ -9,6 +9,8 @@ export interface CardFilter {
   colors?: string[];
   costMax?: number;
   costMin?: number;
+  powerMax?: number;
+  powerMin?: number;
   keyword?: Keyword;
 }
 
