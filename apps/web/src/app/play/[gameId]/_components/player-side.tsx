@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { useState } from 'react';
 import { cardImagePath } from '@/lib/card-image';
 import { useGame } from './game-provider';
+import { computeEffectivePower } from '@optcg/engine';
 import type { PlayerIndex } from '@optcg/engine';
 import { LeaderCard } from './leader-card';
 import { CharacterCard } from './character-card';
@@ -29,7 +30,6 @@ export function PlayerSide({
 }) {
   const { state, dispatch, botPlayers, isOnline, myPlayerIndex } = useGame();
   const p = state.players[playerIndex];
-  const opp = state.players[playerIndex === 0 ? 1 : 0];
   const isActive = state.activePlayer === playerIndex && state.priorityWindow === null;
   const inMainRaw =
     state.phase === 'Main' && state.priorityWindow === null && state.activePlayer === playerIndex;
@@ -88,28 +88,25 @@ export function PlayerSide({
     setPendingAttacker(null);
   }
 
-  const attackTargets = buildAttackTargets(
-    opp.leader,
-    opp.life.length,
-    opp.characters,
-    state.catalog,
-  );
+  const attackTargets = buildAttackTargets(state, playerIndex === 0 ? 1 : 0);
 
   let attackerInfo: AttackerInfo | null = null;
   if (pendingAttacker) {
     if (pendingAttacker.kind === 'Leader') {
-      const ls = state.catalog[p.leader.cardId];
       attackerInfo = {
         cardId: p.leader.cardId,
-        power: (ls?.power ?? 0) + p.leader.attachedDon * 1000 + p.leader.powerThisTurn,
+        power: computeEffectivePower(state, { kind: 'Leader', owner: playerIndex }),
       };
     } else {
       const char = p.characters.find((c) => c.instanceId === pendingAttacker.instanceId);
       if (char) {
-        const cs = state.catalog[char.cardId];
         attackerInfo = {
           cardId: char.cardId,
-          power: (cs?.power ?? 0) + char.attachedDon * 1000 + char.powerThisTurn,
+          power: computeEffectivePower(state, {
+            kind: 'Character',
+            instanceId: char.instanceId,
+            owner: playerIndex,
+          }),
         };
       }
     }

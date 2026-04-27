@@ -5,7 +5,8 @@ import { Swords } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { cardImagePath } from '@/lib/card-image';
-import type { CardStatic, CharacterInPlay, LeaderInPlay } from '@optcg/engine';
+import { computeEffectivePower } from '@optcg/engine';
+import type { GameState, PlayerIndex } from '@optcg/engine';
 
 export interface AttackTarget {
   kind: 'Leader' | 'Character';
@@ -134,29 +135,27 @@ export function TargetPicker({
   );
 }
 
-export function buildAttackTargets(
-  opponentLeader: LeaderInPlay,
-  opponentLife: number,
-  opponentCharacters: CharacterInPlay[],
-  catalog: Record<string, CardStatic>,
-): AttackTarget[] {
-  const leaderCard = catalog[opponentLeader.cardId];
+export function buildAttackTargets(state: GameState, defenderOwner: PlayerIndex): AttackTarget[] {
+  const opp = state.players[defenderOwner];
   const targets: AttackTarget[] = [
     {
       kind: 'Leader',
-      cardId: opponentLeader.cardId,
-      power: leaderCard?.power ?? 0,
-      lifeRemaining: opponentLife,
+      cardId: opp.leader.cardId,
+      power: computeEffectivePower(state, { kind: 'Leader', owner: defenderOwner }),
+      lifeRemaining: opp.life.length,
     },
   ];
-  for (const c of opponentCharacters) {
+  for (const c of opp.characters) {
     if (c.rested) {
-      const cs = catalog[c.cardId];
       targets.push({
         kind: 'Character',
         instanceId: c.instanceId,
         cardId: c.cardId,
-        power: cs?.power ?? 0,
+        power: computeEffectivePower(state, {
+          kind: 'Character',
+          instanceId: c.instanceId,
+          owner: defenderOwner,
+        }),
       });
     }
   }

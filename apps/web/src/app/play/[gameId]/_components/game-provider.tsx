@@ -58,6 +58,8 @@ function summarizeAction(action: Action): string {
       return 'No blocker';
     case 'ActivateTrigger':
       return action.activate ? 'Activated trigger' : 'Skipped trigger';
+    default:
+      return 'Unknown action';
   }
 }
 
