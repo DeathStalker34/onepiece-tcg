@@ -48,7 +48,7 @@ export function CharacterCard({
           onClick={handleClick}
           aria-disabled={!clickable}
           tabIndex={clickable ? 0 : -1}
-          className={`relative aspect-[5/7] w-24 overflow-hidden rounded border border-amber-900/70 animate-in fade-in-0 slide-in-from-bottom-16 duration-500 ease-out transition-transform duration-700 ease-in-out ${char.rested ? 'rotate-90' : ''} ${char.summoningSickness ? 'opacity-60' : ''} ${clickable ? 'cursor-pointer hover:ring-2 hover:ring-primary' : 'cursor-default'} ${highlighted ? 'ring-2 ring-amber-400 ring-offset-1 ring-offset-stone-900 animate-pulse' : ''} ${glow}`}
+          className={`relative aspect-[5/7] w-24 overflow-hidden rounded border border-amber-900/70 animate-in fade-in-0 slide-in-from-bottom-16 duration-500 ease-out transition-transform duration-700 ease-in-out ${char.rested ? 'rotate-90' : ''} ${char.summoningSickness ? 'opacity-60' : ''} ${clickable ? 'cursor-pointer hover:ring-2 hover:ring-primary' : 'cursor-default'} ${highlighted ? 'ring-4 ring-amber-300 ring-offset-2 ring-offset-stone-900 shadow-[0_0_16px_rgba(252,211,77,0.9)]' : ''} ${glow}`}
           title={`${char.cardId}${char.summoningSickness ? ' (summoning sickness)' : ''}`}
         >
           <Image

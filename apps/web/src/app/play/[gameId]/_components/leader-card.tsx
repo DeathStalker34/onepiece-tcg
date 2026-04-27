@@ -50,7 +50,7 @@ export function LeaderCard({
           onClick={handleClick}
           aria-disabled={!clickable}
           tabIndex={clickable ? 0 : -1}
-          className={`relative aspect-[5/7] w-32 overflow-hidden rounded border-2 border-amber-900/70 transition-transform duration-700 ease-in-out ${leader.rested ? 'rotate-90' : ''} ${clickable ? 'cursor-pointer hover:ring-2 hover:ring-primary' : 'cursor-default'} ${highlighted ? 'ring-2 ring-amber-400 ring-offset-1 ring-offset-stone-900 animate-pulse' : ''} ${glow}`}
+          className={`relative aspect-[5/7] w-32 overflow-hidden rounded border-2 border-amber-900/70 transition-transform duration-700 ease-in-out ${leader.rested ? 'rotate-90' : ''} ${clickable ? 'cursor-pointer hover:ring-2 hover:ring-primary' : 'cursor-default'} ${highlighted ? 'ring-4 ring-amber-300 ring-offset-2 ring-offset-stone-900 shadow-[0_0_20px_rgba(252,211,77,0.95)]' : ''} ${glow}`}
           aria-label={`Leader ${leader.cardId}`}
         >
           <Image
