@@ -49,7 +49,14 @@ export type Effect =
   | { kind: 'manual'; text: string };
 
 export interface TriggeredEffect {
-  trigger: 'OnPlay' | 'OnKO' | 'OnAttack' | 'Activate:Main' | 'EndOfTurn' | 'Trigger';
+  trigger:
+    | 'OnPlay'
+    | 'OnKO'
+    | 'OnAttack'
+    | 'Activate:Main'
+    | 'EndOfTurn'
+    | 'Trigger'
+    | 'StaticAura';
   condition?: EffectCondition;
   cost?: EffectCost;
   effect: Effect;
