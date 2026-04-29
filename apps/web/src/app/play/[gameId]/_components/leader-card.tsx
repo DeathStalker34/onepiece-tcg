@@ -1,11 +1,13 @@
 'use client';
 
 import Image from 'next/image';
-import { useState } from 'react';
+import { useState, type Ref } from 'react';
+import { useDraggable, useDroppable } from '@dnd-kit/core';
 import { cardImagePath } from '@/lib/card-image';
 import type { LeaderInPlay } from '@optcg/engine';
 import { ActionMenu, type ActionMenuOption } from './action-menu';
 import { CardHoverPreview } from './card-hover-preview';
+import { useDndBoard } from './dnd/dnd-board';
 
 export function LeaderCard({
   leader,
@@ -14,6 +16,8 @@ export function LeaderCard({
   highlighted = false,
   effectivePower,
   basePower,
+  dndDropId,
+  dndDraggableId,
 }: {
   leader: LeaderInPlay;
   lifeCount: number;
@@ -21,6 +25,8 @@ export function LeaderCard({
   highlighted?: boolean;
   effectivePower: number;
   basePower: number;
+  dndDropId?: string;
+  dndDraggableId?: string;
 }) {
   const [open, setOpen] = useState(false);
   const clickable = actions.length > 0;
@@ -33,6 +39,33 @@ export function LeaderCard({
       ? 'shadow-[0_0_12px_rgba(220,38,38,0.65)]'
       : '';
 
+  const { validDropIds } = useDndBoard();
+  const { setNodeRef: setDropRef, isOver } = useDroppable({
+    id: dndDropId ?? 'leader-no-drop',
+    disabled: !dndDropId,
+  });
+  const isValidDrop = dndDropId !== undefined && validDropIds.has(dndDropId);
+  const dropGlow = isValidDrop
+    ? isOver
+      ? 'ring-2 ring-amber-400'
+      : 'ring-2 ring-amber-400/70'
+    : '';
+
+  const {
+    attributes,
+    listeners,
+    setNodeRef: setDragRef,
+    isDragging,
+  } = useDraggable({
+    id: dndDraggableId ?? 'leader-no-drag',
+    disabled: !dndDraggableId,
+  });
+
+  function combineRefs(node: HTMLElement | null) {
+    setDropRef(node);
+    setDragRef(node);
+  }
+
   function handleClick() {
     if (!clickable) return;
     if (actions.length === 1) {
@@ -43,7 +76,12 @@ export function LeaderCard({
   }
 
   return (
-    <div className="relative">
+    <div
+      ref={combineRefs as Ref<HTMLDivElement>}
+      {...(dndDraggableId ? attributes : {})}
+      {...(dndDraggableId ? listeners : {})}
+      className={`relative inline-block rounded transition ${dropGlow} ${isDragging ? 'opacity-40' : ''}`}
+    >
       <CardHoverPreview cardId={leader.cardId}>
         <button
           type="button"

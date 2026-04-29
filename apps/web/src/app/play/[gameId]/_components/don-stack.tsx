@@ -2,10 +2,27 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
+import { useDraggable } from '@dnd-kit/core';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { cardImagePath } from '@/lib/card-image';
 import { useGame } from './game-provider';
+
+function DraggableDonTile({ index, disabled }: { index: number; disabled: boolean }) {
+  const { attributes, listeners, setNodeRef, isDragging } = useDraggable({
+    id: `don:${index}`,
+    disabled,
+  });
+  return (
+    <div
+      ref={setNodeRef}
+      {...attributes}
+      {...listeners}
+      className={`h-16 w-12 rounded border border-yellow-600 bg-gradient-to-br from-yellow-500 to-yellow-700 shadow ${disabled ? 'cursor-default' : 'cursor-grab active:cursor-grabbing'} ${isDragging ? 'opacity-40' : ''}`}
+      aria-label={`DON ${index + 1}`}
+    />
+  );
+}
 
 interface Props {
   playerIndex: 0 | 1;
@@ -48,29 +65,23 @@ export function DonStack({ playerIndex }: Props) {
         aria-label="Don pool"
       >
         <div className="flex flex-col items-center gap-1">
-          <div className="relative h-16 w-12">
+          <div className="flex gap-0.5">
             {donActive === 0 ? (
               <div className="h-16 w-12 rounded border border-yellow-700/40 bg-stone-800/50" />
             ) : (
               <>
-                {Array.from({ length: Math.min(donActive, 3) }).map((_, i) => (
-                  <div
-                    key={i}
-                    className="absolute h-16 w-12 rounded border border-yellow-600 bg-gradient-to-br from-yellow-500 to-yellow-700 shadow"
-                    style={{ top: `-${i * 2}px`, left: `-${i * 1}px`, zIndex: i }}
-                    aria-hidden
-                  />
+                {Array.from({ length: Math.min(donActive, 5) }).map((_, i) => (
+                  <DraggableDonTile key={i} index={i} disabled={!canAttach} />
                 ))}
-                <span
-                  key={donActive}
-                  className="absolute inset-0 z-10 flex items-center justify-center text-sm font-bold text-white drop-shadow animate-in zoom-in-75 duration-300"
-                >
-                  {donActive}
-                </span>
+                {donActive > 5 && (
+                  <span className="ml-1 self-center text-xs font-bold text-yellow-200">
+                    +{donActive - 5}
+                  </span>
+                )}
               </>
             )}
           </div>
-          <span className="text-[10px] uppercase text-yellow-300">Active</span>
+          <span className="text-[10px] uppercase text-yellow-300">Active ({donActive})</span>
         </div>
         <div className="flex flex-col items-center gap-1">
           <div className="relative h-16 w-12">

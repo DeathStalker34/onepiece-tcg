@@ -158,6 +158,7 @@ export function PlayerSide({
               highlighted={isHighlightedRef('Leader')}
               effectivePower={computeEffectivePower(state, { kind: 'Leader', owner: playerIndex })}
               basePower={state.catalog[p.leader.cardId]?.power ?? 0}
+              dndDropId={isYou ? 'drop:friendly-leader' : undefined}
             />
           </div>
         </div>
@@ -215,6 +216,7 @@ export function PlayerSide({
                           owner: playerIndex,
                         })}
                         basePower={charStatic?.power ?? 0}
+                        dndDropId={isYou ? `drop:friendly-char:${c.instanceId}` : undefined}
                       />
                     );
                   }
