@@ -65,19 +65,33 @@ export function DonStack({ playerIndex }: Props) {
         aria-label="Don pool"
       >
         <div className="flex flex-col items-center gap-1">
-          <div className="flex gap-0.5">
+          <div className={canAttach ? 'flex gap-0.5' : 'relative h-16 w-12'}>
             {donActive === 0 ? (
               <div className="h-16 w-12 rounded border border-yellow-700/40 bg-stone-800/50" />
-            ) : (
+            ) : canAttach ? (
               <>
                 {Array.from({ length: Math.min(donActive, 5) }).map((_, i) => (
-                  <DraggableDonTile key={i} index={i} disabled={!canAttach} />
+                  <DraggableDonTile key={i} index={i} disabled={false} />
                 ))}
                 {donActive > 5 && (
                   <span className="ml-1 self-center text-xs font-bold text-yellow-200">
                     +{donActive - 5}
                   </span>
                 )}
+              </>
+            ) : (
+              <>
+                {Array.from({ length: Math.min(donActive, 3) }).map((_, i) => (
+                  <div
+                    key={i}
+                    className="absolute h-16 w-12 rounded border border-yellow-600 bg-gradient-to-br from-yellow-500 to-yellow-700 shadow"
+                    style={{ top: `-${i * 2}px`, left: `-${i * 1}px`, zIndex: i }}
+                    aria-hidden
+                  />
+                ))}
+                <span className="absolute inset-0 z-10 flex items-center justify-center text-sm font-bold text-white drop-shadow">
+                  {donActive}
+                </span>
               </>
             )}
           </div>
