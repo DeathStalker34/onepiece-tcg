@@ -9,8 +9,19 @@ const SECTIONS = [
   { href: '/play', label: 'Play' },
 ] as const;
 
+// Hide chrome inside active matches: /play/<gameId> and /play/online/<code>.
+// Keeps it visible on the mode selector (/play) and online lobby (/play/online).
+function isInMatch(pathname: string): boolean {
+  const segs = pathname.split('/').filter(Boolean);
+  if (segs[0] !== 'play') return false;
+  if (segs[1] === 'online') return segs.length >= 3;
+  return segs.length >= 2;
+}
+
 export function TopNav() {
   const pathname = usePathname();
+
+  if (isInMatch(pathname)) return null;
 
   return (
     <header className="sticky top-0 z-40 border-b border-border/60 bg-background/80 backdrop-blur">
