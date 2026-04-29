@@ -4,7 +4,7 @@ Simulador web del One Piece Trading Card Game — hotseat local, PvAI (3 niveles
 
 ## Estado actual
 
-- **Fase:** Fases 0-7 mergeadas a `main`. Última: librería de efectos hand-coded (85/121 OP01 cards = 70 % gate). Multijugador online en producción: https://optcg-web.fly.dev.
+- **Fase:** Fases 0-7 mergeadas a `main`. Última: librería de efectos hand-coded (85/121 OP01 cards = 70 % gate). Migrado a stack free tier: web https://onepiece-tcg-web.vercel.app (Vercel), server https://optcg-server.onrender.com (Render — hiberna tras 15 min idle, ~30-60 s cold start), DB Postgres en Neon (London).
 - **Próxima fase:** Mini-fases sueltas por orden de pull — drag&drop / atajos / animaciones / stats / replay / chat / search-choice picker / OP02 effects.
 - **Fase-gated delivery:** no empieces la siguiente fase sin aprobación explícita del usuario. Pasa primero por `superpowers:brainstorming` → spec → `writing-plans` antes de tocar código.
 
