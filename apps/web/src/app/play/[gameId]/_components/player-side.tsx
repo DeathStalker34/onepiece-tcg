@@ -158,7 +158,12 @@ export function PlayerSide({
               highlighted={isHighlightedRef('Leader')}
               effectivePower={computeEffectivePower(state, { kind: 'Leader', owner: playerIndex })}
               basePower={state.catalog[p.leader.cardId]?.power ?? 0}
-              dndDropId={isYou ? 'drop:friendly-leader' : undefined}
+              dndDropId={isYou ? 'drop:friendly-leader' : `drop:leader:${playerIndex}`}
+              dndDraggableId={
+                isYou && inMain && !p.leader.rested && p.firstTurnUsed
+                  ? 'attacker:leader'
+                  : undefined
+              }
             />
           </div>
         </div>
@@ -204,6 +209,12 @@ export function PlayerSide({
                         });
                       }
                     }
+                    const canCharAttack =
+                      isYou &&
+                      inMain &&
+                      !c.rested &&
+                      p.firstTurnUsed &&
+                      (!c.summoningSickness || (charStatic?.keywords.includes('Rush') ?? false));
                     return (
                       <CharacterCard
                         key={c.instanceId}
@@ -216,7 +227,12 @@ export function PlayerSide({
                           owner: playerIndex,
                         })}
                         basePower={charStatic?.power ?? 0}
-                        dndDropId={isYou ? `drop:friendly-char:${c.instanceId}` : undefined}
+                        dndDropId={
+                          isYou
+                            ? `drop:friendly-char:${c.instanceId}`
+                            : `drop:char:${c.instanceId}:${playerIndex}`
+                        }
+                        dndDraggableId={canCharAttack ? `attacker:char:${c.instanceId}` : undefined}
                       />
                     );
                   }
