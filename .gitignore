@@ -28,6 +28,3 @@ coverage/
 # TypeScript incremental build cache
 *.tsbuildinfo
 
-# Fase 1 — imágenes descargadas por pnpm cards:sync (cada dev genera las suyas)
-apps/web/public/cards/**
-!apps/web/public/cards/.gitkeep
