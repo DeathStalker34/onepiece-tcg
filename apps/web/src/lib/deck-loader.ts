@@ -1,3 +1,5 @@
+import { apiUrl } from './api';
+
 export interface DeckCardInput {
   cardId: string;
   quantity: number;
@@ -20,7 +22,7 @@ export function expandDeckCards(cards: DeckCardInput[]): string[] {
 }
 
 export async function loadGameDeckById(deckId: string, userId: string): Promise<LoadedDeck> {
-  const res = await fetch(`/api/decks/${deckId}`, { headers: { 'x-user-id': userId } });
+  const res = await fetch(apiUrl(`/api/decks/${deckId}`), { headers: { 'x-user-id': userId } });
   if (!res.ok) {
     throw new Error(`Failed to load deck ${deckId}: HTTP ${res.status}`);
   }

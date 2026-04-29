@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { useUser } from '@/lib/user-context';
+import { apiUrl } from '@/lib/api';
 import type { OnlineHook } from '@/lib/online/use-online-socket';
 
 interface DeckSummary {
@@ -25,7 +26,7 @@ export function OnlineLobby({ online, matchId }: { online: OnlineHook; matchId: 
 
   useEffect(() => {
     if (!user) return;
-    fetch('/api/decks', { headers: { 'x-user-id': user.id } })
+    fetch(apiUrl('/api/decks'), { headers: { 'x-user-id': user.id } })
       .then((r) => (r.ok ? r.json() : []))
       .then(setDecks)
       .catch(() => setDecks([]));

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useUser } from '@/lib/user-context';
+import { apiUrl } from '@/lib/api';
 import { NewDeckButton } from './_components/new-deck-button';
 import { DeckListItem } from './_components/deck-list-item';
 
@@ -20,7 +21,7 @@ export default function BuilderPage() {
 
   useEffect(() => {
     if (!user) return;
-    fetch('/api/decks', { headers: { 'x-user-id': user.id } })
+    fetch(apiUrl('/api/decks'), { headers: { 'x-user-id': user.id } })
       .then((r) => r.json())
       .then((data: DeckSummary[]) => setDecks(data))
       .catch((e: unknown) => setError((e as Error).message));

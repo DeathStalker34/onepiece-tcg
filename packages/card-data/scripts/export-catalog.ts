@@ -1,6 +1,6 @@
 import { writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { prisma } from '../src/index';
+import { prisma } from '../src/prisma';
 import type { CardStatic, CardType } from '@optcg/engine';
 import { getEffectsForCard } from '@optcg/engine';
 

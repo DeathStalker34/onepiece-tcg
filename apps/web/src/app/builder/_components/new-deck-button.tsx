@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useUser } from '@/lib/user-context';
+import { apiUrl } from '@/lib/api';
 import { Button } from '@/components/ui/button';
 
 interface CreatedDeck {
@@ -21,7 +22,7 @@ export function NewDeckButton({ onCreated }: { onCreated?: (deck: CreatedDeck) =
   async function handle() {
     if (!user) return;
     setPending(true);
-    const res = await fetch('/api/decks', {
+    const res = await fetch(apiUrl('/api/decks'), {
       method: 'POST',
       headers: { 'content-type': 'application/json', 'x-user-id': user.id },
       body: JSON.stringify({ name: 'Untitled deck' }),

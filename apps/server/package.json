@@ -14,6 +14,7 @@
     "catalog:build": "tsx scripts/build-catalog.ts"
   },
   "dependencies": {
+    "@optcg/card-data": "workspace:*",
     "@optcg/engine": "workspace:*",
     "@optcg/protocol": "workspace:*",
     "fastify": "^4.28.0",
