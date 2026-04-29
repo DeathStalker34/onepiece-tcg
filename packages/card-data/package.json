@@ -16,6 +16,7 @@
     }
   },
   "scripts": {
+    "postinstall": "prisma generate",
     "lint": "eslint src tests --no-error-on-unmatched-pattern",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
