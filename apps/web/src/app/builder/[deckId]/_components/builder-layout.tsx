@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import type { Card } from '@optcg/card-data';
 import { useUser } from '@/lib/user-context';
 import { apiUrl } from '@/lib/api';
@@ -27,6 +28,7 @@ interface DeckApiResponse {
 }
 
 export function BuilderLayout({ deckId }: { deckId: string }) {
+  const router = useRouter();
   const { user, ready } = useUser();
   const [deck, setDeck] = useState<DeckDraftState | null>(null);
   const [catalog, setCatalog] = useState<Card[]>([]);
@@ -77,7 +79,7 @@ export function BuilderLayout({ deckId }: { deckId: string }) {
         setSaveError(body.error ?? `HTTP ${res.status}`);
       } else {
         setSaveStatus('saved');
-        setTimeout(() => setSaveStatus('idle'), 2000);
+        router.push('/builder');
       }
     } catch (err) {
       setSaveStatus('error');
