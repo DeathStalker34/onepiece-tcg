@@ -10,10 +10,10 @@ import {
   type DragEndEvent,
   type DragStartEvent,
 } from '@dnd-kit/core';
-import type { GameState, PlayerIndex } from '@optcg/engine';
+import type { PlayerIndex } from '@optcg/engine';
 import { useGame } from '../game-provider';
 import { parseDragId, parseDropId } from './ids';
-import { resolveDrop, computeValidDropIds, getLegalActions } from './use-board-dnd';
+import { resolveDrop, computeValidDropIds, makeLegalCheck } from './use-board-dnd';
 import { CardDragOverlay, DonDragOverlay } from './drag-overlay';
 
 interface DndBoardCtxValue {
@@ -37,12 +37,14 @@ export function DndBoardProvider({ children }: { children: ReactNode }) {
   const localPlayer: PlayerIndex = isOnline && myPlayerIndex !== null ? myPlayerIndex : 0;
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 4 } }));
 
+  const isLegal = useMemo(() => makeLegalCheck(state), [state]);
+
   const validDropIds = useMemo<Set<string>>(() => {
     if (!activeDragId) return new Set();
     const drag = parseDragId(activeDragId);
     if (!drag) return new Set();
-    return computeValidDropIds(drag, getLegalActions(state as GameState), localPlayer);
-  }, [activeDragId, state, localPlayer]);
+    return computeValidDropIds(drag, state, localPlayer, isLegal);
+  }, [activeDragId, state, localPlayer, isLegal]);
 
   const onDragStart = useCallback((e: DragStartEvent) => {
     setActiveDragId(String(e.active.id));
@@ -54,10 +56,10 @@ export function DndBoardProvider({ children }: { children: ReactNode }) {
       const drag = parseDragId(String(e.active.id));
       if (!drag) return;
       const drop = e.over ? parseDropId(String(e.over.id)) : null;
-      const action = resolveDrop(drag, drop, getLegalActions(state as GameState));
+      const action = resolveDrop(drag, drop, state, localPlayer, makeLegalCheck(state));
       if (action) dispatch(action);
     },
-    [state, dispatch],
+    [state, localPlayer, dispatch],
   );
 
   const onDragCancel = useCallback(() => setActiveDragId(null), []);
