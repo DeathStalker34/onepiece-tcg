@@ -2,11 +2,43 @@
 
 import Image from 'next/image';
 import { useState } from 'react';
+import { useDraggable } from '@dnd-kit/core';
 import { cardImagePath } from '@/lib/card-image';
 import { useGame } from './game-provider';
 import { ActionMenu, type ActionMenuOption } from './action-menu';
 import { CardHoverPreview } from './card-hover-preview';
 import type { CardType } from '@optcg/engine';
+
+function DraggableHandCard({
+  cardId,
+  handIndex,
+  clickable,
+  onClick,
+}: {
+  cardId: string;
+  handIndex: number;
+  clickable: boolean;
+  onClick: () => void;
+}) {
+  const { attributes, listeners, setNodeRef, isDragging } = useDraggable({
+    id: `hand:${handIndex}`,
+    disabled: !clickable,
+  });
+  return (
+    <button
+      ref={setNodeRef}
+      {...attributes}
+      {...listeners}
+      type="button"
+      className={`relative aspect-[5/7] w-24 shrink-0 overflow-hidden rounded border border-amber-900/60 transition animate-in fade-in-0 slide-in-from-right-16 duration-500 ease-out ${clickable ? 'cursor-grab active:cursor-grabbing hover:ring-2 hover:ring-primary' : 'cursor-default'} ${isDragging ? 'opacity-40' : ''}`}
+      onClick={onClick}
+      disabled={!clickable}
+      aria-label={`Card ${cardId}`}
+    >
+      <Image src={cardImagePath(cardId)} alt={cardId} fill sizes="96px" className="object-cover" />
+    </button>
+  );
+}
 
 export function Hand({
   cards,
@@ -107,21 +139,12 @@ export function Hand({
         ) : (
           cards.map((cardId, i) => (
             <CardHoverPreview key={`${cardId}-${i}`} cardId={cardId}>
-              <button
-                type="button"
-                className={`relative aspect-[5/7] w-24 shrink-0 overflow-hidden rounded border border-amber-900/60 transition animate-in fade-in-0 slide-in-from-right-16 duration-500 ease-out ${clickable ? 'cursor-pointer hover:ring-2 hover:ring-primary' : 'cursor-default'}`}
+              <DraggableHandCard
+                cardId={cardId}
+                handIndex={i}
+                clickable={clickable}
                 onClick={() => handleCardClick(cardId, i)}
-                disabled={!clickable}
-                aria-label={`Card ${cardId}`}
-              >
-                <Image
-                  src={cardImagePath(cardId)}
-                  alt={cardId}
-                  fill
-                  sizes="96px"
-                  className="object-cover"
-                />
-              </button>
+              />
             </CardHoverPreview>
           ))
         )}

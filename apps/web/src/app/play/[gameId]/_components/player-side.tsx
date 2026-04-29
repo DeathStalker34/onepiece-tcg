@@ -2,6 +2,7 @@
 
 import Image from 'next/image';
 import { useState } from 'react';
+import { useDroppable } from '@dnd-kit/core';
 import { cardImagePath } from '@/lib/card-image';
 import { useGame } from './game-provider';
 import { computeEffectivePower } from '@optcg/engine';
@@ -13,6 +14,7 @@ import { OpponentStatus } from './opponent-status';
 import { DonStack } from './don-stack';
 import { PileStack } from './pile-stack';
 import { PileViewer } from './pile-viewer';
+import { useDndBoard } from './dnd/dnd-board';
 import type { ActionMenuOption } from './action-menu';
 import {
   TargetPicker,
@@ -56,6 +58,19 @@ export function PlayerSide({
   const [trashOpen, setTrashOpen] = useState(false);
   const [deckOpen, setDeckOpen] = useState(false);
   const [banishOpen, setBanishOpen] = useState(false);
+
+  const { validDropIds } = useDndBoard();
+  const fieldDroppableId = 'drop:field';
+  const { setNodeRef: setFieldRef, isOver: isFieldOver } = useDroppable({
+    id: fieldDroppableId,
+    disabled: !isYou,
+  });
+  const fieldIsValid = isYou && validDropIds.has(fieldDroppableId);
+  const fieldGlow = fieldIsValid
+    ? isFieldOver
+      ? 'ring-2 ring-amber-400 bg-amber-400/10'
+      : 'ring-2 ring-amber-400/70'
+    : '';
 
   const leaderStatic = state.catalog[p.leader.cardId];
   const leaderActions: ActionMenuOption[] = [];
@@ -153,7 +168,10 @@ export function PlayerSide({
             <div className="zone-label">Stage</div>
           </div>
           <div className="flex justify-center">
-            <div className="zone-frame inline-flex items-center gap-2 p-2">
+            <div
+              ref={setFieldRef}
+              className={`zone-frame inline-flex items-center gap-2 p-2 transition ${fieldGlow}`}
+            >
               <div className="flex items-center gap-2">
                 {Array.from({ length: 5 }).map((_, slotIdx) => {
                   const c = p.characters[slotIdx];
