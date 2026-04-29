@@ -2,7 +2,19 @@
 
 import { useEffect, useRef, useState } from 'react';
 import type { GameEvent, PlayerIndex } from '@optcg/engine';
+import cardsData from '@/data/cards.json';
 import { useGame } from './game-provider';
+
+interface CardRecord {
+  id: string;
+  name: string;
+}
+const CARD_NAMES: Record<string, string> = Object.fromEntries(
+  (cardsData as CardRecord[]).map((c) => [c.id, c.name]),
+);
+function nameOf(cardId: string): string {
+  return CARD_NAMES[cardId] ?? cardId;
+}
 
 type ToastVariant = 'info' | 'success' | 'danger' | 'warning';
 
@@ -54,6 +66,46 @@ function mapEvent(
       return { text: 'Blocker activated', variant: 'warning' };
     case 'AttackBlocked':
       return { text: 'Attack blocked!', variant: 'warning' };
+    case 'CardSearched': {
+      const side = perspective(ev.sourcePlayer, human);
+      const sourceName = nameOf(ev.sourceCardId);
+      const pickedNames = ev.picked.map(nameOf).join(', ');
+      const fromLabel = ev.from === 'deck' ? 'deck' : 'trash';
+      if (side === 'opponent') {
+        return {
+          text: `${sourceName} pulled a card from ${fromLabel}`,
+          variant: 'warning',
+        };
+      }
+      return {
+        text:
+          ev.picked.length === 1
+            ? `${sourceName} → got ${pickedNames} from ${fromLabel}`
+            : `${sourceName} → got ${ev.picked.length} cards from ${fromLabel}: ${pickedNames}`,
+        variant: 'success',
+      };
+    }
+    case 'EffectResolved': {
+      const e = ev.effect;
+      const sourceName = nameOf(ev.sourceCardId);
+      if (e.kind === 'ko') return { text: `${sourceName} → KO'd a character`, variant: 'danger' };
+      if (e.kind === 'banish')
+        return { text: `${sourceName} → banished a character`, variant: 'danger' };
+      if (e.kind === 'returnToHand')
+        return { text: `${sourceName} → returned a character to hand`, variant: 'warning' };
+      if (e.kind === 'power') {
+        const sign = e.delta >= 0 ? '+' : '';
+        return {
+          text: `${sourceName} → ${sign}${e.delta} power`,
+          variant: e.delta >= 0 ? 'info' : 'warning',
+        };
+      }
+      if (e.kind === 'draw') {
+        return { text: `${sourceName} → drew ${e.amount}`, variant: 'info' };
+      }
+      // 'search' is covered by CardSearched event for richer info — skip
+      return null;
+    }
     default:
       return null;
   }

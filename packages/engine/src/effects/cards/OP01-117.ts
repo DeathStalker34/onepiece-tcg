@@ -1,0 +1,7 @@
+import { onPlay, manual } from '../helpers';
+import type { TriggeredEffect } from '../../types/card';
+
+// [Main] DON!! −1: Rest up to 1 of your opponent's Characters with a cost of 6 or less.
+export const effects: TriggeredEffect[] = [
+  onPlay(manual("Rest up to 1 of your opponent's Characters with a cost of 6 or less.")),
+];

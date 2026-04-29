@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { apply, createInitialState, createRng } from '@optcg/engine';
+import type { GameState } from '@optcg/engine';
 import { EasyBot } from '../src/easy';
 import { TEST_CATALOG } from './fixtures/test-cards';
 import { simpleRedDeck50 } from './fixtures/simple-red-deck';
@@ -60,5 +61,54 @@ describe('EasyBot.pick', () => {
     const rng0 = createRng(5);
     const d = EasyBot.pick(s, 0, rng0);
     expect(d.rng.pointer).toBeGreaterThan(rng0.pointer);
+  });
+
+  it('handles EffectTargetSelection: picks random target and advances RNG', () => {
+    const base = createInitialState(mkSetup());
+    const stateWithWindow: GameState = {
+      ...base,
+      priorityWindow: {
+        kind: 'EffectTargetSelection',
+        sourceCardId: 'TEST-EVENT-KO',
+        sourceOwner: 0,
+        effect: { kind: 'ko', target: { kind: 'opponentCharacter' } },
+        validTargets: [
+          { kind: 'Leader', owner: 1 },
+          { kind: 'Leader', owner: 0 },
+        ],
+        optional: false,
+        pendingChain: [],
+      },
+    };
+    const rng0 = createRng(7);
+    const d = EasyBot.pick(stateWithWindow, 0, rng0);
+    expect(d.action.kind).toBe('SelectEffectTarget');
+    // targetIndex must be 0 or 1 (not null, since optional=false and 2 targets)
+    expect((d.action as { targetIndex: number | null }).targetIndex).toBeGreaterThanOrEqual(0);
+    // RNG pointer must advance
+    expect(d.rng.pointer).toBeGreaterThan(rng0.pointer);
+  });
+
+  it('handles EffectTargetSelection optional: may pick null', () => {
+    const base = createInitialState(mkSetup());
+    const stateWithOptional: GameState = {
+      ...base,
+      priorityWindow: {
+        kind: 'EffectTargetSelection',
+        sourceCardId: 'TEST-EVENT-KO',
+        sourceOwner: 0,
+        effect: { kind: 'ko', target: { kind: 'opponentCharacter' } },
+        validTargets: [{ kind: 'Leader', owner: 1 }],
+        optional: true,
+        pendingChain: [],
+      },
+    };
+    // Try multiple seeds — at least one should return null (skip)
+    const results = Array.from({ length: 20 }, (_, i) => {
+      const d = EasyBot.pick(stateWithOptional, 0, createRng(i));
+      return (d.action as { targetIndex: number | null }).targetIndex;
+    });
+    expect(results.some((t) => t === null)).toBe(true);
+    expect(results.some((t) => t === 0)).toBe(true);
   });
 });

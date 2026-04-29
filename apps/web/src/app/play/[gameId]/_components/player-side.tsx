@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { useState } from 'react';
 import { cardImagePath } from '@/lib/card-image';
 import { useGame } from './game-provider';
+import { computeEffectivePower } from '@optcg/engine';
 import type { PlayerIndex } from '@optcg/engine';
 import { LeaderCard } from './leader-card';
 import { CharacterCard } from './character-card';
@@ -29,7 +30,6 @@ export function PlayerSide({
 }) {
   const { state, dispatch, botPlayers, isOnline, myPlayerIndex } = useGame();
   const p = state.players[playerIndex];
-  const opp = state.players[playerIndex === 0 ? 1 : 0];
   const isActive = state.activePlayer === playerIndex && state.priorityWindow === null;
   const inMainRaw =
     state.phase === 'Main' && state.priorityWindow === null && state.activePlayer === playerIndex;
@@ -39,6 +39,16 @@ export function PlayerSide({
     isOnline && myPlayerIndex !== null ? playerIndex === myPlayerIndex : !botPlayers[playerIndex];
   const friendlyName = isPvAI || isOnline ? (isYou ? 'You' : 'Opponent') : `Player ${playerIndex}`;
   const isOpponentInOnline = isOnline && myPlayerIndex !== null && playerIndex !== myPlayerIndex;
+
+  function isHighlightedRef(refKind: 'Leader' | 'Character', instanceId?: string): boolean {
+    const pw = state.priorityWindow;
+    if (pw?.kind !== 'EffectTargetSelection') return false;
+    return pw.validTargets.some((t) => {
+      if (t.kind !== refKind) return false;
+      if (t.kind === 'Leader') return t.owner === playerIndex;
+      return t.owner === playerIndex && t.instanceId === instanceId;
+    });
+  }
 
   const [pendingAttacker, setPendingAttacker] = useState<
     { kind: 'Leader' } | { kind: 'Character'; instanceId: string } | null
@@ -88,28 +98,25 @@ export function PlayerSide({
     setPendingAttacker(null);
   }
 
-  const attackTargets = buildAttackTargets(
-    opp.leader,
-    opp.life.length,
-    opp.characters,
-    state.catalog,
-  );
+  const attackTargets = buildAttackTargets(state, playerIndex === 0 ? 1 : 0);
 
   let attackerInfo: AttackerInfo | null = null;
   if (pendingAttacker) {
     if (pendingAttacker.kind === 'Leader') {
-      const ls = state.catalog[p.leader.cardId];
       attackerInfo = {
         cardId: p.leader.cardId,
-        power: (ls?.power ?? 0) + p.leader.attachedDon * 1000 + p.leader.powerThisTurn,
+        power: computeEffectivePower(state, { kind: 'Leader', owner: playerIndex }),
       };
     } else {
       const char = p.characters.find((c) => c.instanceId === pendingAttacker.instanceId);
       if (char) {
-        const cs = state.catalog[char.cardId];
         attackerInfo = {
           cardId: char.cardId,
-          power: (cs?.power ?? 0) + char.attachedDon * 1000 + char.powerThisTurn,
+          power: computeEffectivePower(state, {
+            kind: 'Character',
+            instanceId: char.instanceId,
+            owner: playerIndex,
+          }),
         };
       }
     }
@@ -129,7 +136,14 @@ export function PlayerSide({
         <div className="space-y-1">
           <div className="zone-label">Leader</div>
           <div className="zone-frame p-2">
-            <LeaderCard leader={p.leader} lifeCount={p.life.length} actions={leaderActions} />
+            <LeaderCard
+              leader={p.leader}
+              lifeCount={p.life.length}
+              actions={leaderActions}
+              highlighted={isHighlightedRef('Leader')}
+              effectivePower={computeEffectivePower(state, { kind: 'Leader', owner: playerIndex })}
+              basePower={state.catalog[p.leader.cardId]?.power ?? 0}
+            />
           </div>
         </div>
 
@@ -171,7 +185,20 @@ export function PlayerSide({
                         });
                       }
                     }
-                    return <CharacterCard key={c.instanceId} char={c} actions={actions} />;
+                    return (
+                      <CharacterCard
+                        key={c.instanceId}
+                        char={c}
+                        actions={actions}
+                        highlighted={isHighlightedRef('Character', c.instanceId)}
+                        effectivePower={computeEffectivePower(state, {
+                          kind: 'Character',
+                          instanceId: c.instanceId,
+                          owner: playerIndex,
+                        })}
+                        basePower={charStatic?.power ?? 0}
+                      />
+                    );
                   }
                   return (
                     <div

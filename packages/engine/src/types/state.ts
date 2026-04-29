@@ -16,6 +16,10 @@ export interface DefenderRef {
   defensePower: number;
 }
 
+export type TargetRef =
+  | { kind: 'Leader'; owner: PlayerIndex }
+  | { kind: 'Character'; instanceId: string; owner: PlayerIndex };
+
 export type PriorityWindow =
   | { kind: 'Mulligan'; player: PlayerIndex }
   | { kind: 'CounterStep'; attacker: AttackerRef; defender: DefenderRef }
@@ -29,6 +33,15 @@ export type PriorityWindow =
       kind: 'BlockerStep';
       attacker: AttackerRef;
       originalTarget: DefenderRef;
+    }
+  | {
+      kind: 'EffectTargetSelection';
+      sourceCardId: string;
+      sourceOwner: PlayerIndex;
+      effect: Effect;
+      validTargets: TargetRef[];
+      optional: boolean;
+      pendingChain: Effect[];
     };
 
 export interface LeaderInPlay {

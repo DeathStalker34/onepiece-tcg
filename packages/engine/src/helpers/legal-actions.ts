@@ -12,6 +12,18 @@ export function computeLegalActions(state: GameState): Action[] {
     ];
   }
 
+  if (state.priorityWindow?.kind === 'EffectTargetSelection') {
+    const pw = state.priorityWindow;
+    const actions: Action[] = [];
+    for (let i = 0; i < pw.validTargets.length; i += 1) {
+      actions.push({ kind: 'SelectEffectTarget', player: pw.sourceOwner, targetIndex: i });
+    }
+    if (pw.optional) {
+      actions.push({ kind: 'SelectEffectTarget', player: pw.sourceOwner, targetIndex: null });
+    }
+    return actions;
+  }
+
   // Other priority windows (Counter/Trigger/Blocker) are filled by later tasks.
   if (state.priorityWindow !== null) return [];
 

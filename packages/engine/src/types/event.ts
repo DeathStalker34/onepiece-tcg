@@ -18,5 +18,12 @@ export type GameEvent =
       revealedCardId: string;
     }
   | { kind: 'TriggerResolved'; cardId: string; activated: boolean }
+  | {
+      kind: 'CardSearched';
+      sourceCardId: string;
+      sourcePlayer: PlayerIndex;
+      from: 'deck' | 'trash';
+      picked: string[];
+    }
   | { kind: 'EffectResolved'; effect: Effect; sourceCardId: string }
   | { kind: 'GameOver'; winner: PlayerIndex };

@@ -2,6 +2,7 @@ import type { Action } from './types/action';
 import type { GameState, PlayerIndex } from './types/state';
 import type { EngineError } from './types/error';
 import type { GameEvent } from './types/event';
+import type { Effect } from './types/card';
 import { shuffle } from './rng';
 import { computeLegalActions } from './helpers/legal-actions';
 import { runRefresh } from './phases/refresh';
@@ -13,6 +14,7 @@ import { declareAttack } from './combat/declare';
 import { playCounter, declineCounter } from './combat/counter-step';
 import { useBlocker, declineBlocker } from './combat/blocker';
 import { activateTrigger } from './combat/trigger-step';
+import { applyEffect, resolveDirectly, type EffectContext } from './effects/executor';
 
 export interface ApplyResult {
   state: GameState;
@@ -185,6 +187,61 @@ export function apply(state: GameState, action: Action): ApplyResult {
       break;
     }
 
+    case 'SelectEffectTarget': {
+      const pw = state.priorityWindow;
+      if (pw?.kind !== 'EffectTargetSelection') {
+        return errorResult(state, { code: 'NotYourPriority' });
+      }
+      if (action.targetIndex === null) {
+        if (!pw.optional) {
+          return errorResult(state, {
+            code: 'InvalidTarget',
+            reason: 'cannot skip mandatory effect',
+          });
+        }
+        // Optional skip: clear window, drop pending effect; process pendingChain
+        next = processPendingChain({ ...state, priorityWindow: null }, pw.pendingChain, {
+          sourcePlayer: pw.sourceOwner,
+          sourceCardId: pw.sourceCardId,
+        });
+        break;
+      }
+      if (action.targetIndex < 0 || action.targetIndex >= pw.validTargets.length) {
+        return errorResult(state, {
+          code: 'InvalidTarget',
+          reason: 'targetIndex out of range',
+        });
+      }
+      const target = pw.validTargets[action.targetIndex];
+      // Re-validate stale target (race condition)
+      let chosenIsStale = false;
+      if (target.kind === 'Character') {
+        const stillThere = state.players[target.owner].characters.some(
+          (c) => c.instanceId === target.instanceId,
+        );
+        if (!stillThere) chosenIsStale = true;
+      }
+      let cleared: GameState = { ...state, priorityWindow: null };
+      if (!chosenIsStale) {
+        const direct = resolveDirectly(
+          cleared,
+          pw.effect,
+          {
+            sourcePlayer: pw.sourceOwner,
+            sourceCardId: pw.sourceCardId,
+          },
+          target,
+        );
+        cleared = direct.state;
+        events.push(...direct.events);
+      }
+      next = processPendingChain(cleared, pw.pendingChain, {
+        sourcePlayer: pw.sourceOwner,
+        sourceCardId: pw.sourceCardId,
+      });
+      break;
+    }
+
     default:
       return errorResult(state, {
         code: 'Unknown',
@@ -273,4 +330,20 @@ function startNextTurn(state: GameState): { state: GameState; events: GameEvent[
     turn: state.turn + 1,
   };
   return runRefresh(preRefresh);
+}
+
+function processPendingChain(state: GameState, chain: Effect[], ctx: EffectContext): GameState {
+  let s = state;
+  const queue = [...chain];
+  while (queue.length > 0 && s.priorityWindow === null) {
+    const effect = queue.shift()!;
+    const r = applyEffect(s, effect, ctx);
+    s = r.state;
+    if (s.priorityWindow?.kind === 'EffectTargetSelection') {
+      s = { ...s, priorityWindow: { ...s.priorityWindow, pendingChain: queue.slice() } };
+      // Stop processing: player must select a target before chain can continue
+      break;
+    }
+  }
+  return s;
 }

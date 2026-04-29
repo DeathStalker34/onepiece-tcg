@@ -9,6 +9,21 @@ export const EasyBot: Bot = {
     const priority = generatePriorityAction(state, player);
     if (priority) return { action: priority, rng };
 
+    if (
+      state.priorityWindow?.kind === 'EffectTargetSelection' &&
+      state.priorityWindow.sourceOwner === player
+    ) {
+      const pw = state.priorityWindow;
+      const total = pw.validTargets.length + (pw.optional ? 1 : 0);
+      const { value: idx, rng: rng2 } = nextInt(rng, total);
+      const targetIndex = idx < pw.validTargets.length ? idx : null;
+      return {
+        action: { kind: 'SelectEffectTarget', player: pw.sourceOwner, targetIndex },
+        rng: rng2,
+        rationale: `random select target idx=${String(targetIndex)}`,
+      };
+    }
+
     if (state.phase === 'Main' && state.activePlayer === player && state.priorityWindow === null) {
       const actions = generateMainActions(state, player);
       if (actions.length === 0) {
