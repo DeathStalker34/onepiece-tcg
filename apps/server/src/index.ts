@@ -5,6 +5,7 @@ import { loadCatalog } from './catalog';
 import { createLogger } from './logger';
 import { MatchStore } from './match/store';
 import { registerHandlers } from './match/handlers';
+import { registerApiRoutes } from './api/routes';
 
 export interface ServerOptions {
   catalogPath: string;
@@ -24,8 +25,13 @@ export async function buildServer(opts: ServerOptions): Promise<ServerHandle> {
   logger.info('catalog loaded', { cards: Object.keys(catalog).length });
 
   const app = Fastify({ logger: false });
-  await app.register(cors, { origin: opts.corsOrigin ?? '*' });
+  await app.register(cors, {
+    origin: opts.corsOrigin ?? '*',
+    credentials: true,
+    allowedHeaders: ['content-type', 'x-user-id'],
+  });
   app.get('/health', async () => ({ status: 'ok' }));
+  await registerApiRoutes(app, { catalog });
 
   const io = new SocketIOServer(app.server, { cors: { origin: opts.corsOrigin ?? '*' } });
   const store = new MatchStore(catalog, {

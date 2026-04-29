@@ -1,13 +1,13 @@
-// Card model real — Fase 1.
-// Campos multi-valor (colors, attributes) se guardan como string comma-separated
-// porque SQLite no soporta arrays. Filtros usan "contains".
+// Postgres schema (Neon free tier en producción, local Postgres para dev).
+// Card table es solo para el sync script (apitcg.com → DB → JSON export).
+// El catálogo runtime se lee de cards.json + catalog.json committed en el repo.
 
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 

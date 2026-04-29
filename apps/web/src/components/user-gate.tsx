@@ -2,6 +2,7 @@
 
 import { useState, type FormEvent } from 'react';
 import { useUser } from '@/lib/user-context';
+import { apiUrl } from '@/lib/api';
 import {
   Dialog,
   DialogContent,
@@ -27,7 +28,7 @@ export function UserGate() {
     setSubmitting(true);
     setError(null);
     try {
-      const res = await fetch('/api/users', {
+      const res = await fetch(apiUrl('/api/users'), {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify({ username: username.trim() }),

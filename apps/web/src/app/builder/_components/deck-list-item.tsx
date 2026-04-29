@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useUser } from '@/lib/user-context';
+import { apiUrl } from '@/lib/api';
 import { Button } from '@/components/ui/button';
 
 interface DeckSummary {
@@ -18,7 +19,7 @@ export function DeckListItem({ deck, onDeleted }: { deck: DeckSummary; onDeleted
   async function handleDelete() {
     if (!user) return;
     if (!confirm(`Delete "${deck.name}"?`)) return;
-    const res = await fetch(`/api/decks/${deck.id}`, {
+    const res = await fetch(apiUrl(`/api/decks/${deck.id}`), {
       method: 'DELETE',
       headers: { 'x-user-id': user.id },
     });

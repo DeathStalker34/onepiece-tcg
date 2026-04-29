@@ -1,6 +1,6 @@
 import { writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { prisma } from '../src/index';
+import { prisma } from '../src/prisma';
 
 async function main(): Promise<void> {
   const args = process.argv.slice(2).filter((a) => a !== '--');

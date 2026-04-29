@@ -50,6 +50,9 @@ importers:
       '@fastify/cors':
         specifier: ^9.0.0
         version: 9.0.1
+      '@optcg/card-data':
+        specifier: workspace:*
+        version: link:../../packages/card-data
       '@optcg/engine':
         specifier: workspace:*
         version: link:../../packages/engine

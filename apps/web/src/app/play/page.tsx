@@ -4,6 +4,7 @@ import { useEffect, useState, type FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useUser } from '@/lib/user-context';
+import { apiUrl } from '@/lib/api';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -39,7 +40,7 @@ export default function PlaySetupPage() {
 
   useEffect(() => {
     if (!user) return;
-    fetch('/api/decks', { headers: { 'x-user-id': user.id } })
+    fetch(apiUrl('/api/decks'), { headers: { 'x-user-id': user.id } })
       .then((r) => r.json() as Promise<DeckSummary[]>)
       .then(setDecks)
       .catch((e: unknown) => setError((e as Error).message));
@@ -71,7 +72,7 @@ export default function PlaySetupPage() {
         if (!Number.isInteger(s)) throw new Error('Seed must be an integer');
         body.seed = s;
       }
-      const res = await fetch('/api/games', {
+      const res = await fetch(apiUrl('/api/games'), {
         method: 'POST',
         headers: { 'content-type': 'application/json', 'x-user-id': user.id },
         body: JSON.stringify(body),

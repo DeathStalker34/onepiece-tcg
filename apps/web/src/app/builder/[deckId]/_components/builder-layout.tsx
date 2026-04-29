@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import type { Card } from '@optcg/card-data';
 import { useUser } from '@/lib/user-context';
+import { apiUrl } from '@/lib/api';
 import { CardDetailDialog } from '@/app/cards/_components/card-detail-dialog';
 import {
   FilterSidebarBuilder,
@@ -39,7 +40,7 @@ export function BuilderLayout({ deckId }: { deckId: string }) {
   useEffect(() => {
     if (!user) return;
     Promise.all([
-      fetch(`/api/decks/${deckId}`, { headers: { 'x-user-id': user.id } }).then(
+      fetch(apiUrl(`/api/decks/${deckId}`), { headers: { 'x-user-id': user.id } }).then(
         (r) => r.json() as Promise<DeckApiResponse>,
       ),
       fetch('/api/cards').then((r) => r.json() as Promise<Card[]>),
@@ -61,7 +62,7 @@ export function BuilderLayout({ deckId }: { deckId: string }) {
     setSaveStatus('idle');
     setSaveError(null);
     try {
-      const res = await fetch(`/api/decks/${deckId}`, {
+      const res = await fetch(apiUrl(`/api/decks/${deckId}`), {
         method: 'PUT',
         headers: { 'content-type': 'application/json', 'x-user-id': user.id },
         body: JSON.stringify({

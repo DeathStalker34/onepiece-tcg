@@ -1,3 +1,5 @@
+import type { Card } from '@optcg/card-data';
+
 export const PAGE_SIZE = 48;
 
 export interface SearchParams {
@@ -9,7 +11,7 @@ export interface SearchParams {
   [key: string]: string | string[] | undefined;
 }
 
-interface Where {
+export interface Where {
   name?: { contains: string };
   colors?: { contains: string };
   type?: string;
@@ -77,4 +79,35 @@ export function parseFilters(params: SearchParams): ParsedFilters {
   const skip = (page - 1) * PAGE_SIZE;
 
   return { where, page, skip };
+}
+
+/**
+ * In-memory equivalent of running the Prisma `where` against a card list.
+ * Used by the gallery page now that Card data lives in cards.json (no DB).
+ */
+export function applyFilters(cards: Card[], where: Where): Card[] {
+  return cards.filter((card) => {
+    if (where.name && !card.name.toLowerCase().includes(where.name.contains.toLowerCase())) {
+      return false;
+    }
+    if (where.colors && !card.colors.includes(where.colors.contains)) {
+      return false;
+    }
+    if (where.AND && where.AND.length > 0) {
+      for (const clause of where.AND) {
+        if (!card.colors.includes(clause.colors.contains)) return false;
+      }
+    }
+    if (where.type && card.type !== where.type) {
+      return false;
+    }
+    if (where.cost !== undefined) {
+      if (typeof where.cost === 'number') {
+        if (card.cost !== where.cost) return false;
+      } else {
+        if (card.cost === null || !where.cost.in.includes(card.cost)) return false;
+      }
+    }
+    return true;
+  });
 }
